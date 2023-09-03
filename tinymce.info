@@ -1,0 +1,7 @@
+type = module
+name = TinyMCE Editor
+description = Integrates TinyMCE as WYSIWYG editor for content.
+tags[] = Text Editors
+dependencies[] = filter
+
+backdrop = 1.x

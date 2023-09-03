@@ -1,0 +1,13 @@
+{
+    "_config_name": "tinymce.profiles.default",
+    "name": "default",
+    "label": "Default",
+    "tiny_options": {
+        "branding": false,
+        "promotion": false,
+        "menubar": false,
+        "toolbar": "bold italic blockquote | styles | bullist numlist | alignleft aligncenter alignright | backdroplink unlink | image | code fullscreen",
+        "plugins": "link lists advlist image fullscreen code autoresize",
+        "image_caption": true
+    }
+}

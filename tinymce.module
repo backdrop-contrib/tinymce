@@ -1,0 +1,166 @@
+<?php
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_editor_info().
+ */
+function tinymce_editor_info() {
+  $editors['tinymce'] = array(
+    'label' => t('TinyMCE Editor'),
+    'settings callback' => '_tinymce_settings',
+    'default settings' => array(
+      'tinymce_settings' => array(
+        'profile' => 'default',
+        'skin' => 'oxide',
+      ),
+    ),
+    'library' => array('tinymce', 'backdrop.tinymce'),
+    'js settings callback' => '_tinymce_js_settings',
+  );
+  return $editors;
+}
+
+/**
+ * Custom callback for filter form.
+ */
+function _tinymce_settings(&$form, $form_state, $format) {
+  $elements = array();
+  $settings = $format->editor_settings;
+
+  $elements['tinymce_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Editor settings'),
+  );
+  $elements['tinymce_settings']['profile'] = array(
+    '#title' => t('Editor profile'),
+    '#type' => 'select',
+    '#options' => _tinymce_get_profile_options(),
+    '#default_value' => $settings['tinymce_settings']['profile'],
+  );
+  $elements['tinymce_settings']['skin'] = array(
+    '#title' => t('Editor skin'),
+    '#type' => 'select',
+    '#options' => array(
+      'oxide' => t('Light'),
+      'oxide-dark' => t('Dark'),
+     ),
+    '#default_value' => $settings['tinymce_settings']['skin'],
+  );
+
+  $elements['tinymce_settings']['image'] = filter_editor_image_upload_settings_form($format);
+  $elements['tinymce_settings']['image']['#parents'] = array('editor_settings', 'image_upload');
+  $elements['tinymce_settings']['file'] = filter_editor_file_upload_settings_form($format);
+  $elements['tinymce_settings']['file']['#parents'] = array('editor_settings', 'file_upload');
+
+  return $elements;
+}
+
+/**
+ * Custom callback for JavaScript settings.
+ */
+function _tinymce_js_settings($format, $existing_settings) {
+  global $language;
+  $options = array();
+  $settings = $format->editor_settings;
+  $filters = $format->filters;
+
+  // @todo make profiles an API? AdminUI?
+  $profile = $settings['tinymce_settings']['profile'];
+  $options['tiny_options'] = config_get('tinymce.profiles.' . $profile, 'tiny_options');
+  $options['tiny_options']['language'] = $language->langcode;
+  $options['tiny_options']['skin'] = $settings['tinymce_settings']['skin'];
+
+  if ($filters['filter_html']->status) {
+    // Prevent any style attributes by setting valid list to empty. All event
+    // attributes (on*) are excluded by default by DOMPurify.
+    $options['tiny_options']['valid_styles'] = array('*' => '');
+    // @todo provide a list of needed tags and put into filter settings via js.
+  }
+
+  // @todo where to get these from? textfield?
+  if (1) {
+    $options['tiny_options']['content_css'] = '/core/themes/basis/css/skin.css';
+  }
+  // @todo "external" plugins for real (link, image...)
+  $module_path = base_path() . backdrop_get_path('module', 'tinymce');
+  $options['tiny_options']['external_plugins'] = array(
+    'backdroplink' => $module_path . '/js/plugins/backdroplink/plugin.js',
+  );
+
+  // image/file or not, image captions... lots of @todo
+  $link_url_opts = array(
+    'query' => array(
+      'token' => filter_editor_dialog_token($format, 'link'),
+      'calling_path' => $_GET['q'],
+  ));
+  $options['backdrop']['linkDialogUrl'] = url('editor/dialog/link/' . $format->format, $link_url_opts);
+  $img_url_opts = array(
+    'query' => array(
+      'token' => filter_editor_dialog_token($format, 'image'),
+      'calling_path' => $_GET['q'],
+  ));
+  $options['backdrop']['imageDialogUrl'] = url('editor/dialog/image/' . $format->format, $img_url_opts);
+
+  // @todo backdrop_alter?
+  return $options;
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function tinymce_library_info() {
+  $path = backdrop_get_path('module', 'tinymce');
+  $libraries['tinymce'] = array(
+    'title' => 'TinyMCE',
+    'website' => 'https://www.tiny.cloud/',
+    'version' => '6.6.2',
+    'js' => array(
+      $path . '/libraries/tinymce/js/tinymce/tinymce.min.js' =>  array(
+        'preprocess' => FALSE,
+        'group' => JS_LIBRARY,
+      ),
+    ),
+  );
+  $libraries['backdrop.tinymce'] = array(
+    'title' => 'TinyMCE integration',
+    'version' => '1',
+    'website' => '',
+    'js' => array(
+      $path . '/js/tinymce-integration.js' => array(),
+    ),
+    'dependencies' => array(
+      array('filter', 'filter'),//?
+      array('system', 'backdrop.ajax'),
+      array('tinymce', 'tinymce'),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Implements hook_config_info().
+ */
+function tinymce_config_info() {
+  $prefixes['tinymce.profiles'] = array(
+    'name_key' => 'name',
+    'label_key' => 'label',
+    'group' => t('Editor profiles'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Custom callback.
+ */
+function _tinymce_get_profile_options() {
+  $options = array();
+  $all_profiles = config_get_names_with_prefix('tinymce.profile');
+  foreach ($all_profiles as $config_name) {
+    $config = config($config_name);
+    $profile_name = $config->get('name');
+    $options[$profile_name] = $config->get('label');
+  }
+  return $options;
+}
