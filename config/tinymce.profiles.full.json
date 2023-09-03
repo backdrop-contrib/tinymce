@@ -7,9 +7,9 @@
         "promotion": false,
         "image_caption": true,
         "plugins": "accordion advlist autoresize charmap code codesample emoticons fullscreen help image insertdatetime link lists save searchreplace table visualblocks visualchars wordcount",
-        "toolbar": "bold italic blockquote | styles | bullist numlist | alignleft aligncenter alignright | backdroplink unlink | image | code fullscreen",
+        "toolbar": "bold italic blockquote | styles | bullist numlist outdent indent | alignleft aligncenter alignright | backdroplink unlink | image | fullscreen",
         "menubar": "edit view insert format tools table help",
-        "contextmenu": "backdroplink image table",
+        "contextmenu": "backdroplink image",
         "menu": {
             "edit": {
                 "title": "Edit",
@@ -17,7 +17,7 @@
             },
             "view": {
                 "title": "View",
-                "items": "code | visualaid visualchars visualblocks | spellchecker | preview fullscreen"
+                "items": "code | visualaid visualchars visualblocks | fullscreen"
             },
             "insert": {
                 "title": "Insert",
