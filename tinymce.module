@@ -183,6 +183,12 @@ function tinymce_tinymce_external_plugins($format) {
         'linkDialogUrl' => $link_dialog_url,
       ),
     ),
+    'backdropimage' => array(
+      'plugin_path' => $module_url . '/js/plugins/backdropimage/plugin.js',
+      'variables' => array(
+        'imageDialogUrl' => $image_dialog_url,
+      ),
+    ),
   );
 
   return $plugins;
