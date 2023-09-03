@@ -2,6 +2,8 @@
  * @file
  * Backdrop TinyMCE link plugin.
  */
+"use strict";
+
 tinymce.PluginManager.add('backdroplink', function(editor, url) {
   /* Add a button that opens a dialog */
   editor.ui.registry.addToggleButton('backdroplink', {
@@ -43,7 +45,7 @@ tinymce.PluginManager.add('backdroplink', function(editor, url) {
 });
 
 // Just a wrapper...
-backdroplinkTools = {};
+let backdroplinkTools = {};
 
 /**
  * Helper function.

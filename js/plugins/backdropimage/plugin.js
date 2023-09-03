@@ -2,6 +2,8 @@
  * @file
  * Backdrop TinyMCE image plugin.
  */
+"use strict";
+
 tinymce.PluginManager.add('backdropimage', function(editor, url) {
   editor.ui.registry.addToggleButton('backdropimage', {
     icon: 'image',
@@ -43,7 +45,7 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
 });
 
 // Just a wrapper...
-backdropimageTools = {};
+let backdropimageTools = {};
 
 /**
  * Helper function.
