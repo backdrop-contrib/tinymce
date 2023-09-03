@@ -83,27 +83,19 @@ function _tinymce_js_settings($format, $existing_settings) {
   if (1) {
     $options['tiny_options']['content_css'] = '/core/themes/basis/css/skin.css';
   }
-  // @todo "external" plugins for real (link, image...)
-  $module_path = base_path() . backdrop_get_path('module', 'tinymce');
-  $options['tiny_options']['external_plugins'] = array(
-    'backdroplink' => $module_path . '/js/plugins/backdroplink/plugin.js',
-  );
 
-  // image/file or not, image captions... lots of @todo
-  $link_url_opts = array(
-    'query' => array(
-      'token' => filter_editor_dialog_token($format, 'link'),
-      'calling_path' => $_GET['q'],
-  ));
-  $options['backdrop']['linkDialogUrl'] = url('editor/dialog/link/' . $format->format, $link_url_opts);
-  $img_url_opts = array(
-    'query' => array(
-      'token' => filter_editor_dialog_token($format, 'image'),
-      'calling_path' => $_GET['q'],
-  ));
-  $options['backdrop']['imageDialogUrl'] = url('editor/dialog/image/' . $format->format, $img_url_opts);
+  // Collect additional TinyMCE plugins.
+  $external_plugins = module_invoke_all('tinymce_external_plugins', $format);
+  foreach ($external_plugins as $name => $plugin) {
+    $options['tiny_options']['external_plugins'][$name] = $plugin['plugin_path'];
+    if (!empty($plugin['variables'])) {
+      foreach ($plugin['variables'] as $key => $value) {
+        $options['backdrop'][$key] = $value;
+      }
+    }
+  }
 
-  // @todo backdrop_alter?
+  // @todo another alter hook?
   return $options;
 }
 
@@ -163,4 +155,35 @@ function _tinymce_get_profile_options() {
     $options[$profile_name] = $config->get('label');
   }
   return $options;
+}
+
+/**
+ * Implements hook_tinymce_external_plugins().
+ */
+function tinymce_tinymce_external_plugins($format) {
+  $link_url_opts = array(
+    'query' => array(
+      'token' => filter_editor_dialog_token($format, 'link'),
+      'calling_path' => $_GET['q'],
+  ));
+  $link_dialog_url = url('editor/dialog/link/' . $format->format, $link_url_opts);
+
+  $img_url_opts = array(
+    'query' => array(
+      'token' => filter_editor_dialog_token($format, 'image'),
+      'calling_path' => $_GET['q'],
+  ));
+  $image_dialog_url = url('editor/dialog/image/' . $format->format, $img_url_opts);
+
+  $module_url = base_path() . backdrop_get_path('module', 'tinymce');
+  $plugins = array(
+    'backdroplink' => array(
+      'plugin_path' => $module_url . '/js/plugins/backdroplink/plugin.js',
+      'variables' => array(
+        'linkDialogUrl' => $link_dialog_url,
+      ),
+    ),
+  );
+
+  return $plugins;
 }
