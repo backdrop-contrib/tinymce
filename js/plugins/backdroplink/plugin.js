@@ -144,6 +144,9 @@ backdroplinkTools.buildLink = function (editor, returnValues) {
     a.appendChild(node.firstChild);
   }
   else {
+    if (!textContent.length) {
+      textContent = a.getAttribute('href');
+    }
     a.textContent = textContent;
   }
 
