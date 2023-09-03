@@ -61,8 +61,6 @@ backdroplinkTools.backdropDialog = function (editor) {
     else {
       editor.execCommand('mceReplaceContent', false, link);
     }
-    // @todo put cursor at previous position.
-    editor.focus();
   };
 
   Backdrop.tinymce.openDialog(editor, dialogUrl, existingValues, saveCallback, dialogSettings);
@@ -108,6 +106,7 @@ backdroplinkTools.existingValues = function (editor) {
       text: content
     };
   }
+
   return existingValues;
 }
 
