@@ -18,12 +18,15 @@
       // Backdrop link dialog.
       options.convert_urls = false;
 
-      // Dynamically registered additional variables.
-      options.backdropLinkDialogUrl = format.editorSettings.backdrop.linkDialogUrl;
-      options.backdropImageDialogUrl = format.editorSettings.backdrop.imageDialogUrl;
+      // Additional variables from hook.
+      for (let item in format.editorSettings.backdrop) {
+        options[item] = format.editorSettings.backdrop[item];
+      }
+      // Register additional string variables.
       options.setup = function (editor) {
-        editor.options.register('backdropLinkDialogUrl', { processor: "string" });
-        editor.options.register('backdropImageDialogUrl', { processor: "string" });
+        for (let item in format.editorSettings.backdrop) {
+          editor.options.register(item, { processor: "string" });
+        }
       };
 
       tinymce.init(options);

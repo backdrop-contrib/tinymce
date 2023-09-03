@@ -49,7 +49,7 @@ backdroplinkTools = {};
  * Helper function.
  */
 backdroplinkTools.backdropDialog = function (editor) {
-  let dialogUrl = editor.options.get('backdropLinkDialogUrl');
+  let dialogUrl = editor.options.get('linkDialogUrl');
   let dialogSettings = {dialogClass: 'editor-link-dialog'};
   let existingValues = backdroplinkTools.existingValues(editor);
 
