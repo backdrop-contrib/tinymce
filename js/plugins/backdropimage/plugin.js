@@ -57,12 +57,12 @@ backdropimageTools.backdropDialog = function (editor) {
 
   let saveCallback = function(returnValues) {
     let image = backdropimageTools.buildImage(editor, returnValues);
-    if (typeof existingValues.href == 'undefined') {
-      editor.execCommand('mceInsertContent', false, image);
+    let selected = editor.selection.getNode();
+    // This has been a nested figure tag, but now becomes an img tag.
+    if (selected.nodeName == 'IMG' && selected.parentNode && selected.parentNode.nodeName == 'FIGURE') {
+      selected.parentNode.remove();
     }
-    else {
-      editor.execCommand('mceReplaceContent', false, image);
-    }
+    editor.execCommand('mceInsertContent', false, image);
   };
 
   Backdrop.tinymce.openDialog(editor, dialogUrl, existingValues, saveCallback, dialogSettings);
@@ -80,11 +80,7 @@ backdropimageTools.backdropDialog = function (editor) {
 backdropimageTools.existingValues = function (editor) {
   let node = editor.selection.getNode();
   let existingValues = {};
-/*
-  if (node.nodeName == 'IMG' && node.parentNode.nodeName == 'A') {
-    node = node.parentNode;
-  }
-*/
+
   if (node.nodeName == 'IMG') {
     let attribs = node.getAttributeNames();
     for (let i = 0; i < attribs.length; i++) {
@@ -93,6 +89,13 @@ backdropimageTools.existingValues = function (editor) {
         continue;
       }
       existingValues[name] = node.attributes[name]['value'];
+    }
+  }
+  if (node.parentNode && node.parentNode.nodeName == 'FIGURE') {
+    let parent = node.parentNode;
+    existingValues['data-has-caption'] = 1;
+    if (parent.hasAttribute('data-align')) {
+      existingValues['data-align'] = parent.getAttribute('data-align');
     }
   }
 
@@ -111,14 +114,49 @@ backdropimageTools.existingValues = function (editor) {
  */
 backdropimageTools.buildImage = function (editor, returnValues) {
   let values = returnValues.attributes;
+  // @todo width/height... where?
+  let node;
 
-  let img = editor.dom.create('img');
-  for (let key in values) {
-    if (key == 'data-file-id' && !values[key]) {
-      continue;
+  if (values['data-has-caption']) {
+    node = editor.dom.create('figure');
+    if (values['data-align']) {
+      node.setAttribute('data-align', values['data-align']);
     }
-    img.setAttribute(key, values[key]);
+    let img = editor.dom.create('img');
+    for (let key in values) {
+      if (key == 'data-has-caption' || key == 'data-align') {
+        continue;
+      }
+      if (key == 'data-file-id' && !values[key]) {
+        continue;
+      }
+      img.setAttribute(key, values[key]);
+    }
+    node.appendChild(img);
+
+    let captiontext = 'My caption';
+    let selected = editor.selection.getNode();
+    if (selected.parentNode && selected.parentNode.nodeName == 'FIGURE') {
+      let parent = selected.parentNode;
+      if (parent.lastChild && parent.lastChild.nodeName == 'FIGCAPTION') {
+        captiontext = parent.lastChild.textContent;
+      }
+    }
+    let figcaption = editor.dom.create('figcaption', {}, captiontext);
+    node.appendChild(figcaption);
+  }
+  else {
+    node = editor.dom.create('img');
+    for (let key in values) {
+      if (key == 'data-has-caption') {
+        continue;
+      }
+      if (key == 'data-file-id' && !values[key]) {
+        continue;
+      }
+      node.setAttribute(key, values[key]);
+    }
   }
 
-  return img.outerHTML;
+  return node.outerHTML;
 }
