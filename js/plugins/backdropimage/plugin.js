@@ -15,12 +15,17 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
       api.setActive(false);
       editor.on('SelectionChange', function () {
         let node = editor.selection.getNode();
-        // @todo <figure> tags (nested)
         if (node.nodeName == 'IMG') {
           api.setActive(true);
         }
         else {
           api.setActive(false);
+        }
+      });
+      editor.on('dblclick', function (ev) {
+        let node = editor.selection.getNode();
+        if (node.nodeName == 'IMG') {
+          backdropimageTools.backdropDialog(editor);
         }
       });
     }
@@ -58,9 +63,15 @@ backdropimageTools.backdropDialog = function (editor) {
   let saveCallback = function(returnValues) {
     let image = backdropimageTools.buildImage(editor, returnValues);
     let selected = editor.selection.getNode();
-    // This has been a nested figure tag, but now becomes an img tag.
-    if (selected.nodeName == 'IMG' && selected.parentNode && selected.parentNode.nodeName == 'FIGURE') {
-      selected.parentNode.remove();
+    if (selected.nodeName == 'IMG') {
+      let parentFigure = editor.dom.getParents(selected, 'FIGURE');
+      let parentLink = editor.dom.getParents(selected, 'A');
+      if (parentFigure.length) {
+        parentFigure[0].remove();
+      }
+      else if (parentLink.length) {
+        parentLink[0].remove();
+      }
     }
     editor.execCommand('mceInsertContent', false, image);
   };
@@ -90,12 +101,14 @@ backdropimageTools.existingValues = function (editor) {
       }
       existingValues[name] = node.attributes[name]['value'];
     }
-  }
-  if (node.parentNode && node.parentNode.nodeName == 'FIGURE') {
-    let parent = node.parentNode;
-    existingValues['data-has-caption'] = 1;
-    if (parent.hasAttribute('data-align')) {
-      existingValues['data-align'] = parent.getAttribute('data-align');
+
+    let parentFigure = editor.dom.getParents(node, 'FIGURE');
+    if (parentFigure.length) {
+      existingValues['data-has-caption'] = 1;
+      let parent = parentFigure[0];
+      if (parent.hasAttribute('data-align')) {
+        existingValues['data-align'] = parent.getAttribute('data-align');
+      }
     }
   }
 
@@ -132,14 +145,29 @@ backdropimageTools.buildImage = function (editor, returnValues) {
       }
       img.setAttribute(key, values[key]);
     }
-    node.appendChild(img);
+
+    let selected = editor.selection.getNode();
+    let parentLink = editor.dom.getParents(selected, 'A');
+    if (parentLink.length) {
+      let link = parentLink[0].cloneNode(false);
+      link.removeAttribute('data-mce-href');
+      link.removeAttribute('data-mce-selected');
+      link.appendChild(img);
+      node.appendChild(link);
+    }
+    else {
+      node.appendChild(img);
+    }
 
     let captiontext = 'My caption';
-    let selected = editor.selection.getNode();
-    if (selected.parentNode && selected.parentNode.nodeName == 'FIGURE') {
-      let parent = selected.parentNode;
-      if (parent.lastChild && parent.lastChild.nodeName == 'FIGCAPTION') {
-        captiontext = parent.lastChild.textContent;
+    let parentFigure = editor.dom.getParents(selected, 'FIGURE');
+    if (parentFigure.length) {
+      let parent = parentFigure[0];
+      for (let i = 0; i < parent.childNodes.length; i++) {
+        if (parent.childNodes[i].nodeName == 'FIGCAPTION') {
+          captiontext = parent.childNodes[i].textContent;
+          break;
+        }
       }
     }
     let figcaption = editor.dom.create('figcaption', {}, captiontext);
