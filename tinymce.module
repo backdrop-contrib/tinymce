@@ -180,13 +180,13 @@ function tinymce_tinymce_external_plugins($format) {
     'backdroplink' => array(
       'plugin_path' => $module_url . '/js/plugins/backdroplink/plugin.js',
       'variables' => array(
-        'linkDialogUrl' => $link_dialog_url,
+        'backdroplinkDialogUrl' => $link_dialog_url,
       ),
     ),
     'backdropimage' => array(
       'plugin_path' => $module_url . '/js/plugins/backdropimage/plugin.js',
       'variables' => array(
-        'imageDialogUrl' => $image_dialog_url,
+        'backdropimageDialogUrl' => $image_dialog_url,
       ),
     ),
   );

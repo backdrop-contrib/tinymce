@@ -56,7 +56,7 @@ let backdropimageTools = {};
  * Helper function.
  */
 backdropimageTools.backdropDialog = function (editor) {
-  let dialogUrl = editor.options.get('imageDialogUrl');
+  let dialogUrl = editor.options.get('backdropimageDialogUrl');
   let dialogSettings = {dialogClass: 'editor-image-dialog'};
   let existingValues = backdropimageTools.existingValues(editor);
 
