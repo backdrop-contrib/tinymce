@@ -138,14 +138,15 @@ backdroplinkTools.buildLink = function (editor, returnValues) {
     a.setAttribute(key, values[key]);
   }
 
-  // @todo links on img nested in figure behave odd.
-  // firstChild, lastChild in backdropimage - wrong.
   let node = editor.selection.getNode();
   if (node.nodeName == 'IMG') {
     a.appendChild(node);
   }
-  else if (node.firstChild && node.firstChild.nodeName == 'IMG') {
-    a.appendChild(node.firstChild);
+  else if (node.nodeName == 'A' && node.childNodes.length) {
+    for (let i = 0; i < node.childNodes.length; i++) {
+      let clone = node.childNodes[i].cloneNode(true);
+      a.appendChild(clone);
+    }
   }
   else {
     if (!textContent.length) {

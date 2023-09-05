@@ -174,6 +174,8 @@ backdropimageTools.buildImage = function (editor, returnValues) {
     node.appendChild(figcaption);
   }
   else {
+    // @todo Switching from figure to image (uncheck caption setting) removes
+    // link around image. Probably a bug in backdropimage plugin.
     node = editor.dom.create('img');
     for (let key in values) {
       if (key == 'data-has-caption') {
