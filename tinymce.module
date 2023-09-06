@@ -9,52 +9,32 @@
 function tinymce_editor_info() {
   $editors['tinymce'] = array(
     'label' => t('TinyMCE Editor'),
-    'settings callback' => '_tinymce_settings',
     'default settings' => array(
       'tinymce_settings' => array(
         'profile' => 'default',
         'skin' => 'oxide',
       ),
+      'image_browser' => array(
+        'enable' => 1,
+      ),
     ),
     'library' => array('tinymce', 'backdrop.tinymce'),
+    'file' => 'tinymce.admin.inc',
+    'settings callback' => '_tinymce_settings_form',
     'js settings callback' => '_tinymce_js_settings',
   );
   return $editors;
 }
 
 /**
- * Custom callback for filter form.
+ * Implements hook_form_FORM_ID_alter().
  */
-function _tinymce_settings(&$form, $form_state, $format) {
-  $elements = array();
-  $settings = $format->editor_settings;
-
-  $elements['tinymce_settings'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Editor settings'),
-  );
-  $elements['tinymce_settings']['profile'] = array(
-    '#title' => t('Editor profile'),
-    '#type' => 'select',
-    '#options' => _tinymce_get_profile_options(),
-    '#default_value' => $settings['tinymce_settings']['profile'],
-  );
-  $elements['tinymce_settings']['skin'] = array(
-    '#title' => t('Editor skin'),
-    '#type' => 'select',
-    '#options' => array(
-      'oxide' => t('Light'),
-      'oxide-dark' => t('Dark'),
-     ),
-    '#default_value' => $settings['tinymce_settings']['skin'],
-  );
-
-  $elements['tinymce_settings']['image'] = filter_editor_image_upload_settings_form($format);
-  $elements['tinymce_settings']['image']['#parents'] = array('editor_settings', 'image_upload');
-  $elements['tinymce_settings']['file'] = filter_editor_file_upload_settings_form($format);
-  $elements['tinymce_settings']['file']['#parents'] = array('editor_settings', 'file_upload');
-
-  return $elements;
+function tinymce_form_filter_format_editor_image_form_alter(&$form, $form_state) {
+  $format = $form_state['format'];
+  if ($format->editor === 'tinymce' && !$format->editor_settings['image_browser']['enable']) {
+    // Suppress library view based on setting.
+    $form['image']['src']['#access'] = FALSE;
+  }
 }
 
 /**
@@ -81,7 +61,9 @@ function _tinymce_js_settings($format, $existing_settings) {
 
   // @todo where to get these from? textfield?
   if (1) {
-    $options['tiny_options']['content_css'] = '/core/themes/basis/css/skin.css';
+    $options['tiny_options']['content_css'] = array(
+      '/core/themes/basis/css/skin.css',
+    );
   }
 
   // Collect additional TinyMCE plugins.
