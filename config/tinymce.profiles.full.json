@@ -2,11 +2,12 @@
     "_config_name": "tinymce.profiles.full",
     "name": "full",
     "label": "Full",
+    "filter_allowed_html": "a,em,strong,cite,blockquote,code,ul,ol,li,dl,dt,dd,h2,h3,h4,h5,p,img,figure,figcaption,pre,details,summary,div,span,table,caption,tr,th,td,s,sub,sup",
     "tiny_options": {
         "branding": false,
         "promotion": false,
         "image_caption": true,
-        "plugins": "accordion advlist autoresize charmap code codesample emoticons fullscreen help backdropimage insertdatetime link lists searchreplace table visualblocks visualchars wordcount",
+        "plugins": "accordion advlist autoresize charmap code codesample emoticons fullscreen help backdropimage insertdatetime link lists save searchreplace table visualblocks visualchars wordcount",
         "toolbar": "bold italic blockquote | styles | bullist numlist outdent indent | alignleft aligncenter alignright | backdroplink unlink | backdropimage | fullscreen",
         "menubar": "edit view insert format tools table help",
         "contextmenu": "backdroplink backdropimage",

@@ -2,6 +2,7 @@
     "_config_name": "tinymce.profiles.small",
     "name": "small",
     "label": "Small",
+    "filter_allowed_html": "a,em,strong,cite,blockquote,ul,ol,li,h3,h4,h5,p,span",
     "tiny_options": {
         "branding": false,
         "promotion": false,

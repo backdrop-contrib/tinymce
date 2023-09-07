@@ -38,6 +38,28 @@ function tinymce_form_filter_format_editor_image_form_alter(&$form, $form_state)
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function tinymce_form_filter_admin_format_form_alter(&$form, $form_state) {
+  $form['#attached']['js'][] = backdrop_get_path('module', 'tinymce') . '/js/tinymce-admin.js';
+  $all_profiles = config_get_names_with_prefix('tinymce.profile');
+  $featurelist = array();
+  foreach ($all_profiles as $config_name) {
+    $config = config($config_name);
+    $profile_name = $config->get('name');
+    $taglist = $config->get('filter_allowed_html');
+    $tags = ($taglist) ? explode(',', $taglist) : array();
+    $featurelist[$profile_name] = $tags;
+  }
+  $form['#attached']['js'][] = array(
+    'type' => 'setting',
+    'data' => array(
+      'tinymceprofiletags' => $featurelist,
+    ),
+  );
+}
+
+/**
  * Custom callback for JavaScript settings.
  */
 function _tinymce_js_settings($format, $existing_settings) {
@@ -56,7 +78,6 @@ function _tinymce_js_settings($format, $existing_settings) {
     // Prevent any style attributes by setting valid list to empty. All event
     // attributes (on*) are excluded by default by DOMPurify.
     $options['tiny_options']['valid_styles'] = array('*' => '');
-    // @todo provide a list of needed tags and put into filter settings via js.
   }
 
   // @todo where to get these from? textfield?

@@ -2,6 +2,7 @@
     "_config_name": "tinymce.profiles.default",
     "name": "default",
     "label": "Default",
+    "filter_allowed_html": "a,em,strong,cite,blockquote,code,ul,ol,li,dl,dt,dd,h2,h3,h4,h5,p,img,figure,figcaption,pre,div,span",
     "tiny_options": {
         "branding": false,
         "promotion": false,
