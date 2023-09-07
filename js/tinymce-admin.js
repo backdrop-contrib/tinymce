@@ -44,8 +44,8 @@ Backdrop.behaviors.tinymceAdmin = {
       for (let n = 0; n < requiredHtml.length; n++) {
         let ruleDefinition = requiredHtml[n];
         ruleDefinition.required = true;
-        let buttonRule = new Backdrop.EditorFeatureHTMLRule(ruleDefinition);
-        feature.addHTMLRule(buttonRule);
+        let profileRule = new Backdrop.EditorFeatureHTMLRule(ruleDefinition);
+        feature.addHTMLRule(profileRule);
       }
       list[profile] = feature;
     }
