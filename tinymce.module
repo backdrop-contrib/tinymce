@@ -90,6 +90,10 @@ function _tinymce_js_settings($format, $existing_settings) {
   // Collect additional TinyMCE plugins.
   $external_plugins = module_invoke_all('tinymce_external_plugins', $format);
   foreach ($external_plugins as $name => $plugin) {
+    if (strpos($options['tiny_options']['plugins'], $name) === FALSE) {
+      // Do not load plugin if not needed.
+      continue;
+    }
     $options['tiny_options']['external_plugins'][$name] = $plugin['plugin_path'];
     if (!empty($plugin['variables'])) {
       foreach ($plugin['variables'] as $key => $value) {
