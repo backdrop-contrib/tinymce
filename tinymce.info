@@ -2,6 +2,10 @@ type = module
 name = TinyMCE Editor
 description = Integrates TinyMCE as WYSIWYG editor for content.
 tags[] = Text Editors
+tags[] = Formats
+package = User Interface
+
 dependencies[] = filter
 
 backdrop = 1.x
+configure = admin/config/content/formats
