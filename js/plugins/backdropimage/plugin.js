@@ -170,7 +170,6 @@ backdropimageTools.buildImage = function (editor, returnValues) {
   let values = returnValues.attributes;
   // @todo width/height... where?
   let node;
-  console.log(returnValues);
 
   if (values['data-has-caption']) {
     node = editor.dom.create('figure');
@@ -204,7 +203,7 @@ backdropimageTools.buildImage = function (editor, returnValues) {
       let parent = parentFigure[0];
       for (let i = 0; i < parent.childNodes.length; i++) {
         if (parent.childNodes[i].nodeName == 'FIGCAPTION') {
-          captiontext = parent.childNodes[i].textContent;// @todo can be tags.
+          captiontext = parent.childNodes[i].innerHTML;
           break;
         }
       }
