@@ -28,6 +28,52 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
           backdropimageTools.backdropDialog(editor);
         }
       });
+      // Parser fires when the editor initializes, or the code plugin submits.
+      editor.parser.addAttributeFilter('data-caption', function (nodes) {
+        for (let i = 0; i < nodes.length; i++) {
+          // These "node" are AstNode, not dom node.
+          // @see https://www.tiny.cloud/docs/tinymce/6/apis/tinymce.html.node/#Node
+          if (nodes[i].parent.name == 'p') {
+            nodes[i].parent.unwrap();
+          }
+          let img = nodes[i].clone();
+          let caption = backdropimageTools.attributeToCaption(img.attr('data-caption'));
+          let fig = new tinymce.html.Node('figure', 1);
+          fig.append(img);
+          fig.append(caption);
+          img.attr('data-caption', null);
+
+          nodes[i].replace(fig);
+        }
+      });
+      // Serializer fires when saving, opening with code plugin, or switching
+      // filter formatting options.
+      editor.serializer.addNodeFilter('figure', function (nodes) {
+        for (let i = 0; i < nodes.length; i++) {
+          let childImgs = nodes[i].getAll('img');
+          if (!childImgs.length) {
+            nodes[i].remove();
+            continue;
+          }
+          let img = childImgs[0].clone();
+          let captions = nodes[i].getAll('figcaption');
+          if (captions.length) {
+            let captionContent = captions[0].children();
+            let content = backdropimageTools.captionAstNodeToString(editor, captionContent);
+            img.attr('data-caption', content);
+          }
+          // Also cleanup that...
+          img.attr('data-mce-src', null);
+          // To p or not to p - tiny wraps it, anyway, but filter module doesn't handle well.
+          let p = new tinymce.html.Node('p', 1);
+          if (nodes[i].attr('data-align')) {
+            img.attr('data-align', nodes[i].attr('data-align'));
+          }
+          nodes[i].wrap(p);
+
+          nodes[i].replace(img);
+        }
+      });
     }
   });
 
@@ -101,14 +147,9 @@ backdropimageTools.existingValues = function (editor) {
       }
       existingValues[name] = node.attributes[name]['value'];
     }
-
     let parentFigure = editor.dom.getParents(node, 'FIGURE');
     if (parentFigure.length) {
       existingValues['data-has-caption'] = 1;
-      let parent = parentFigure[0];
-      if (parent.hasAttribute('data-align')) {
-        existingValues['data-align'] = parent.getAttribute('data-align');
-      }
     }
   }
 
@@ -129,15 +170,13 @@ backdropimageTools.buildImage = function (editor, returnValues) {
   let values = returnValues.attributes;
   // @todo width/height... where?
   let node;
+  console.log(returnValues);
 
   if (values['data-has-caption']) {
     node = editor.dom.create('figure');
-    if (values['data-align']) {
-      node.setAttribute('data-align', values['data-align']);
-    }
     let img = editor.dom.create('img');
     for (let key in values) {
-      if (key == 'data-has-caption' || key == 'data-align') {
+      if (key == 'data-has-caption') {
         continue;
       }
       if (key == 'data-file-id' && !values[key]) {
@@ -159,13 +198,13 @@ backdropimageTools.buildImage = function (editor, returnValues) {
       node.appendChild(img);
     }
 
-    let captiontext = 'My caption';
+    let captiontext = 'My caption';// @todo configurable?
     let parentFigure = editor.dom.getParents(selected, 'FIGURE');
     if (parentFigure.length) {
       let parent = parentFigure[0];
       for (let i = 0; i < parent.childNodes.length; i++) {
         if (parent.childNodes[i].nodeName == 'FIGCAPTION') {
-          captiontext = parent.childNodes[i].textContent;
+          captiontext = parent.childNodes[i].textContent;// @todo can be tags.
           break;
         }
       }
@@ -187,6 +226,66 @@ backdropimageTools.buildImage = function (editor, returnValues) {
       node.setAttribute(key, values[key]);
     }
   }
-
   return node.outerHTML;
+}
+
+/**
+ * Helper function to parse an array of AstNodes into a string.
+ *
+ * @param object editor
+ * @param array captionContent
+ *
+ * @return string
+ */
+backdropimageTools.captionAstNodeToString = function (editor, captionContent) {
+  let content = '';
+  if (!captionContent.length) {
+    return content;
+  }
+  let allowedTags = ['a', 'em', 'strong'];
+  let dummy = editor.dom.create('figcaption');
+
+  for (let i = 0; i < captionContent.length; i++) {
+    if (captionContent[i].type == 3) {
+      dummy.append(document.createTextNode(captionContent[i].value));
+    }
+    else if (captionContent[i].type == 1) {
+      if (allowedTags.includes(captionContent[i].name)) {
+        dummy.append(editor.dom.create(captionContent[i].name, {}, captionContent[i].firstChild.value));
+      }
+    }
+  }
+  return dummy.innerHTML;
+}
+
+/**
+ * Helper function to turn an attribute string into an AstNode instance.
+ *
+ * @param string attrContent
+ *
+ * @return object
+ */
+backdropimageTools.attributeToCaption = function (attrContent) {
+  let allowedTags = ['A', 'EM', 'STRONG'];
+  let caption = new tinymce.html.Node('figcaption', 1);
+  let domNode = document.createElement('figcaption');
+  domNode.innerHTML = attrContent;
+
+  for (let i = 0; i < domNode.childNodes.length; i++) {
+    let n = domNode.childNodes[i];
+    if (n.nodeName == '#text') {
+      let text = new tinymce.html.Node('#text', 3);
+      text.value = n.textContent;
+      caption.append(text);
+    }
+    else if (allowedTags.includes(n.nodeName)) {
+      let tag = n.nodeName.toLowerCase();
+      let node = new tinymce.html.Node(tag, 1);
+      let text = new tinymce.html.Node('#text', 3);
+      text.value = n.innerText;
+      node.append(text);
+      caption.append(node);
+    }
+  }
+  return caption;
 }
