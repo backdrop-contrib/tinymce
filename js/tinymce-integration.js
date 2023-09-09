@@ -39,7 +39,7 @@
   };
 
   /**
-   * copy past from cke
+   * Mostly copy-paste from ckeditor module.
    */
   Backdrop.tinymce = {
     saveCallback: null,
