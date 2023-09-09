@@ -39,6 +39,9 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
           let img = nodes[i].clone();
           let caption = backdropimageTools.attributeToCaption(img.attr('data-caption'));
           let fig = new tinymce.html.Node('figure', 1);
+          if (img.attr('data-align')) {
+            fig.attr('class', 'align-' + img.attr('data-align'));
+          }
           fig.append(img);
           fig.append(caption);
           img.attr('data-caption', null);
@@ -172,7 +175,11 @@ backdropimageTools.buildImage = function (editor, returnValues) {
   let node;
 
   if (values['data-has-caption']) {
-    node = editor.dom.create('figure');
+    let figAttrib = {};
+    if (returnValues.attributes['data-align']) {
+      figAttrib['class'] = 'align-' + returnValues.attributes['data-align'];
+    }
+    node = editor.dom.create('figure', figAttrib);
     let img = editor.dom.create('img');
     for (let key in values) {
       if (key == 'data-has-caption') {
