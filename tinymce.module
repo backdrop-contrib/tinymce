@@ -84,6 +84,7 @@ function _tinymce_js_settings($format, $existing_settings) {
   if (1) {
     $options['tiny_options']['content_css'] = array(
       '/core/themes/basis/css/skin.css',
+      '/modules/tinymce/css/tinymce-content.css',
     );
   }
 
