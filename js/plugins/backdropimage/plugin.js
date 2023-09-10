@@ -33,6 +33,11 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
         for (let i = 0; i < nodes.length; i++) {
           // These "node" are AstNode, not dom node.
           // @see https://www.tiny.cloud/docs/tinymce/6/apis/tinymce.html.node/#Node
+          let link;
+          if (nodes[i].parent.name == 'a') {
+            link = nodes[i].parent.clone();
+            nodes[i].parent.unwrap();
+          }
           if (nodes[i].parent.name == 'p') {
             nodes[i].parent.unwrap();
           }
@@ -42,7 +47,13 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
           if (img.attr('data-align')) {
             fig.attr('class', 'align-' + img.attr('data-align'));
           }
-          fig.append(img);
+          if (link) {
+            link.append(img);
+            fig.append(link);
+          }
+          else {
+            fig.append(img);
+          }
           fig.append(caption);
           img.attr('data-caption', null);
 
