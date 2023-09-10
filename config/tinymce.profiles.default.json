@@ -9,8 +9,7 @@
         "menubar": false,
         "toolbar": "bold italic blockquote | styles | bullist numlist | alignleft aligncenter alignright | backdroplink unlink | backdropimage | code fullscreen",
         "plugins": "backdroplink link lists advlist backdropimage fullscreen code autoresize",
-        "image_caption": true,
-        "contextmenu": "backdropimage table",
+        "contextmenu": "backdropimage backdroplink",
         "style_formats": [
             {
                 "title": "Headings",
