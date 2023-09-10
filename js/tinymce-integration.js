@@ -95,7 +95,9 @@
 
   // Respond to dialogs that are closed, removing the current save handler.
   $(window).on('dialog:afterclose', function (e, dialog, $element) {
-    tinymce.activeEditor.iframeElement.focus();
+    if (tinymce.activeEditor) {
+      tinymce.activeEditor.iframeElement.focus();
+    }
     if (Backdrop.tinymce.saveCallback) {
       Backdrop.tinymce.saveCallback = null;
     }
