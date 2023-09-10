@@ -2,6 +2,10 @@
  * @file
  * Stylesheet for editor content.
  */
+img {
+  max-width: 100%;
+  height: auto;
+}
 p > img[data-align="left"] {
   float: left;
   margin: .5rem 1rem .5rem 0;
