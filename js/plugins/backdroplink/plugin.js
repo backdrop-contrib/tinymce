@@ -140,7 +140,9 @@ backdroplinkTools.buildLink = function (editor, returnValues) {
 
   let node = editor.selection.getNode();
   if (node.nodeName == 'IMG') {
-    a.appendChild(node);
+    let clone = node.cloneNode(true);
+    clone.removeAttribute('data-mce-src');
+    a.appendChild(clone);
   }
   else if (node.nodeName == 'A' && node.childNodes.length) {
     for (let i = 0; i < node.childNodes.length; i++) {
