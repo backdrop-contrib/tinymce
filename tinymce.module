@@ -1,6 +1,7 @@
 <?php
 /**
  * @file
+ * TinyMCE module hook implementations and helper functions.
  */
 
 /**
@@ -103,7 +104,6 @@ function _tinymce_js_settings($format, $existing_settings) {
     }
   }
 
-  // @todo another alter hook?
   return $options;
 }
 
@@ -117,7 +117,7 @@ function tinymce_library_info() {
     'website' => 'https://www.tiny.cloud/',
     'version' => '6.7.0',
     'js' => array(
-      $path . '/libraries/tinymce/js/tinymce/tinymce.min.js' =>  array(
+      $path . '/libraries/tinymce/js/tinymce/tinymce.min.js' => array(
         'preprocess' => FALSE,
         'group' => JS_LIBRARY,
       ),
@@ -131,7 +131,7 @@ function tinymce_library_info() {
       $path . '/js/tinymce-integration.js' => array(),
     ),
     'dependencies' => array(
-      array('filter', 'filter'),//?
+      array('filter', 'filter'),
       array('system', 'backdrop.ajax'),
       array('tinymce', 'tinymce'),
     ),
@@ -173,14 +173,14 @@ function tinymce_tinymce_external_plugins($format) {
     'query' => array(
       'token' => filter_editor_dialog_token($format, 'link'),
       'calling_path' => $_GET['q'],
-  ));
+    ));
   $link_dialog_url = url('editor/dialog/link/' . $format->format, $link_url_opts);
 
   $img_url_opts = array(
     'query' => array(
       'token' => filter_editor_dialog_token($format, 'image'),
       'calling_path' => $_GET['q'],
-  ));
+    ));
   $image_dialog_url = url('editor/dialog/image/' . $format->format, $img_url_opts);
 
   $module_url = base_path() . backdrop_get_path('module', 'tinymce');
