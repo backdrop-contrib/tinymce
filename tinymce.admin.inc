@@ -34,6 +34,17 @@ function _tinymce_settings_form(&$form, $form_state, $format) {
      ),
     '#default_value' => $settings['tinymce_settings']['skin'],
   );
+  $elements['tabs']['tinymce_settings']['content_css'] = array(
+    '#title' => t('Content CSS files'),
+    '#type' => 'textarea',
+    '#default_value' => $settings['tinymce_settings']['content_css'],
+    '#rows' => 3,
+    '#attributes' => array(
+      'placeholder' => '/core/themes/basis/css/skin.css',
+    ),
+    '#description' => t('Add URLs to CSS files, the editor should use to display its content, one file per line.'),
+  );
+
   $elements['tabs']['image_browser'] = array(
     '#type' => 'fieldset',
     '#title' => t('Image browser'),
@@ -65,6 +76,22 @@ function _tinymce_settings_form(&$form, $form_state, $format) {
  * Validation callback for settings form.
  */
 function _tinymce_settings_form_validate($form, &$form_state) {
-  // @todo why is type vertical_tabs part of form submission?
   unset($form_state['values']['editor_settings']['tabs']);
+
+  if (!empty($form_state['values']['editor_settings']['tinymce_settings']['content_css'])) {
+    $content_css = trim($form_state['values']['editor_settings']['tinymce_settings']['content_css']);
+    $files = explode("\n", $content_css);
+    $files_trimmed = array();
+    foreach ($files as $file) {
+      $file = trim($file);
+      if (!preg_match('/.+\.css$/', $file)) {
+        form_set_error('editor_settings][tinymce_settings][content_css', t('At least one URL to content CSS does not end with ".css".'));
+      }
+      if (!valid_url($file, TRUE) && !valid_url($file, FALSE)) {
+        form_set_error('editor_settings][tinymce_settings][content_css', t('At least one URL to content CSS is invalid.'));
+      }
+      $files_trimmed[] = $file;
+    }
+    $form_state['values']['editor_settings']['tinymce_settings']['content_css'] = implode("\n", $files_trimmed);
+  }
 }

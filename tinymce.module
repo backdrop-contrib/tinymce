@@ -14,6 +14,7 @@ function tinymce_editor_info() {
       'tinymce_settings' => array(
         'profile' => 'default',
         'skin' => 'oxide',
+        'content_css' => NULL,
       ),
       'image_browser' => array(
         'enable' => 1,
@@ -81,13 +82,16 @@ function _tinymce_js_settings($format, $existing_settings) {
     $options['tiny_options']['valid_styles'] = array('*' => '');
   }
 
-  // @todo where to get these from? textfield?
-  if (1) {
-    $options['tiny_options']['content_css'] = array(
-      '/core/themes/basis/css/skin.css',
-      '/modules/tinymce/css/tinymce-content.css',
-    );
+  $options['tiny_options']['content_css'] = array(
+    base_path() . backdrop_get_path('module', 'tinymce') . '/css/tinymce-content.css',
+  );
+  if (!empty($settings['tinymce_settings']['content_css'])) {
+    $css_files = explode("\n", trim($settings['tinymce_settings']['content_css']));
+    foreach ($css_files as $file) {
+      $options['tiny_options']['content_css'][] = trim($file);
+    }
   }
+  // @todo Maybe add an alter hook for content_css.
 
   // Collect additional TinyMCE plugins.
   $external_plugins = module_invoke_all('tinymce_external_plugins', $format);
