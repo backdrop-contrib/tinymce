@@ -172,7 +172,14 @@ backdropimageTools.existingValues = function (editor) {
 backdropimageTools.buildImage = function (editor, returnValues) {
   let values = returnValues.attributes;
   // @todo width/height... where?
-  let node;
+  let node, link;
+  let selected = editor.selection.getNode();
+  let parentLink = editor.dom.getParents(selected, 'A');
+  if (parentLink.length) {
+    link = parentLink[0].cloneNode(false);
+    link.removeAttribute('data-mce-href');
+    link.removeAttribute('data-mce-selected');
+  }
 
   if (values['data-has-caption']) {
     let figAttrib = {};
@@ -191,12 +198,7 @@ backdropimageTools.buildImage = function (editor, returnValues) {
       img.setAttribute(key, values[key]);
     }
 
-    let selected = editor.selection.getNode();
-    let parentLink = editor.dom.getParents(selected, 'A');
-    if (parentLink.length) {
-      let link = parentLink[0].cloneNode(false);
-      link.removeAttribute('data-mce-href');
-      link.removeAttribute('data-mce-selected');
+    if (link) {
       link.appendChild(img);
       node.appendChild(link);
     }
@@ -219,9 +221,7 @@ backdropimageTools.buildImage = function (editor, returnValues) {
     node.appendChild(figcaption);
   }
   else {
-    // @todo Switching from figure to image (uncheck caption setting) removes
-    // link around image. Probably a bug in backdropimage plugin.
-    node = editor.dom.create('img');
+    let img = editor.dom.create('img');
     for (let key in values) {
       if (key == 'data-has-caption') {
         continue;
@@ -229,7 +229,14 @@ backdropimageTools.buildImage = function (editor, returnValues) {
       if (key == 'data-file-id' && !values[key]) {
         continue;
       }
-      node.setAttribute(key, values[key]);
+      img.setAttribute(key, values[key]);
+    }
+    if (link) {
+      link.appendChild(img);
+      node = link;
+    }
+    else {
+      node = img;
     }
   }
   return node.outerHTML;
