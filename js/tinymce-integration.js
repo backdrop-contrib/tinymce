@@ -93,11 +93,15 @@
     }
   });
 
-  // Respond to dialogs that are closed, removing the current save handler.
-  $(window).on('dialog:afterclose', function (e, dialog, $element) {
-    if (tinymce.activeEditor) {
+  // Fires when hitting dialog Save or Close buttons.
+  $(window).on('dialogclose', function(event, ui) {
+    if (event.target.id == 'tinymce-modal' && tinymce.activeEditor) {
       tinymce.activeEditor.iframeElement.focus();
     }
+  });
+
+  // Respond to dialogs that are closed, removing the current save handler.
+  $(window).on('dialog:afterclose', function (e, dialog, $element) {
     if (Backdrop.tinymce.saveCallback) {
       Backdrop.tinymce.saveCallback = null;
     }
