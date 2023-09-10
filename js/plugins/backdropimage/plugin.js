@@ -194,7 +194,7 @@ backdropimageTools.existingValues = function (editor) {
  */
 backdropimageTools.buildImage = function (editor, returnValues) {
   let values = returnValues.attributes;
-  // @todo Image dimenstions.
+  // @todo Image dimensions.
   // @see https://github.com/backdrop-contrib/tinymce/issues/5
   let node, link;
   let selected = editor.selection.getNode();

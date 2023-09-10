@@ -47,8 +47,8 @@
       var classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
       classes.push('editor-dialog');
       var $content = $('<div class="tinymce-dialog-loading"><span class="tinymce-dialog-loading-link"><a>' + Backdrop.t('Loading...') + '</a></span></div>');
-      var $target = $('.tox-edit-area');//hm...
-      //$target.css('position', 'relative');//??
+      var $target = $('.tox-edit-area');
+      $target.css('position', 'relative');
       $content.appendTo($target);
 
       dialogSettings = {
@@ -62,13 +62,13 @@
         dialog: dialogSettings,
         selector: '.tinymce-dialog-loading-link',
         url: url,
-        event: 'tinymce-internal.tinymce',//not sure
+        event: 'tinymce-internal.tinymce',
         progress: {'type': 'throbber'},
         submit: {
-          editor_object: existingValues// todo filter module magic
+          editor_object: existingValues
         }
       });
-      // Trigger ajax.
+      // Trigger AJAX event to open modal.
       $content.find('a')
           .on('click', function () { return false; })
           .trigger('tinymce-internal.tinymce');
