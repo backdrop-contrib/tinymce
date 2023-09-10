@@ -6,11 +6,15 @@ img {
   max-width: 100%;
   height: auto;
 }
-p > img[data-align="left"] {
+img[data-align="left"] {
   float: left;
   margin: .5rem 1rem .5rem 0;
 }
-p > img[data-align="right"] {
+img[data-align="right"] {
   float: right;
   margin: .5rem 0 .5rem 1rem;
+}
+figure img[data-align="left"],
+figure img[data-align="right"] {
+  float: none;
 }
