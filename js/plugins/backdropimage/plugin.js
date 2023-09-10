@@ -65,8 +65,9 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
             let content = backdropimageTools.captionAstNodeToString(editor, captionContent);
             img.attr('data-caption', content);
           }
-          // Also cleanup that...
+          // Also cleanup internal attributes.
           img.attr('data-mce-src', null);
+          img.attr('data-mce-selected', null);
           // To p or not to p - tiny wraps it, anyway, but filter module doesn't handle well.
           let p = new tinymce.html.Node('p', 1);
           if (nodes[i].attr('data-align')) {
@@ -74,7 +75,18 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
           }
           nodes[i].wrap(p);
 
-          nodes[i].replace(img);
+          let link;
+          let childLinks = nodes[i].getAll('a');
+          if (childLinks.length) {
+            link = childLinks[0].clone();
+            link.attr('data-mce-href', null);
+            link.attr('data-mce-selected', null);
+            link.append(img);
+            nodes[i].replace(link);
+          }
+          else {
+            nodes[i].replace(img);
+          }
         }
       });
     }
