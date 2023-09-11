@@ -4,8 +4,6 @@
     "label": "Small",
     "filter_allowed_html": "a,em,strong,cite,blockquote,ul,ol,li,h3,h4,h5,p,span",
     "tiny_options": {
-        "branding": false,
-        "promotion": false,
         "menubar": false,
         "toolbar": "bold italic blockquote | styles | bullist numlist | link unlink",
         "plugins": "link lists autoresize",

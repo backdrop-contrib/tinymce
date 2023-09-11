@@ -63,26 +63,41 @@ function tinymce_form_filter_admin_format_form_alter(&$form, $form_state) {
 
 /**
  * Custom callback for JavaScript settings.
+ *
+ * @param object $format
+ *   Filter format object.
+ * @param array $existing_settings
+ *   Settings collected so far (not used here).
+ *
+ * @return array
+ *   Options to get attached to the page as js settings.
  */
 function _tinymce_js_settings($format, $existing_settings) {
   global $language;
   $options = array();
   $settings = $format->editor_settings;
-  $filters = $format->filters;
 
-  // @todo make profiles an API? AdminUI?
+  // Load settings from JSON profile.
   $profile = $settings['tinymce_settings']['profile'];
   $options['tiny_options'] = config_get('tinymce.profiles.' . $profile, 'tiny_options');
-  $options['tiny_options']['language'] = $language->langcode;
-  $options['tiny_options']['browser_spellcheck'] = TRUE;
-  $options['tiny_options']['skin'] = $settings['tinymce_settings']['skin'];
 
-  if ($filters['filter_html']->status) {
-    // Prevent any style attributes by setting valid list to empty. All event
-    // attributes (on*) are excluded by default by DOMPurify.
+  // Merge defaults.
+  $tiny_defaults = array(
+    'branding' => FALSE,
+    'promotion' => FALSE,
+    'language' => $language->langcode,
+    'browser_spellcheck' => TRUE,
+  );
+  $options['tiny_options'] += $tiny_defaults;
+
+  // If the filter_html setting is enabled. The filter will remove any inline
+  // styles on content display, so we prevent to use them in the editor.
+  if ($format->filters['filter_html']->status) {
     $options['tiny_options']['valid_styles'] = array('*' => '');
   }
 
+  // Settings from admin UI.
+  $options['tiny_options']['skin'] = $settings['tinymce_settings']['skin'];
   $options['tiny_options']['content_css'] = array(
     base_path() . backdrop_get_path('module', 'tinymce') . '/css/tinymce-content.css',
   );
@@ -92,9 +107,8 @@ function _tinymce_js_settings($format, $existing_settings) {
       $options['tiny_options']['content_css'][] = trim($file);
     }
   }
-  // @todo Maybe add an alter hook for content_css.
 
-  // Collect additional TinyMCE plugins.
+  // Collect additional TinyMCE plugins from hook.
   $external_plugins = module_invoke_all('tinymce_external_plugins', $format);
   foreach ($external_plugins as $name => $plugin) {
     if (strpos($options['tiny_options']['plugins'], $name) === FALSE) {
