@@ -74,6 +74,7 @@ function _tinymce_js_settings($format, $existing_settings) {
   $profile = $settings['tinymce_settings']['profile'];
   $options['tiny_options'] = config_get('tinymce.profiles.' . $profile, 'tiny_options');
   $options['tiny_options']['language'] = $language->langcode;
+  $options['tiny_options']['browser_spellcheck'] = TRUE;
   $options['tiny_options']['skin'] = $settings['tinymce_settings']['skin'];
 
   if ($filters['filter_html']->status) {

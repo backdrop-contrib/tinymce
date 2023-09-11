@@ -27,6 +27,10 @@
         for (let item in format.editorSettings.backdrop) {
           editor.options.register(item, { processor: "string" });
         }
+        editor.on('PreInit', function (editor) {
+          // @see https://github.com/tinymce/tinymce/issues/4830
+          editor.target.contentDocument.documentElement.setAttribute('lang', options.language);
+        });
       };
 
       tinymce.init(options);
