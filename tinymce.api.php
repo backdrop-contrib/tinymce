@@ -8,14 +8,15 @@
  * Implements hook_tinymce_external_plugins().
  */
 function hook_tinymce_external_plugins($format) {
+  $module_url = base_path() . backdrop_get_path('module', 'mymodule');
   $plugins = array(
     // A simple plugin, just declare the path to it.
     'myplugin' => array(
-      'plugin_path' => backdrop_get_path('module', 'mymodule') . '/js/plugins/myplugin/plugin.js',
+      'plugin_path' => $module_url . '/js/plugins/myplugin/plugin.js',
     ),
     // A plugin that needs a special variable (string).
     'myotherplugin' => array(
-      'plugin_path' => backdrop_get_path('module', 'mymodule') . '/js/plugins/myotherplugin/plugin.js',
+      'plugin_path' => $module_url . '/js/plugins/myotherplugin/plugin.js',
       'variables' => array(
         'myotherpluginSpecialVariable' => _callback_to_get_value_based_on_format($format),
       ),
