@@ -123,6 +123,10 @@ function _tinymce_js_settings($format, $existing_settings) {
     }
   }
 
+  // Until https://github.com/backdrop-contrib/tinymce/issues/3 is addressed,
+  // prevent pasting images.
+  $options['tiny_options']['paste_data_images'] = FALSE;
+
   return $options;
 }
 
