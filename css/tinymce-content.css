@@ -1,6 +1,6 @@
 /**
  * @file
- * Stylesheet for editor content.
+ * Very basic stylesheet for editor content.
  */
 img {
   max-width: 100%;
@@ -14,7 +14,18 @@ img[data-align="right"] {
   float: right;
   margin: .5rem 0 .5rem 1rem;
 }
+img[data-align="center"] {
+  display: block;
+  margin: .5rem auto;
+}
 figure img[data-align="left"],
 figure img[data-align="right"] {
   float: none;
+}
+figure img[data-align="center"] {
+  display: inline;
+}
+figure.align-center {
+  display: table;
+  margin: .5em auto;
 }
