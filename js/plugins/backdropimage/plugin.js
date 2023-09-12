@@ -146,6 +146,16 @@ backdropimageTools.backdropDialog = function (editor) {
       }
     }
     editor.execCommand('mceInsertContent', false, image);
+    if (!returnValues.attributes.width && !returnValues.attributes.height) {
+      let src = returnValues.attributes.src;
+      let imgDomnode = editor.getBody().querySelector('[src="' + src + '"]');
+      let imgToSize = new Image();
+      imgToSize.onload = function() {
+        imgDomnode.setAttribute('width', this.width);
+        imgDomnode.setAttribute('height', this.height);
+      }
+      imgToSize.src = src;
+    }
   };
 
   Backdrop.tinymce.openDialog(editor, dialogUrl, existingValues, saveCallback, dialogSettings);
