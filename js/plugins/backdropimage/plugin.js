@@ -28,6 +28,15 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
           backdropimageTools.backdropDialog(editor);
         }
       });
+      editor.on('UpdateImageMetadata', function (ev) {
+        // The src gets a timestamp attached, so we search by "begins with" (^).
+        let imgDomnode = editor.getBody().querySelector('[src^="' + ev.data.src + '"]');
+        if (imgDomnode) {
+          imgDomnode.setAttribute('width', ev.data.width);
+          imgDomnode.setAttribute('height', ev.data.height);
+          imgDomnode.setAttribute('data-file-id', ev.data.fileId);
+        }
+      });
       // Parser fires when the editor initializes, or the code plugin submits.
       editor.parser.addAttributeFilter('data-caption', function (nodes) {
         for (let i = 0; i < nodes.length; i++) {

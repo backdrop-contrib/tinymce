@@ -22,6 +22,12 @@
       for (let item in format.editorSettings.backdrop) {
         options[item] = format.editorSettings.backdrop[item];
       }
+
+      // If image uploads are active, we also need the paste handler.
+      if (options.images_upload_url) {
+        options.images_upload_handler = tinymceImageUploadHandler;
+      }
+
       // Register additional string variables.
       options.setup = function (editor) {
         for (let item in format.editorSettings.backdrop) {
@@ -111,5 +117,62 @@
     }
   });
 
-
 })(Backdrop, jQuery);
+
+/**
+ * Custom image upload handler.
+ */
+const tinymceImageUploadHandler = function (blobInfo, progress) {
+  return new Promise( function (resolve, reject) {
+    const xhr = new XMLHttpRequest();
+    let myurl = tinymce.activeEditor.options.get('images_upload_url');
+    xhr.open('POST', myurl);
+
+    xhr.onerror = function () {
+      reject({ message: 'HTTP Error: ' + xhr.status, remove: true });
+    };
+
+    xhr.onload = function () {
+      if (xhr.status < 200 || xhr.status >= 300) {
+        reject({ message: 'HTTP Error: ' + xhr.status, remove: true });
+        return;
+      }
+
+      const json = JSON.parse(xhr.responseText);
+
+      if (!json) {
+        reject({ message: 'Invalid JSON response', remove: true });
+        return;
+      }
+
+      // Image validation errors.
+      if (!json.uploaded) {
+        if (json.errors) {
+          reject({ message: json.errors, remove: true });
+        }
+        else {
+          reject({ message: 'Upload failed', remove: true });
+        }
+        return;
+      }
+
+      resolve(json.location);
+
+      // Event to trigger setting data-file-id and dimensions in backdropimage.
+      let data = {
+        'src': json.location,
+        'fileId': json.fileId,
+        'width': json.width,
+        'height': json.height
+      };
+      setTimeout(function () {
+        tinymce.activeEditor.dispatch('UpdateImageMetadata', {'data': data});
+      }, 500);// @todo is this delay really necessary?
+    };
+
+    const formData = new FormData();
+    formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+    xhr.send(formData);
+  });
+};

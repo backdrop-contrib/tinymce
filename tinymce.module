@@ -29,6 +29,24 @@ function tinymce_editor_info() {
 }
 
 /**
+ * Implements hook_menu().
+ */
+function tinymce_menu() {
+  $items['tinymce/upload/image/%filter_format'] = array(
+    'title' => 'Upload image',
+    'page callback' => 'tinymce_image_upload',
+    'page arguments' => array(3),
+    'access callback' => 'filter_dialog_access',
+    'access arguments' => array(3, 'image'),
+    'theme callback' => 'ajax_base_page_theme',
+    'delivery callback' => 'backdrop_json_deliver',
+    'type' => MENU_CALLBACK,
+    'file' => 'tinymce.pages.inc',
+  );
+  return $items;
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function tinymce_form_filter_format_editor_image_form_alter(&$form, $form_state) {
@@ -123,9 +141,25 @@ function _tinymce_js_settings($format, $existing_settings) {
     }
   }
 
-  // Until https://github.com/backdrop-contrib/tinymce/issues/3 is addressed,
-  // prevent pasting images.
-  $options['tiny_options']['paste_data_images'] = FALSE;
+  // Drag-and-drop upload.
+  if ($format->editor_settings['image_upload']['status']) {
+    $upload_url_opts = array(
+      'query' => array(
+        'token' => filter_editor_dialog_token($format, 'image'),
+        'calling_path' => $_GET['q'],
+      ));
+    if (!function_exists('image_gd_supported_extensions')) {
+      require BACKDROP_ROOT . '/' . backdrop_get_path('module', 'system') . '/image.gd.inc';
+    }
+    $extensions = image_gd_supported_extensions();
+    $options['tiny_options']['images_file_types'] = implode(',', $extensions);
+    $options['tiny_options']['images_upload_url'] = url('tinymce/upload/image/' . $format->format, $upload_url_opts);
+    $options['tiny_options']['automatic_uploads'] = TRUE;
+    $options['tiny_options']['images_reuse_filename'] = TRUE;
+  }
+  else {
+    $options['tiny_options']['paste_data_images'] = FALSE;
+  }
 
   return $options;
 }
