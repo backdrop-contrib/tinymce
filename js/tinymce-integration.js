@@ -166,8 +166,13 @@ const tinymceImageUploadHandler = function (blobInfo, progress) {
         'height': json.height
       };
       setTimeout(function () {
-        tinymce.activeEditor.dispatch('UpdateImageMetadata', {'data': data});
-      }, 500);// @todo is this delay really necessary?
+        let imgDomnode = tinymce.activeEditor.getBody().querySelector('[src^="' + data.src + '"]');
+        if (imgDomnode) {
+          imgDomnode.setAttribute('width', data.width);
+          imgDomnode.setAttribute('height', data.height);
+          imgDomnode.setAttribute('data-file-id', data.fileId);
+        }
+      }, 500);
     };
 
     const formData = new FormData();
