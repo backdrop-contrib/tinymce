@@ -41,19 +41,13 @@ const tinymceImageUploadHandler = function (blobInfo, progress) {
 
       resolve(json.location);
 
-      let data = {
-        'src': json.location,
-        'fileId': json.fileId,
-        'width': json.width,
-        'height': json.height
-      };
       // Update other attributes, TinyMCE doesn't take care of.
       setTimeout(function () {
-        let imgDomnode = tinymce.activeEditor.getBody().querySelector('[src^="' + data.src + '"]');
+        let imgDomnode = tinymce.activeEditor.getBody().querySelector('[src^="' + json.location + '"]');
         if (imgDomnode) {
-          imgDomnode.setAttribute('width', data.width);
-          imgDomnode.setAttribute('height', data.height);
-          imgDomnode.setAttribute('data-file-id', data.fileId);
+          imgDomnode.setAttribute('width', json.width);
+          imgDomnode.setAttribute('height', json.height);
+          imgDomnode.setAttribute('data-file-id', json.fileId);
         }
       }, 500);
     };
