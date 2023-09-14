@@ -90,7 +90,7 @@ function tinymce_form_filter_admin_format_form_alter(&$form, $form_state) {
  * @return array
  *   Options to get attached to the page as js settings.
  */
-function _tinymce_js_settings($format, $existing_settings) {
+function _tinymce_js_settings($format, array $existing_settings) {
   global $language;
   $options = array();
   $settings = $format->editor_settings;

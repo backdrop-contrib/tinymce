@@ -30,7 +30,9 @@ function tinymce_image_upload($format) {
     $validators['file_validate_size'] = array(parse_size($upload_settings['max_size']));
   }
   if ($upload_settings['max_dimensions']['width']) {
-    $validators['file_validate_image_resolution'] = array($upload_settings['max_dimensions']['width'] . 'x' . $upload_settings['max_dimensions']['height']);
+    $validators['file_validate_image_resolution'] = array(
+      $upload_settings['max_dimensions']['width'] . 'x' . $upload_settings['max_dimensions']['height'],
+    );
   }
 
   file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
