@@ -3,6 +3,8 @@
 Integrates [TinyMCE](https://www.tiny.cloud/) as alternative WYSIWYG editor in
 Backdrop CMS.
 
+![Screenshot of the full profile](https://raw.githubusercontent.com/backdrop-contrib/tinymce/1.x-1.x/screenshots/tinymce-full-profile.webp)
+
 This module is in an early stage of development. Testing and feedback is
  welcome, but it's not ready for productions sites, yet.
 
