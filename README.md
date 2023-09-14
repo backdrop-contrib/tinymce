@@ -15,14 +15,14 @@ Documentation is still pending, help with that task is highly appreciated!
 Compatible with the [Editor Image Dimension Sync](https://backdropcms.org/project/editorimgdimensionsync)
  module.
 
-### Why another WYSIWYG editor?###
+### Why another WYSIWYG editor?
 
 Because CKEditor might eventually not be the ideal solution for your site,
  especially its version 5.
 
 ## Installation
 
-- Install this module using the official [Backdrop CMS instructions](Install this module using the official Backdrop CMS instructions)
+- Install this module using the official [Backdrop CMS instructions](https://docs.backdropcms.org/documentation/extend-with-modules)
 - Visit the Text Editors and Formats page under Administration > Configuration > Content authoring (admin/config/content/formats)
 - Create or edit a format. In the "Editor" dropdown, select "TinyMCE"
 - Optionally select a profile and add custom content CSS URLs
