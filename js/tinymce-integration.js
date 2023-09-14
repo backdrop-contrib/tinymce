@@ -22,6 +22,12 @@
       for (let item in format.editorSettings.backdrop) {
         options[item] = format.editorSettings.backdrop[item];
       }
+
+      // If image uploads are active, we also need the paste handler.
+      if (options.images_upload_url) {
+        options.images_upload_handler = tinymceImageUploadHandler;
+      }
+
       // Register additional string variables.
       options.setup = function (editor) {
         for (let item in format.editorSettings.backdrop) {
@@ -110,6 +116,5 @@
       Backdrop.tinymce.saveCallback = null;
     }
   });
-
 
 })(Backdrop, jQuery);

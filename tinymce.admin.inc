@@ -31,7 +31,7 @@ function _tinymce_settings_form(&$form, $form_state, $format) {
     '#options' => array(
       'oxide' => t('Light'),
       'oxide-dark' => t('Dark'),
-     ),
+    ),
     '#default_value' => $settings['tinymce_settings']['skin'],
   );
   $elements['tabs']['tinymce_settings']['content_css'] = array(
@@ -60,14 +60,20 @@ function _tinymce_settings_form(&$form, $form_state, $format) {
     '#type' => 'fieldset',
     '#title' => t('Image upload'),
   );
+  $elements['tabs']['image_settings']['image'] = filter_editor_image_upload_settings_form($format);
+  $elements['tabs']['image_settings']['image']['#parents'] = array(
+    'editor_settings',
+    'image_upload',
+  );
   $elements['tabs']['file_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('File upload'),
   );
-  $elements['tabs']['image_settings']['image'] = filter_editor_image_upload_settings_form($format);
-  $elements['tabs']['image_settings']['image']['#parents'] = array('editor_settings', 'image_upload');
   $elements['tabs']['file_settings']['file'] = filter_editor_file_upload_settings_form($format);
-  $elements['tabs']['file_settings']['file']['#parents'] = array('editor_settings', 'file_upload');
+  $elements['tabs']['file_settings']['file']['#parents'] = array(
+    'editor_settings',
+    'file_upload',
+  );
 
   return $elements;
 }
