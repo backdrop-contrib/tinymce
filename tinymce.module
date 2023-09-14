@@ -156,6 +156,10 @@ function _tinymce_js_settings($format, $existing_settings) {
     $options['tiny_options']['images_upload_url'] = url('tinymce/upload/image/' . $format->format, $upload_url_opts);
     $options['tiny_options']['automatic_uploads'] = TRUE;
     $options['tiny_options']['images_reuse_filename'] = TRUE;
+    // The default image plugin doesn't reliably handle data-file-id. Prevent
+    // uploading, in case a profile uses that plugin. Providing urls to images
+    // still works.
+    $options['tiny_options']['image_uploadtab'] = FALSE;
   }
   else {
     $options['tiny_options']['paste_data_images'] = FALSE;
