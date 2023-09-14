@@ -180,11 +180,12 @@ function tinymce_library_info() {
       ),
     ),
   );
+  $info = system_get_info('module', 'tinymce');
   $libraries['backdrop.tinymce'] = array(
     'title' => 'TinyMCE integration',
-    'version' => '1',
-    'website' => '',
+    'version' => isset($info['version']) ? $info['version'] : 'dev',
     'js' => array(
+      $path . '/js/tinymce-uploader.js' => array(),
       $path . '/js/tinymce-integration.js' => array(),
     ),
     'dependencies' => array(
