@@ -1,5 +1,5 @@
 /**
- * Custom image upload handler.
+ * Custom image upload handler for drag-and-drop.
  *
  * @see Backdrop.editors.tinymce.attach
  */
@@ -41,13 +41,13 @@ const tinymceImageUploadHandler = function (blobInfo, progress) {
 
       resolve(json.location);
 
-      // Event to trigger setting data-file-id and dimensions in backdropimage.
       let data = {
         'src': json.location,
         'fileId': json.fileId,
         'width': json.width,
         'height': json.height
       };
+      // Update other attributes, TinyMCE doesn't take care of.
       setTimeout(function () {
         let imgDomnode = tinymce.activeEditor.getBody().querySelector('[src^="' + data.src + '"]');
         if (imgDomnode) {
