@@ -6,7 +6,7 @@ Backdrop CMS.
 ![Screenshot of the full profile](https://raw.githubusercontent.com/backdrop-contrib/tinymce/1.x-1.x/screenshots/tinymce-full-profile.webp)
 
 This module is in an early stage of development. Testing and feedback is
- welcome, but it's not ready for productions sites, yet.
+ welcome, but it's not ready for production sites, yet.
 
 Documentation is still pending, help with that task is highly appreciated!
 
@@ -20,7 +20,7 @@ Compatible with the [Editor Image Dimension Sync](https://backdropcms.org/projec
 ### Why another WYSIWYG editor?
 
 Because CKEditor might eventually not be the ideal solution for your site,
- especially its version 5.
+ especially beginning with its version 5.
 
 ## Installation
 
