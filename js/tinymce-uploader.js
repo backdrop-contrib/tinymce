@@ -48,6 +48,7 @@ const tinymceImageUploadHandler = function (blobInfo, progress) {
           imgDomnode.setAttribute('width', json.width);
           imgDomnode.setAttribute('height', json.height);
           imgDomnode.setAttribute('data-file-id', json.fileId);
+          imgDomnode.setAttribute('alt', '');
         }
       }, 500);
     };
