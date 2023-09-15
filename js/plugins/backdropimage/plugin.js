@@ -15,7 +15,7 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
       api.setActive(false);
       editor.on('SelectionChange', function () {
         let node = editor.selection.getNode();
-        if (node.nodeName == 'IMG') {
+        if (backdropimageTools.isRegularImg(node)) {
           api.setActive(true);
         }
         else {
@@ -24,7 +24,7 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
       });
       editor.on('dblclick', function (ev) {
         let node = editor.selection.getNode();
-        if (node.nodeName == 'IMG') {
+        if (backdropimageTools.isRegularImg(node)) {
           backdropimageTools.backdropDialog(editor);
         }
       });
@@ -333,4 +333,26 @@ backdropimageTools.attributeToCaption = function (attrContent) {
     }
   }
   return caption;
+}
+
+/**
+ * Checks if a dom node is relevant for this plugin.
+ *
+ * @param object node
+ *   Dom node (tag).
+ *
+ * @return bool
+ *   True if this tag is something, this plugin handles.
+ */
+backdropimageTools.isRegularImg = function (node) {
+  if (node.nodeName != 'IMG') {
+    return false;
+  }
+  if (node.hasAttribute('data-mce-object') || node.hasAttribute('data-mce-placeholder')) {
+    return false;
+  }
+  if (node.src.startsWith('data:')) {
+    return false;
+  }
+  return true;
 }
