@@ -157,5 +157,8 @@ backdroplinkTools.buildLink = function (editor, returnValues) {
     a.textContent = textContent;
   }
 
+  if (!values.href) {
+    return a.innerHTML;
+  }
   return a.outerHTML;
 }
