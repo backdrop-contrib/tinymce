@@ -114,6 +114,8 @@ function _tinymce_js_settings($format, array $existing_settings) {
   // styles on content display, so we prevent to use them in the editor.
   if ($format->filters['filter_html']->status) {
     $options['tiny_options']['valid_styles'] = array('*' => '');
+    // Remove menu items that rely on inline styles.
+    $options['tiny_options']['removed_menuitems'] = 'underline forecolor backcolor fontfamily fontsize lineheight';
   }
 
   // Settings from admin UI.
