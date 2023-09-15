@@ -27,7 +27,6 @@
       if (options.images_upload_url) {
         options.images_upload_handler = tinymceImageUploadHandler;
       }
-      console.log(options);
 
       // Register additional string variables.
       options.setup = function (editor) {
