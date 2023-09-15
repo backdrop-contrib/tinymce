@@ -103,8 +103,10 @@ function _tinymce_js_settings($format, array $existing_settings) {
   $tiny_defaults = array(
     'branding' => FALSE,
     'promotion' => FALSE,
+    // @todo Content language vs. interface language on multilingual sites.
     'language' => $language->langcode,
     'browser_spellcheck' => TRUE,
+    'entity_encoding' => 'raw',
   );
   $options['tiny_options'] += $tiny_defaults;
 
