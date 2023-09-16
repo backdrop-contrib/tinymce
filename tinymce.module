@@ -99,7 +99,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
   $options['tiny_options'] = config_get('tinymce.profiles.' . $profile, 'tiny_options');
 
   // Merge defaults.
-  $options['tiny_options'] += _tinymce_get_default_settings();
+  $options['tiny_options'] = _tinymce_merge_default_settings($options['tiny_options']);
 
   // If the filter_html setting is enabled. The filter will remove any inline
   // styles on content display, so we prevent to use them in the editor.
@@ -166,9 +166,12 @@ function _tinymce_js_settings($format, array $existing_settings) {
 /**
  * Helper function that builds default settings to merge with profiles.
  *
+ * @param array $settings
+ *   Settings from profile.
+ *
  * @return array
  */
-function _tinymce_get_default_settings() {
+function _tinymce_merge_default_settings(array $settings) {
   global $language;
   $tiny_defaults = array(
     'branding' => FALSE,
@@ -178,32 +181,40 @@ function _tinymce_get_default_settings() {
     'browser_spellcheck' => TRUE,
     'entity_encoding' => 'raw',
   );
+  $settings += $tiny_defaults;
+
+  // Get formats from profile, if any.
+  $formats = isset($settings['formats']) ? $settings['formats'] : array();
+
   // Text align with classes only. The theme's supposed to provide styles.
-  $tiny_defaults['formats']['alignleft'] = array(
+  $align_selector = 'p,h1,h2,h3,h4,h5,h6,div';
+  $formats['alignleft'] = array(
     array(
-      'selector' => 'p,h1,h2,h3,h4,h5,h6,div',
+      'selector' => $align_selector,
       'classes' => 'text-align-left',
     ),
   );
-  $tiny_defaults['formats']['aligncenter'] = array(
+  $formats['aligncenter'] = array(
     array(
-      'selector' => 'p,h1,h2,h3,h4,h5,h6,div',
+      'selector' => $align_selector,
       'classes' => 'text-align-center',
     ),
   );
-  $tiny_defaults['formats']['alignright'] = array(
+  $formats['alignright'] = array(
     array(
-      'selector' => 'p,h1,h2,h3,h4,h5,h6,div',
+      'selector' => $align_selector,
       'classes' => 'text-align-right',
     ),
   );
-  $tiny_defaults['formats']['alignjustify'] = array(
+  $formats['alignjustify'] = array(
     array(
-      'selector' => 'p,h1,h2,h3,h4,h5,h6,div',
+      'selector' => $align_selector,
       'classes' => 'text-align-justify',
     ),
   );
-  return $tiny_defaults;
+  $settings['formats'] = $formats;
+
+  return $settings;
 }
 
 /**
