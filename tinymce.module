@@ -164,10 +164,10 @@ function _tinymce_js_settings($format, array $existing_settings) {
 }
 
 /**
- * Helper function that builds default settings to merge with profiles.
+ * Helper function that merges default settings with profiles.
  *
  * @param array $settings
- *   Settings from profile.
+ *   TinyMCE settings from profile.
  *
  * @return array
  */
