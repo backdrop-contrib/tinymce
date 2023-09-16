@@ -30,6 +30,8 @@ Because CKEditor might eventually not be the ideal solution for your site,
 - Optionally select a profile and add custom content CSS URLs
 - Optionally enable image or file upload and adapt settings
 
+Find additional documentation in the [wiki](https://github.com/backdrop-contrib/tinymce/wiki).
+
 ## Issues
 
 Bugs and feature requests should be reported in the [Issue Queue](https://github.com/backdrop-contrib/tinymce/issues)
