@@ -263,20 +263,6 @@ function tinymce_config_info() {
 }
 
 /**
- * Custom callback.
- */
-function _tinymce_get_profile_options() {
-  $options = array();
-  $all_profiles = config_get_names_with_prefix('tinymce.profile');
-  foreach ($all_profiles as $config_name) {
-    $config = config($config_name);
-    $profile_name = $config->get('name');
-    $options[$profile_name] = $config->get('label');
-  }
-  return $options;
-}
-
-/**
  * Implements hook_tinymce_external_plugins().
  */
 function tinymce_tinymce_external_plugins($format) {

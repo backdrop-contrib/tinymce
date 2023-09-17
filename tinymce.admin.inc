@@ -1,6 +1,7 @@
 <?php
 /**
  * @file
+ * Admin form handling for TinyMCE module.
  */
 
 /**
@@ -100,4 +101,20 @@ function _tinymce_settings_form_validate($form, &$form_state) {
     }
     $form_state['values']['editor_settings']['tinymce_settings']['content_css'] = implode("\n", $files_trimmed);
   }
+}
+
+/**
+ * Custom callback to return options list for admin form.
+ *
+ * @return array
+ */
+function _tinymce_get_profile_options() {
+  $options = array();
+  $all_profiles = config_get_names_with_prefix('tinymce.profile');
+  foreach ($all_profiles as $config_name) {
+    $config = config($config_name);
+    $profile_name = $config->get('name');
+    $options[$profile_name] = $config->get('label');
+  }
+  return $options;
 }
