@@ -113,7 +113,7 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
 
   editor.ui.registry.addContextMenu('backdropimage', {
     update: function (element) {
-      if (element.src) {
+      if (backdropimageTools.isRegularImg(element)) {
         return 'backdropimage';
       }
       return '';
