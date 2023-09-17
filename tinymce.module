@@ -107,6 +107,12 @@ function _tinymce_js_settings($format, array $existing_settings) {
     $options['tiny_options']['valid_styles'] = array('*' => '');
     // Remove menu items that rely on inline styles.
     $options['tiny_options']['removed_menuitems'] = 'underline forecolor backcolor fontfamily fontsize lineheight';
+    // Unregister formats that won't get displayed. Deactivates menu items, that
+    // would otherwise be available (usually h1...).
+    $unregister =  _tinymce_get_unregister_formats($format->filters['filter_html']->settings['allowed_html']);
+    if ($unregister) {
+      $options['unregisterFmts'] = $unregister;
+    }
   }
 
   // Settings from admin UI.
@@ -164,6 +170,25 @@ function _tinymce_js_settings($format, array $existing_settings) {
 }
 
 /**
+ * Helper funtion to filter for heading tags to unregister in formats.
+ *
+ * @param string $taglist
+ *   List of allowed tags from filter settings.
+ *
+ * @return array
+ */
+function _tinymce_get_unregister_formats($taglist) {
+  preg_match_all('/h\d/', $taglist, $matches);
+  $all = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6');
+
+  if ($matches[0]) {
+    $diff = array_diff($all, $matches[0]);
+    return array_values($diff);
+  }
+  return $all;
+}
+
+/**
  * Helper function that merges default settings with profiles.
  *
  * @param array $settings
@@ -210,6 +235,12 @@ function _tinymce_merge_default_settings(array $settings) {
     array(
       'selector' => $align_selector,
       'classes' => 'text-align-justify',
+    ),
+  );
+  // Set tag as default for underline (instead of style).
+  $formats['underline'] = array(
+    array(
+      'inline' => 'u',
     ),
   );
   $settings['formats'] = $formats;

@@ -33,9 +33,16 @@
         for (let item in format.editorSettings.backdrop) {
           editor.options.register(item, { processor: "string" });
         }
-        editor.on('PreInit', function (editor) {
+        editor.on('PreInit', function (event) {
           // @see https://github.com/tinymce/tinymce/issues/4830
-          editor.target.contentDocument.documentElement.setAttribute('lang', options.language);
+          event.target.contentDocument.documentElement.setAttribute('lang', options.language);
+          // Unregister formats, if any.
+          if (typeof format.editorSettings.unregisterFmts != 'undefined') {
+            let fmts = format.editorSettings.unregisterFmts;
+            for (let i = 0; i < fmts.length; i++) {
+              event.target.formatter.unregister(fmts[i]);
+            }
+          }
         });
       };
 

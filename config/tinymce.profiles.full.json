@@ -2,7 +2,7 @@
     "_config_name": "tinymce.profiles.full",
     "name": "full",
     "label": "Full",
-    "filter_allowed_html": "a,em,strong,cite,blockquote,code,ul,ol,li,dl,dt,dd,h2,h3,h4,h5,hr,p,img,figure,figcaption,pre,details,summary,div,span,table,caption,tr,th,td,s,sub,sup",
+    "filter_allowed_html": "a,em,strong,cite,blockquote,code,ul,ol,li,dl,dt,dd,h2,h3,h4,h5,hr,p,img,figure,figcaption,pre,details,summary,div,span,table,caption,tr,th,td,s,sub,sup,u",
     "tiny_options": {
         "plugins": "accordion advlist autoresize charmap code codesample emoticons fullscreen help backdropimage backdroplink insertdatetime link lists searchreplace table visualblocks visualchars wordcount",
         "toolbar": "bold italic blockquote | styles | bullist numlist outdent indent | alignleft aligncenter alignright | backdroplink unlink | backdropimage | fullscreen",
