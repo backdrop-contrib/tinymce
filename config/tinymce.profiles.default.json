@@ -5,8 +5,8 @@
     "filter_allowed_html": "a,em,strong,cite,blockquote,code,ul,ol,li,dl,dt,dd,h2,h3,h4,h5,p,img,figure,figcaption,pre,div,span",
     "tiny_options": {
         "menubar": false,
-        "toolbar": "bold italic blockquote | styles | bullist numlist | alignleft aligncenter alignright | backdroplink unlink | backdropimage | code fullscreen",
-        "plugins": "backdroplink link lists advlist backdropimage fullscreen code autoresize",
+        "toolbar": "bold italic blockquote | styles | bullist numlist | alignleft aligncenter alignright | backdroplink backdropunlink | backdropimage | code fullscreen",
+        "plugins": "backdroplink lists advlist backdropimage fullscreen code autoresize",
         "contextmenu": "backdropimage backdroplink",
         "style_formats": [
             {

@@ -25,6 +25,25 @@ tinymce.PluginManager.add('backdroplink', function(editor, url) {
       });
     }
   });
+  editor.ui.registry.addButton('backdropunlink', {
+    icon: 'unlink',
+    tooltip: 'Remove link',
+    onAction: function () {
+      editor.execCommand('unlink');
+    },
+    onSetup: function (api) {
+      api.setEnabled(false);
+      editor.on('SelectionChange', function () {
+        let node = editor.selection.getNode();
+        if (node.nodeName == 'A' || node.parentNode.nodeName == 'A') {
+          api.setEnabled(true);
+        }
+        else {
+          api.setEnabled(false);
+        }
+      });
+    }
+  });
 
   editor.ui.registry.addMenuItem('backdroplink', {
     icon: 'link',
@@ -33,11 +52,18 @@ tinymce.PluginManager.add('backdroplink', function(editor, url) {
       backdroplinkTools.backdropDialog(editor);
     }
   });
+  editor.ui.registry.addMenuItem('backdropunlink', {
+    icon: 'unlink',
+    text: 'Remove link',
+    onAction: function () {
+      editor.execCommand('unlink');
+    }
+  });
 
   editor.ui.registry.addContextMenu('backdroplink', {
     update: function (element) {
       if (element.href || element.parentNode.href) {
-        return 'backdroplink unlink';
+        return 'backdroplink backdropunlink';
       }
       return '';
     }
