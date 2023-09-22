@@ -1,5 +1,5 @@
 (function ($, Backdrop) {
-"use strict";
+  "use strict";
   Backdrop.behaviors.tinymceAdminDragdrop = {
     attach: function (context, settings) {
       let values = $('#edit-toolbar').val();
