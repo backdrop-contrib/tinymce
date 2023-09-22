@@ -108,9 +108,13 @@ function _tinymce_build_buttonlist_item(array $data, array $icons, $button_name)
   $label = $button_name;
   $tooltip = '';
   if (isset($data['icon'])) {
-    $icon_name = $data['icon'];// @todo !! SVG
+    $icon_name = $data['icon'];
     if (isset($icons[$icon_name])) {
       $label = $icons[$icon_name];
+    }
+    else {
+      // This might be too strict.
+      $label = filter_xss($data['icon'], array('svg', 'path', 'g'));
     }
   }
   elseif (isset($data['text'])) {
@@ -203,9 +207,13 @@ function tinymce_builder_form_submit($form, &$form_state) {
  * Helper function to check if a config name already exists.
  */
 function tinymce_profile_name_exists($name) {
-  // @todo maybe check all configs?
-  $module_provided = array('default', 'full', 'small');
-  return in_array($name, $module_provided);
+  $existing = array();
+  $config_names = config_get_names_with_prefix('tinymce.profiles.');
+  foreach ($config_names as $config_name) {
+    $parts = explode('.', $config_name);
+    $existing[] = end($parts);
+  }
+  return in_array($name, $existing);
 }
 
 /**
