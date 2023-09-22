@@ -2,7 +2,6 @@
   "use strict";
   Backdrop.behaviors.tinymceAdminDragdrop = {
     attach: function (context, settings) {
-      let values = $('#edit-toolbar').val();
       $('#buttons-active').sortable({
         connectWith: '#buttons-available',
         items: '.tinybutton',
