@@ -116,7 +116,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
     $options['tiny_options']['removed_menuitems'] = 'underline forecolor backcolor fontfamily fontsize lineheight';
     // Unregister formats that won't get displayed. Deactivates menu items, that
     // would otherwise be available (usually h1...).
-    $unregister =  _tinymce_get_unregister_formats($format->filters['filter_html']->settings['allowed_html']);
+    $unregister = _tinymce_get_unregister_formats($format->filters['filter_html']->settings['allowed_html']);
     if ($unregister) {
       $options['unregisterFmts'] = $unregister;
     }
