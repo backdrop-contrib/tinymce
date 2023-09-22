@@ -1,0 +1,39 @@
+.wrapper {
+  min-height: 2rem;
+  margin: .5rem 0 1rem;
+  border: 1px solid #c6c6c6;
+}
+.wrapper ul {
+  display: inline-block;
+  margin: 0;
+  padding: .5rem;
+}
+.wrapper li {
+  cursor: move;
+}
+#buttons-active {
+  display: block;
+  border: 1px solid #0074bd;
+}
+#buttons-space {
+  margin-right: .5rem;
+}
+.tinybutton {
+  background-color: #fff;
+  display: inline-block;
+  padding: 1px;
+  margin: 1px;
+  line-height: 1rem;
+  font-size: 1rem;
+  vertical-align: middle;
+}
+.tinybutton svg {
+  vertical-align: bottom;
+}
+.tinybutton.separator {
+  width: .8rem;
+  border: 1px dashed;
+}
+#edit-tb .ui-sortable-helper {
+  outline: 3px solid #0074bd;
+}

@@ -114,7 +114,7 @@ function _tinymce_get_profile_options() {
   foreach ($all_profiles as $config_name) {
     $config = config($config_name);
     $profile_name = $config->get('name');
-    $options[$profile_name] = $config->get('label');
+    $options[$profile_name] = check_plain($config->get('label'));
   }
   return $options;
 }

@@ -43,6 +43,13 @@ function tinymce_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'tinymce.pages.inc',
   );
+  $items['admin/config/content/tinymce-builder'] = array(
+    'title' => 'TinyMCE profile builder',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('tinymce_builder_form'),
+    'access arguments' => array('administer filters'),
+    'file' => 'tinymce.builder.inc',
+  );
   return $items;
 }
 
@@ -318,11 +325,30 @@ function tinymce_tinymce_external_plugins($format) {
       'variables' => array(
         'backdroplinkDialogUrl' => $link_dialog_url,
       ),
+      'buttons' => array(
+        'backdroplink' => array(
+          'icon' => 'link',
+          'tooltip' => 'Insert/Edit Link',
+          'required_tags' => array('a'),
+        ),
+        'backdropunlink' => array(
+          'icon' => 'unlink',
+          'tooltip' => 'Remove link',
+          'required_tags' => array('a'),
+        ),
+      ),
     ),
     'backdropimage' => array(
       'plugin_path' => $module_url . '/js/plugins/backdropimage/plugin.js',
       'variables' => array(
         'backdropimageDialogUrl' => $image_dialog_url,
+      ),
+      'buttons' => array(
+        'backdropimage' => array(
+          'icon' => 'image',
+          'tooltip' => 'Insert/Edit Image',
+          'required_tags' => array('img', 'figure', 'figcaption'),
+        ),
       ),
     ),
   );

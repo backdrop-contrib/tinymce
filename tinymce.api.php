@@ -13,6 +13,14 @@ function hook_tinymce_external_plugins($format) {
     // A simple plugin, just declare the path to it.
     'myplugin' => array(
       'plugin_path' => $module_url . '/js/plugins/myplugin/plugin.js',
+      // Provide info for the builder tool about buttons, this plugin provides.
+      'buttons' => array(
+        'mypluginbutton' => array(
+          'icon' => 'home',
+          'tooltip' => 'My plugin button',
+          'required_tags' => array('span'),
+        ),
+      ),
     ),
     // A plugin that needs a special variable (string).
     'myotherplugin' => array(
