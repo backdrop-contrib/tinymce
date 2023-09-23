@@ -42,10 +42,6 @@ Bugs and feature requests should be reported in the [Issue Queue](https://github
 
 ## Known issues
 
-There's currently no builder tool for custom editor profiles. This module ships
- with three variants. But as it's simple JSON config, it might not be too hard
- to derive your own custom profile.
-
 As this integration module is new, there are currently no enhancing plugins
  available, yet (for Backdrop CMS).
 
