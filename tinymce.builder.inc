@@ -94,7 +94,11 @@ function tinymce_builder_form($form, &$form_state) {
     '#type' => 'markup',
     '#markup' => _tinymce_build_available_list_wrapper($button_list, $separator_item),
   );
-  $form['submit'] = array(
+
+  $form['actions'] = array(
+    '#type' => 'actions',
+  );
+  $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save profile'),
   );
