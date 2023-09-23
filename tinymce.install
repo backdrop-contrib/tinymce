@@ -1,0 +1,26 @@
+<?php
+/**
+ * @file
+ * TinyMCE module update hooks.
+ */
+
+/**
+ * Update config for default and full profile.
+ */
+function tinymce_update_1000() {
+  $path = backdrop_get_path('module', 'tinymce') . '/config/';
+
+  $config_profile_default = config('tinymce.profiles.default');
+  $contents = file_get_contents($path . 'tinymce.profiles.default.json');
+  $data = json_decode($contents, TRUE);
+  $config_profile_default->set('tiny_options.toolbar', $data['tiny_options']['toolbar']);
+  $config_profile_default->set('tiny_options.plugins', $data['tiny_options']['plugins']);
+  $config_profile_default->save();
+
+  $config_profile_full = config('tinymce.profiles.full');
+  $contents = file_get_contents($path . 'tinymce.profiles.full.json');
+  $data = json_decode($contents, TRUE);
+  $config_profile_full->set('tiny_options.toolbar', $data['tiny_options']['toolbar']);
+  $config_profile_full->set('tiny_options.plugins', $data['tiny_options']['plugins']);
+  $config_profile_full->save();
+}
