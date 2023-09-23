@@ -126,7 +126,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
     $options['tiny_options']['table_advtab'] = FALSE;
     $options['tiny_options']['table_appearance_options'] = FALSE;
     // Remove menu items that rely on inline styles.
-    $options['tiny_options']['removed_menuitems'] = 'underline forecolor backcolor fontfamily fontsize lineheight';
+    $options['tiny_options']['removed_menuitems'] = 'forecolor backcolor fontfamily fontsize lineheight';
     // Unregister formats that won't get displayed. Deactivates menu items, that
     // would otherwise be available (usually h1...).
     $unregister = _tinymce_get_unregister_formats($format->filters['filter_html']->settings['allowed_html']);
