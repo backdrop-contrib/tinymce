@@ -446,6 +446,9 @@ function _tinymce_get_button_defs() {
   $external_plugins = module_invoke_all('tinymce_external_plugins', $dummy_format);
 
   foreach ($external_plugins as $plugin_name => $data) {
+    if (!isset($data['buttons'])) {
+      continue;
+    }
     $plugin_buttons = $data['buttons'];
     foreach ($plugin_buttons as $button_name => $button_data) {
       $button_data['plugin'] = $plugin_name;
