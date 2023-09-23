@@ -118,7 +118,13 @@ function _tinymce_js_settings($format, array $existing_settings) {
   // If the filter_html setting is enabled. The filter will remove any inline
   // styles on content display, so we prevent to use them in the editor.
   if ($format->filters['filter_html']->status) {
+    // Note: this doesn't fully work.
     $options['tiny_options']['valid_styles'] = array('*' => '');
+    // The table plugin uses lots of inline styles.
+    $options['tiny_options']['table_cell_advtab'] = FALSE;
+    $options['tiny_options']['table_row_advtab'] = FALSE;
+    $options['tiny_options']['table_advtab'] = FALSE;
+    $options['tiny_options']['table_appearance_options'] = FALSE;
     // Remove menu items that rely on inline styles.
     $options['tiny_options']['removed_menuitems'] = 'underline forecolor backcolor fontfamily fontsize lineheight';
     // Unregister formats that won't get displayed. Deactivates menu items, that
