@@ -26,8 +26,8 @@ Because CKEditor might eventually not be the ideal solution for your site,
 - Install this module using the official [Backdrop CMS instructions](https://docs.backdropcms.org/documentation/extend-with-modules)
 - Visit the Text Editors and Formats page under Administration > Configuration > Content authoring (admin/config/content/formats)
 - Create or edit a format. In the "Editor" dropdown, select "TinyMCE"
-- Optionally select a profile and add custom content CSS URLs
-- Optionally enable image or file upload and adapt settings
+- Optionally switch the profile and add custom content CSS URLs
+- Optionally toggle image or file upload and adapt settings
 
 If none of the three default profiles meets your needs, you can create
  custom ones with the **builder tool**. Go to admin/config/content/tinymce-builder
