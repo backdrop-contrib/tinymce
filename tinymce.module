@@ -104,6 +104,13 @@ function _tinymce_js_settings($format, array $existing_settings) {
   // Load settings from JSON profile.
   $profile = $settings['tinymce_settings']['profile'];
   $options['tiny_options'] = config_get('tinymce.profiles.' . $profile, 'tiny_options');
+  // This profile doesn't exist (anymore), fall back to default and log.
+  if (!$options['tiny_options']) {
+    watchdog('tinymce', 'TinyMCE profile %profile not found in active config directory, falling back to default.', array(
+      '%profile' => $profile,
+    ), WATCHDOG_WARNING);
+    $options['tiny_options'] = config_get('tinymce.profiles.default', 'tiny_options');
+  }
 
   // Merge defaults.
   $options['tiny_options'] = _tinymce_merge_default_settings($options['tiny_options']);

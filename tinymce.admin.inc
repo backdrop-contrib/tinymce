@@ -20,11 +20,19 @@ function _tinymce_settings_form(&$form, $form_state, $format) {
     '#title' => t('Editor settings'),
     '#parents' => array('editor_settings', 'tinymce_settings'),
   );
+  $options = _tinymce_get_profile_options();
+  $existing_value = $settings['tinymce_settings']['profile'];
+  if (!array_key_exists($existing_value, $options)) {
+    backdrop_set_message(t('The editor profile %value does not exist, falling back to "default" profile.', array(
+      '%value' => $existing_value,
+    )), 'warning');
+    $existing_value = 'default';
+  }
   $elements['tabs']['tinymce_settings']['profile'] = array(
     '#title' => t('Editor profile'),
     '#type' => 'select',
-    '#options' => _tinymce_get_profile_options(),
-    '#default_value' => $settings['tinymce_settings']['profile'],
+    '#options' => $options,
+    '#default_value' => $existing_value,
   );
   $elements['tabs']['tinymce_settings']['skin'] = array(
     '#title' => t('Editor skin'),
