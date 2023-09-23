@@ -301,7 +301,10 @@ function _tinymce_get_button_defs() {
       'icon' => 'table',
       'tooltip' => 'Table',
       'plugin' => 'table',
-      'required_tags' => array('table', 'tr', 'th', 'td', 'caption'),
+      'required_tags' => array(
+        'table', 'tr', 'th', 'td', 'caption', 'thead',
+        'tbody', 'tfoot', 'colgroup', 'col',
+      ),
     ),
     'visualblocks' => array(
       'icon' => 'visualblocks',
