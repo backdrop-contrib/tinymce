@@ -6,9 +6,7 @@ Backdrop CMS.
 ![Screenshot of the full profile](https://raw.githubusercontent.com/backdrop-contrib/tinymce/1.x-1.x/screenshots/tinymce-full-profile.webp)
 
 This module is in an early stage of development. Testing and feedback is
- welcome, but it's not ready for production sites, yet.
-
-Documentation is still pending, help with that task is highly appreciated!
+ welcome, but it's not recommended for production sites, yet.
 
 *Note:* this module can co-exist with CKEditor, you can also toggle on-the-fly
  in node forms, although having both editors turned on might have side effects
@@ -20,7 +18,8 @@ Compatible with the [Editor Image Dimension Sync](https://backdropcms.org/projec
 ### Why another WYSIWYG editor?
 
 Because CKEditor might eventually not be the ideal solution for your site,
- especially beginning with its version 5.
+ especially beginning with its version 5. This integration module is
+ supposed to be a drop-in replacement for core's CKEditor module.
 
 ## Installation
 
@@ -29,6 +28,11 @@ Because CKEditor might eventually not be the ideal solution for your site,
 - Create or edit a format. In the "Editor" dropdown, select "TinyMCE"
 - Optionally select a profile and add custom content CSS URLs
 - Optionally enable image or file upload and adapt settings
+
+If none of the three default profiles meets your needs, you can create
+ custom ones with the **builder tool**. Go to admin/config/content/tinymce-builder
+ to create a custom profile via drag-and-drop with the buttons you need.
+ This builder *will not edit* existing profiles, just create new ones.
 
 Find additional documentation in the [wiki](https://github.com/backdrop-contrib/tinymce/wiki).
 
