@@ -9,7 +9,7 @@
  */
 function tinymce_editor_info() {
   $editors['tinymce'] = array(
-    'label' => t('TinyMCE Editor'),
+    'label' => t('TinyMCE'),
     'default settings' => array(
       'tinymce_settings' => array(
         'profile' => 'default',
