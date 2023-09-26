@@ -29,6 +29,22 @@ function tinymce_builder_form($form, &$form_state) {
       'source' => array('label'),
     ),
   );
+  $form['set'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Settings'),
+  );
+  $form['set']['use_menu'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use menubar'),
+    '#default_value' => 0,
+    '#description' => 'Provides a dropdown menu above the toolbar.',
+  );
+  $form['set']['autoresize'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use autoresize'),
+    '#default_value' => 1,
+    '#description' => 'Lets the editor height automatically increase with its content.',
+  );
 
   // Big JSON file, generated with:
   // tinymce.activeEditor.ui.registry.getAll().icons
@@ -59,15 +75,6 @@ function tinymce_builder_form($form, &$form_state) {
     }
   }
 
-  $form['menu'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Menu bar'),
-  );
-  $form['menu']['use_menu'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Use menubar',
-    '#default_value' => 0,
-  );
   $form['tb'] = array(
     '#type' => 'fieldset',
     '#title' => t('Toolbar items'),
@@ -185,6 +192,9 @@ function tinymce_builder_form_submit($form, &$form_state) {
   $tiny_options = array();
   if (!$form_state['values']['use_menu']) {
     $tiny_options['menubar'] = FALSE;
+  }
+  if ($form_state['values']['autoresize']) {
+    $plugins[] = 'autoresize';
   }
   $tiny_options['toolbar'] = $form_state['values']['toolbar'];
   $tiny_options['plugins'] = implode(' ', array_unique($plugins));
