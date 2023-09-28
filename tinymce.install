@@ -24,3 +24,45 @@ function tinymce_update_1000() {
   $config_profile_full->set('tiny_options.plugins', $data['tiny_options']['plugins']);
   $config_profile_full->save();
 }
+
+/**
+ * Add br tags to profiles and filter allowlist if not set yet.
+ */
+function tinymce_update_1001() {
+  // Update TinyMCE profiles if necessary.
+  $all_profiles = config_get_names_with_prefix('tinymce.profile');
+  foreach ($all_profiles as $config_name) {
+    $config = config($config_name);
+    $taglist = $config->get('filter_allowed_html');
+    if ($taglist) {
+      $tags = explode(',', $taglist);
+      if (!in_array('br', $tags)) {
+        $tags[] = 'br';
+        $allowlist = implode(',', $tags);
+        $config->set('filter_allowed_html', $allowlist);
+        $config->save();
+      }
+    }
+  }
+  // Update filter formats if necessary.
+  $all_formats = config_get_names_with_prefix('filter.format');
+  foreach ($all_formats as $config_name) {
+    $config = config($config_name);
+    if ($config->get('editor') != 'tinymce') {
+      continue;
+    }
+    if ($filter_html = $config->get('filters.filter_html')) {
+      if (!$filter_html['status']) {
+        continue;
+      }
+      $allowlist = $filter_html['settings']['allowed_html'];
+      $tags = explode(' ', $allowlist);
+      if (!in_array('<br>', $tags)) {
+        $tags[] = '<br>';
+        $allowlist = trim(implode(' ', $tags));
+        $config->set('filters.filter_html.settings.allowed_html', $allowlist);
+        $config->save();
+      }
+    }
+  }
+}

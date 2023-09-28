@@ -182,6 +182,9 @@ function tinymce_builder_form_submit($form, &$form_state) {
       $plugins[] = $info['plugin'];
     }
   }
+  // We always need these, even if no button requires them:
+  $filter_allowlist[] = 'p';
+  $filter_allowlist[] = 'br';
   $allow_tags = implode(',', array_unique($filter_allowlist));
 
   $config = config('tinymce.profiles.' . $form_state['values']['name']);
