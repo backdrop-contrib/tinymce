@@ -43,6 +43,13 @@
               event.target.formatter.unregister(fmts[i]);
             }
           }
+          // Register custom icons provided by plugins.
+          if (typeof format.editorSettings.iconRegistry != 'undefined') {
+            let icons = format.editorSettings.iconRegistry;
+            for (let name in icons) {
+              editor.ui.registry.addIcon(name, icons[name]);
+            }
+          }
         });
       };
 
