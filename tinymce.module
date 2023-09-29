@@ -150,6 +150,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
   // Collect additional TinyMCE plugins from hook.
   $external_plugins = module_invoke_all('tinymce_external_plugins', $format);
   $icon_registry = array();
+  global $base_path;
   foreach ($external_plugins as $name => $plugin) {
     if (strpos($options['tiny_options']['plugins'], $name) === FALSE) {
       // Do not load plugin if not needed.
@@ -162,9 +163,11 @@ function _tinymce_js_settings($format, array $existing_settings) {
       }
     }
     if (!empty($plugin['icons'])) {
+      $url = dirname($plugin['plugin_path']);
       foreach ($plugin['icons'] as $name => $file) {
-        global $base_path;
-        $url = dirname($plugin['plugin_path']);
+        if (file_get_mimetype($file) != 'image/svg+xml') {
+          continue;
+        }
         $rel_path = substr($url, strlen($base_path)) . '/icons/' . $file;
         if ($icon_data = file_get_contents($rel_path)) {
           $icon_registry[$name] = $icon_data;
