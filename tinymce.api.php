@@ -13,17 +13,24 @@ function hook_tinymce_external_plugins($format) {
     // A simple plugin, just declare the path to it.
     'myplugin' => array(
       'plugin_path' => $module_url . '/js/plugins/myplugin/plugin.js',
+    ),
+    // Another plugin, with a button and a custom icon.
+    'myfancyplugin' => array(
+      'plugin_path' => $module_url . '/js/plugins/myfancyplugin/plugin.js',
       // Provide info for the builder tool about buttons, this plugin provides.
+      // For the builder tool to provide a drag-and-drop handle.
       'buttons' => array(
         'mypluginbutton' => array(
-          'icon' => 'home',
+          'icon' => 'myfancyicon',
           'tooltip' => 'My plugin button',
           'required_tags' => array('span'),
         ),
       ),
       // This plugin also ships with a custom icon. The icon name is the key,
       // the icon filename is the value. This file has to be in a directory
-      // named "icons", next to the plugin js file.
+      // named "icons", next to the plugin's js file.
+      // Relevant for the builder and also for the actual editor appearance.
+      // Not necessary if you only use icons from default icon set.
       'icons' => array(
         'myfancyicon' => 'mysvgfile.svg',
       ),
