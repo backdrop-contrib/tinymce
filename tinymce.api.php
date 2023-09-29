@@ -21,6 +21,12 @@ function hook_tinymce_external_plugins($format) {
           'required_tags' => array('span'),
         ),
       ),
+      // This plugin also ships with a custom icon. The icon name is the key,
+      // the icon filename is the value. This file has to be in a directory
+      // named "icons", next to the plugin js file.
+      'icons' => array(
+        'myfancyicon' => 'mysvgfile.svg',
+      ),
     ),
     // A plugin that needs a special variable (string).
     'myotherplugin' => array(
