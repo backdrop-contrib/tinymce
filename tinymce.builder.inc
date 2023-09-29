@@ -46,11 +46,7 @@ function tinymce_builder_form($form, &$form_state) {
     '#description' => 'Lets the editor height automatically increase with its content.',
   );
 
-  // Big JSON file, generated with:
-  // tinymce.activeEditor.ui.registry.getAll().icons
-  $icon_file = $module_path . '/builder-data/icons.json';
-  $icon_data = file_get_contents($icon_file);
-  $icons = json_decode($icon_data, TRUE);
+  $icons = _tinymce_collect_icons();
   $buttons = _tinymce_get_button_defs();
   $toolbar_default = config_get('tinymce.profiles.default', 'tiny_options.toolbar');
   $toolbar_default_buttons = explode(' ', $toolbar_default);
@@ -122,10 +118,6 @@ function _tinymce_build_buttonlist_item(array $data, array $icons, $button_name)
     $icon_name = $data['icon'];
     if (isset($icons[$icon_name])) {
       $label = $icons[$icon_name];
-    }
-    else {
-      // This might be too strict.
-      $label = filter_xss($data['icon'], array('svg', 'path', 'g'));
     }
   }
   elseif (isset($data['text'])) {
@@ -460,11 +452,7 @@ function _tinymce_get_button_defs() {
   );
 
   // Collect buttons from plugins defined via hook_tinymce_external_plugins().
-  global $user;
-  $formats = filter_formats($user);
-  $dummy_format = reset($formats);
-  $external_plugins = module_invoke_all('tinymce_external_plugins', $dummy_format);
-
+  $external_plugins = _tinymce_get_external_plugins();
   foreach ($external_plugins as $plugin_name => $data) {
     if (!isset($data['buttons'])) {
       continue;
@@ -477,4 +465,54 @@ function _tinymce_get_button_defs() {
   }
 
   return $buttons;
+}
+
+/**
+ * Helper function to collect icons from editor and custom ones.
+ *
+ * @return array
+ */
+function _tinymce_collect_icons() {
+  global $base_path;
+  $module_path = backdrop_get_path('module', 'tinymce');
+  // Big JSON file, generated with:
+  // tinymce.activeEditor.ui.registry.getAll().icons
+  $icon_file = $module_path . '/builder-data/icons.json';
+  $icon_data = file_get_contents($icon_file);
+  $icons = json_decode($icon_data, TRUE);
+
+  // Also collect custom icons provided by plugins.
+  $external_plugins = _tinymce_get_external_plugins();
+  foreach ($external_plugins as $name => $plugin) {
+    if (empty($plugin['icons'])) {
+      continue;
+    }
+    $url = dirname($plugin['plugin_path']);
+    foreach ($plugin['icons'] as $icon_name => $file) {
+      if (file_get_mimetype($file) != 'image/svg+xml') {
+        continue;
+      }
+      $rel_path = substr($url, strlen($base_path)) . '/icons/' . $file;
+      if ($icon_data = file_get_contents($rel_path)) {
+        $icons[$icon_name] = $icon_data;
+      }
+    }
+  }
+  return $icons;
+}
+
+/**
+ * Helper funtion to collect external plugins defined via hook.
+ *
+ * @return array
+ */
+function _tinymce_get_external_plugins() {
+  $external_plugins = &backdrop_static(__FUNCTION__);
+  if (!isset($external_plugins)) {
+    global $user;
+    $formats = filter_formats($user);
+    $dummy_format = reset($formats);
+    $external_plugins = module_invoke_all('tinymce_external_plugins', $dummy_format);
+  }
+  return $external_plugins;
 }
