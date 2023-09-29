@@ -451,6 +451,7 @@ function _tinymce_get_button_defs() {
     ),
   );
 
+  // Collect buttons from plugins defined via hook_tinymce_external_plugins().
   $external_plugins = _tinymce_get_external_plugins();
   foreach ($external_plugins as $plugin_name => $data) {
     if (!isset($data['buttons'])) {
@@ -508,7 +509,6 @@ function _tinymce_collect_icons() {
 function _tinymce_get_external_plugins() {
   $external_plugins = &backdrop_static(__FUNCTION__);
   if (!isset($external_plugins)) {
-    // Collect buttons from plugins defined via hook_tinymce_external_plugins().
     global $user;
     $formats = filter_formats($user);
     $dummy_format = reset($formats);
