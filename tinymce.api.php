@@ -18,7 +18,7 @@ function hook_tinymce_external_plugins($format) {
     'myfancyplugin' => array(
       'plugin_path' => $module_url . '/js/plugins/myfancyplugin/plugin.js',
       // Provide info for the builder tool about buttons, this plugin provides.
-      // For the builder tool to provide a drag-and-drop handle.
+      // Necessary to get a drag-and-drop handle for the toolbar builder.
       'buttons' => array(
         'mypluginbutton' => array(
           'icon' => 'myfancyicon',
