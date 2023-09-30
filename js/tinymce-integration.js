@@ -50,6 +50,19 @@
               editor.ui.registry.addIcon(name, icons[name]);
             }
           }
+          // @see https://github.com/backdrop-contrib/tinymce/issues/18
+          editor.shortcuts.add('ctrl+1', 'Jump to menubar', function () {
+            let menuBar = document.getElementsByClassName('tox-menubar');
+            if (menuBar.length) {
+              menuBar[0].getElementsByTagName('button')[0].focus();
+            }
+          });
+          editor.shortcuts.add('ctrl+2', 'Jump to toolbar', function () {
+            let myToolBar = document.getElementsByClassName('tox-toolbar-overlord');
+            if (myToolBar.length) {
+              myToolBar[0].getElementsByTagName('button')[0].focus();
+            }
+          });
         });
       };
 
