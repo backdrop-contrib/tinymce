@@ -238,7 +238,7 @@ backdropimageTools.buildImage = function (editor, returnValues) {
       node.appendChild(img);
     }
 
-    let captiontext = 'My caption';// @todo configurable?
+    let captiontext = editor.options.get('backdropimageInitialCaption');
     let parentFigure = editor.dom.getParents(selected, 'FIGURE');
     if (parentFigure.length) {
       let parent = parentFigure[0];
