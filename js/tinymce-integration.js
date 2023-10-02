@@ -25,7 +25,16 @@
 
       // If image uploads are active, we also need the paste handler.
       if (options.images_upload_url) {
-        options.images_upload_handler = tinymceImageUploadHandler;
+        // Layouts block editing: image dialog opened from a block dialog,
+        // results in upload (paste) handler to be undefined (nested iframes).
+        if (typeof tinymceImageUploadHandler == 'function') {
+          options.images_upload_handler = tinymceImageUploadHandler;
+        }
+        else {
+          // We turn off pasting images in this case. Selecting via library, or
+          // regular uploads will still work.
+          options.paste_data_images = false;
+        }
       }
 
       // Register additional string variables.
