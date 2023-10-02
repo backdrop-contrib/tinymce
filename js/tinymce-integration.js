@@ -27,6 +27,7 @@
       if (options.images_upload_url) {
         // Layouts block editing: image dialog opened from a block dialog,
         // results in upload (paste) handler to be undefined (nested iframes).
+        // Only happens, if js aggregation is off.
         if (typeof tinymceImageUploadHandler == 'function') {
           options.images_upload_handler = tinymceImageUploadHandler;
         }
