@@ -5,10 +5,7 @@ Backdrop CMS.
 
 ![Screenshot of the full profile](https://raw.githubusercontent.com/backdrop-contrib/tinymce/1.x-1.x/screenshots/tinymce-full-profile.webp)
 
-This module is in an early stage of development. Testing and feedback is
- welcome, but it's not recommended for production sites, yet.
-
-*Note:* this module can co-exist with CKEditor, you can also toggle on-the-fly
+This module can co-exist with CKEditor, you can also toggle on-the-fly
  in node forms, although having both editors turned on might have side effects
  on page performance.
 
@@ -42,8 +39,8 @@ Bugs and feature requests should be reported in the [Issue Queue](https://github
 
 ## Known issues
 
-As this integration module is new, there are currently no enhancing plugins
- available, yet (for Backdrop CMS).
+As this integration module is new, there are currently only few enhancing
+ plugins available for Backdrop CMS.
 
 ## Current Maintainers
 
