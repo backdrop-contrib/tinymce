@@ -428,11 +428,11 @@ function _tinymce_get_button_defs() {
       'tooltip' => 'Visual aids',
     ),
     'outdent' => array(
-      'icon' => 'outdent',// @todo get rid of inline style, if possible.
+      'icon' => 'outdent',
       'tooltip' => 'Decrease indent',
     ),
     'indent' => array(
-      'icon' => 'indent',// @todo same as above.
+      'icon' => 'indent',
       'tooltip' => 'Increase indent',
     ),
     'pastetext' => array(

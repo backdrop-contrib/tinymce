@@ -372,6 +372,7 @@ function tinymce_tinymce_external_plugins($format) {
       'plugin_path' => $module_url . '/js/plugins/backdropimage/plugin.js',
       'variables' => array(
         'backdropimageDialogUrl' => $image_dialog_url,
+        'backdropimageInitialCaption' => t('Enter caption text here.'),
       ),
       'buttons' => array(
         'backdropimage' => array(
