@@ -50,9 +50,13 @@
           if (typeof format.editorSettings.unregisterFmts != 'undefined') {
             let fmts = format.editorSettings.unregisterFmts;
             for (let i = 0; i < fmts.length; i++) {
-              event.target.formatter.unregister(fmts[i]);
+              editor.formatter.unregister(fmts[i]);
             }
           }
+          // Override as noop-commands to prevent inline styles clutter on block
+          // elements. That way indent/outdent are limited to list items.
+          editor.addCommand('indent', function () {});
+          editor.addCommand('outdent', function () {});
           // Register custom icons provided by plugins.
           if (typeof format.editorSettings.iconRegistry != 'undefined') {
             let icons = format.editorSettings.iconRegistry;
