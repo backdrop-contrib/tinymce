@@ -38,14 +38,37 @@
         }
       }
 
-      // Register additional string variables.
+      // Content language defaults to interface language.
+      let contentLang = options.language;
+      // If this element's form has a language select list, toggle content lang
+      // based on that value.
+      if (element.form.querySelector('#edit-langcode') != null) {
+        let languageToggle = element.form.querySelector('#edit-langcode');
+        if (languageToggle.value != 'und') {
+          contentLang = languageToggle.value;
+        }
+        languageToggle.addEventListener('change', function (ev) {
+          let langcode = ev.target.value;
+          if (langcode == 'und') {
+            langcode = options.language;
+          }
+          let event = new CustomEvent('contentLangSwitch', { detail: langcode });
+          window.dispatchEvent(event);
+        });
+      }
+
       options.setup = function (editor) {
+        // Register additional string variables.
         for (let item in format.editorSettings.backdrop) {
           editor.options.register(item, { processor: "string" });
         }
+        // Listen to custom event from language select list toggle.
+        window.addEventListener('contentLangSwitch', function (event) {
+          editor.contentDocument.documentElement.setAttribute('lang', event.detail);
+        });
         editor.on('PreInit', function (event) {
           // @see https://github.com/tinymce/tinymce/issues/4830
-          event.target.contentDocument.documentElement.setAttribute('lang', options.language);
+          editor.contentDocument.documentElement.setAttribute('lang', contentLang);
           // Unregister formats, if any.
           if (typeof format.editorSettings.unregisterFmts != 'undefined') {
             let fmts = format.editorSettings.unregisterFmts;
