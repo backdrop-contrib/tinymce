@@ -60,7 +60,13 @@ function tinymce_builder_form($form, &$form_state) {
   }
 
   $default_button_list = '';
-  $separator_item = '<li class="tinybutton separator" title="Separator">&nbsp;</li>';
+  $attributes = array(
+    'class' => 'tinybutton separator',
+    'tabindex' => '0',
+    'title' => t('Separator'),
+    'aria-label' => t('Separator'),
+  );
+  $separator_item = '<li' . backdrop_attributes($attributes) . '>&nbsp;</li>';
   foreach ($toolbar_default_buttons as $name) {
     if ($name == '|') {
       $default_button_list .= $separator_item;
@@ -75,7 +81,8 @@ function tinymce_builder_form($form, &$form_state) {
     '#type' => 'fieldset',
     '#title' => t('Toolbar items'),
     '#attributes' => array(
-      'role' => 'application',// @todo what is needed for A11Y?
+      'role' => 'application',
+      'aria-describedby' => 'builder-keyboard-help',
     ),
     '#description' => t('Drag desired buttons to the "Active" list, drag unwanted ones to the "Available" list below.'),
   );
@@ -96,6 +103,13 @@ function tinymce_builder_form($form, &$form_state) {
   $form['tb']['available'] = array(
     '#type' => 'markup',
     '#markup' => _tinymce_build_available_list_wrapper($button_list, $separator_item),
+  );
+  $kbd_help = t('Use <em>tab</em> to navigate, left and right arrow keys to move buttons in active toolbar, the <em>-</em> key to remove, the <em>+</em> key in the avialable list to add to the active list.');
+  $markup = '<div class="element-invisible" id="builder-keyboard-help">' . $kbd_help . '</div>';
+  $markup .= '<div class="element-invisible" id="announce-addremove" aria-live="polite"></div>';
+  $form['tb']['keyboard_help'] = array(
+    '#type' => 'markup',
+    '#markup' => $markup,
   );
 
   $form['actions'] = array(
@@ -123,10 +137,15 @@ function _tinymce_build_buttonlist_item(array $data, array $icons, $button_name)
   elseif (isset($data['text'])) {
     $label = filter_xss_admin($data['text']);
   }
-  if (isset($data['tooltip'])) {
-    $tooltip = check_plain($data['tooltip']);
-  }
-  return '<li draggable="true" class="tinybutton" id="' . $button_name . '" title="' . $tooltip . '">' . $label . '</li>';
+  $attributes = array(
+    'draggable' => 'true',
+    'class' => 'tinybutton',
+    'id' => $button_name,
+    'title' => isset($data['tooltip']) ? $data['tooltip'] : '',
+    'tabindex' => '0',
+    'aria-label' => isset($data['tooltip']) ? $data['tooltip'] : $button_name,
+  );
+  return '<li' . backdrop_attributes($attributes) . '>' . $label . '</li>';
 }
 
 /**
@@ -233,78 +252,78 @@ function _tinymce_get_button_defs() {
     // Open Source plugins that ship with TinyMCE, some excluded.
     'accordion' => array(
       'icon' => 'accordion',
-      'tooltip' => 'Insert accordion',
+      'tooltip' => t('Insert accordion'),
       'plugin' => 'accordion',
       'required_tags' => array('details', 'summary'),
     ),
     'accordiontoggle' => array(
       'icon' => 'accordion-toggle',
-      'tooltip' => 'Toggle accordion',
+      'tooltip' => t('Toggle accordion'),
       'plugin' => 'accordion',
       'required_tags' => array('details', 'summary'),
     ),
     'accordionremove' => array(
       'icon' => 'remove',
-      'tooltip' => 'Delete accordion',
+      'tooltip' => t('Delete accordion'),
       'plugin' => 'accordion',
       'required_tags' => array('details', 'summary'),
     ),
     'numlist' => array(
       'icon' => 'ordered-list',
-      'tooltip' => 'Numbered list',
+      'tooltip' => t('Numbered list'),
       'plugin' => 'lists',
       'required_tags' => array('ul', 'ol', 'li'),
     ),
     'bullist' => array(
       'icon' => 'unordered-list',
-      'tooltip' => 'Bullet list',
+      'tooltip' => t('Bullet list'),
       'plugin' => 'lists',
       'required_tags' => array('ul', 'ol', 'li'),
     ),
     'charmap' => array(
       'icon' => 'insert-character',
-      'tooltip' => 'Special character',
+      'tooltip' => t('Special character'),
       'plugin' => 'charmap',
     ),
     'code' => array(
       'icon' => 'sourcecode',
-      'tooltip' => 'Source code',
+      'tooltip' => t('Source code'),
       'plugin' => 'code',
     ),
     'codesample' => array(
       'icon' => 'code-sample',
-      'tooltip' => 'Insert/edit code sample',
+      'tooltip' => t('Insert/edit code sample'),
       'plugin' => 'codesample',
       'required_tags' => array('pre', 'code'),
     ),
     'emoticons' => array(
       'icon' => 'emoji',
-      'tooltip' => 'Emojis',
+      'tooltip' => t('Emojis'),
       'plugin' => 'emoticons',
     ),
     'fullscreen' => array (
       'icon' => 'fullscreen',
-      'tooltip' => 'Fullscreen',
+      'tooltip' => t('Fullscreen'),
       'plugin' => 'fullscreen',
     ),
     'help' => array(
       'icon' => 'help',
-      'tooltip' => 'Help',
+      'tooltip' => t('Help'),
       'plugin' => 'help',
     ),
     'insertdatetime' => array(
       'icon' => 'insert-time',
-      'tooltip' => 'Insert date/time',
+      'tooltip' => t('Insert date/time'),
       'plugin' => 'insertdatetime',
     ),
     'searchreplace' => array(
       'icon' => 'search',
-      'tooltip' => 'Find and replace',
+      'tooltip' => t('Find and replace'),
       'plugin' => 'searchreplace',
     ),
     'table' => array(
       'icon' => 'table',
-      'tooltip' => 'Table',
+      'tooltip' => t('Table'),
       'plugin' => 'table',
       'required_tags' => array(
         'table', 'tr', 'th', 'td', 'caption', 'thead',
@@ -313,136 +332,136 @@ function _tinymce_get_button_defs() {
     ),
     'visualblocks' => array(
       'icon' => 'visualblocks',
-      'tooltip' => 'Show blocks',
+      'tooltip' => t('Show blocks'),
       'plugin' => 'visualblocks',
     ),
     'visualchars' => array(
       'icon' => 'visualchars',
-      'tooltip' => 'Show invisible characters',
+      'tooltip' => t('Show invisible characters'),
       'plugin' => 'visualchars',
     ),
     'wordcount' => array(
       'icon' => 'character-count',
-      'tooltip' => 'Word count',
+      'tooltip' => t('Word count'),
       'plugin' => 'wordcount',
     ),
     // Buttons provided by TinyMCE core.
     'alignleft' => array(
       'icon' => 'align-left',
-      'tooltip' => 'Align left',
+      'tooltip' => t('Align left'),
     ),
     'aligncenter' => array(
       'icon' => 'align-center',
-      'tooltip' => 'Align center',
+      'tooltip' => t('Align center'),
     ),
     'alignright' => array(
       'icon' => 'align-right',
-      'tooltip' => 'Align right',
+      'tooltip' => t('Align right'),
     ),
     'alignjustify' => array(
       'icon' => 'align-justify',
-      'tooltip' => 'Justify',
+      'tooltip' => t('Justify'),
     ),
     'alignnone' => array(
       'icon' => 'align-none',
-      'tooltip' => 'No alignment',
+      'tooltip' => t('No alignment'),
     ),
     'bold' => array(
       'icon' => 'bold',
-      'tooltip' => 'Bold',
+      'tooltip' => t('Bold'),
       'required_tags' => array('strong'),
     ),
     'italic' => array(
       'icon' => 'italic',
-      'tooltip' => 'Italic',
+      'tooltip' => t('Italic'),
       'required_tags' => array('em'),
     ),
     'underline' => array(
       'icon' => 'underline',
-      'tooltip' => 'Underline',
+      'tooltip' => t('Underline'),
       'required_tags' => array('u'),
     ),
     'strikethrough' => array(
       'icon' => 'strike-through',
-      'tooltip' => 'Strikethrough',
+      'tooltip' => t('Strikethrough'),
       'required_tags' => array('s'),
     ),
     'subscript' => array(
       'icon' => 'subscript',
-      'tooltip' => 'Subscript',
+      'tooltip' => t('Subscript'),
       'required_tags' => array('sub'),
     ),
     'superscript' => array(
       'icon' => 'superscript',
-      'tooltip' => 'Superscript',
+      'tooltip' => t('Superscript'),
       'required_tags' => array('sup'),
     ),
     'copy' => array(
       'icon' => 'copy',
-      'tooltip' => 'Copy',
+      'tooltip' => t('Copy'),
     ),
     'selectall' => array(
       'icon' => 'select-all',
-      'tooltip' => 'Select all',
+      'tooltip' => t('Select all'),
     ),
     'print' => array(
       'icon' => 'print',
-      'tooltip' => 'Print',
+      'tooltip' => t('Print'),
     ),
     'cut' => array(
       'icon' => 'cut',
-      'tooltip' => 'Cut',
+      'tooltip' => t('Cut'),
     ),
     'paste' => array(
       'icon' => 'paste',
-      'tooltip' => 'Paste',
+      'tooltip' => t('Paste'),
     ),
     'removeformat' => array(
       'icon' => 'remove-formatting',
-      'tooltip' => 'Clear formatting',
+      'tooltip' => t('Clear formatting'),
     ),
     'remove' => array(
       'icon' => 'remove',
-      'tooltip' => 'Remove',
+      'tooltip' => t('Remove'),
     ),
     'hr' => array(
       'icon' => 'horizontal-rule',
-      'tooltip' => 'Horizontal line',
+      'tooltip' => t('Horizontal line'),
       'required_tags' => array('hr'),
     ),
     'blockquote' => array(
       'icon' => 'quote',
-      'tooltip' => 'Blockquote',
+      'tooltip' => t('Blockquote'),
       'required_tags' => array('blockquote', 'cite'),
     ),
     'undo' => array(
       'icon' => 'undo',
-      'tooltip' => 'Undo',
+      'tooltip' => t('Undo'),
     ),
     'redo' => array(
       'icon' => 'redo',
-      'tooltip' => 'Redo',
+      'tooltip' => t('Redo'),
     ),
     'visualaid' => array(
       'text' => 'Visual aids',
-      'tooltip' => 'Visual aids',
+      'tooltip' => t('Visual aids'),
     ),
     'outdent' => array(
       'icon' => 'outdent',
-      'tooltip' => 'Decrease indent',
+      'tooltip' => t('Decrease indent'),
     ),
     'indent' => array(
       'icon' => 'indent',
-      'tooltip' => 'Increase indent',
+      'tooltip' => t('Increase indent'),
     ),
     'pastetext' => array(
       'icon' => 'paste-text',
-      'tooltip' => 'Paste as text',
+      'tooltip' => t('Paste as text'),
     ),
     // This is actually a nested menu item, not a button.
     'styles' => array(
       'text' => 'Styles&nbsp;▾',
-      'tooltip' => 'Styles dropdown',
+      'tooltip' => t('Styles dropdown'),
       'required_tags' => array(
         'h2', 'h3', 'h4', 'h5',
         'strong', 'em', 'u', 's', 'code',
