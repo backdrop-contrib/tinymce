@@ -48,6 +48,7 @@ function tinymce_menu() {
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('tinymce_builder_form'),
     'access arguments' => array('administer filters'),
+    'description' => 'Create custom editor profiles.',
     'file' => 'tinymce.builder.inc',
   );
   return $items;
