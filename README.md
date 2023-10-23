@@ -33,14 +33,29 @@ If none of the three default profiles meets your needs, you can create
 
 Find additional documentation in the [wiki](https://github.com/backdrop-contrib/tinymce/wiki).
 
+## Extending with plugins
+
+By default TinyMCE already ships with [lots of plugins](https://www.tiny.cloud/docs/tinymce/6/plugins/).
+And it's integrated well in Backdrop CMS with its media handling.
+
+But there's more:
+
+- [TinyMCE snippets](https://backdropcms.org/project/tinymce_snippets)
+  (Insert pre-defined HTML snippets into content, using a dialog)
+- [TinyMCE video filter](https://backdropcms.org/project/tinymce_video_filter)
+  (Integration with the Video Filter module)
+- [TinyMCE paragraph after](https://backdropcms.org/project/tinymce_paraafter)
+  (Insert a new paragraph after block level elements)
+- [TinyMCE IMCE](https://backdropcms.org/project/tinymce_imce)
+  (Integration with the IMCE uploader and browser)
+
+And if that's not enough, it's not hard to add custom ones by leveraging
+ hook_tinymce_external_plugins(). See the
+ [API example](https://github.com/backdrop-contrib/tinymce/blob/1.x-1.x/tinymce.api.php#L10) for details.
+
 ## Issues
 
 Bugs and feature requests should be reported in the [Issue Queue](https://github.com/backdrop-contrib/tinymce/issues)
-
-## Known issues
-
-As this integration module is new, there are currently only few enhancing
- plugins available for Backdrop CMS.
 
 ## Current Maintainers
 
