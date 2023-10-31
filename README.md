@@ -48,6 +48,8 @@ But there's more:
   (Insert a new paragraph after block level elements)
 - [TinyMCE IMCE](https://backdropcms.org/project/tinymce_imce)
   (Integration with the IMCE uploader and browser)
+- [File Entity Embed Filter](https://backdropcms.org/project/feef)
+  (Embed file entities in content using a token-like placeholder)
 
 And if that's not enough, it's not hard to add custom ones by leveraging
  hook_tinymce_external_plugins(). See the
