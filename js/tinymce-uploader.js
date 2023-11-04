@@ -45,6 +45,14 @@ const tinymceImageUploadHandler = function (blobInfo, progress) {
       setTimeout(function () {
         let imgDomnode = tinymce.activeEditor.getBody().querySelector('[src^="' + json.location + '"]');
         if (imgDomnode) {
+          // If we don't get dimensions server-side, e.g. for SVG, we let the
+          // client do that.
+          if (!json.width) {
+            json.width = imgDomnode.width;
+          }
+          if (!json.height) {
+            json.height = imgDomnode.height;
+          }
           imgDomnode.setAttribute('width', json.width);
           imgDomnode.setAttribute('height', json.height);
           imgDomnode.setAttribute('data-file-id', json.fileId);

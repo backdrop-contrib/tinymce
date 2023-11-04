@@ -9,7 +9,7 @@
  */
 function tinymce_image_upload($format) {
   $upload_settings = $format->editor_settings['image_upload'];
-  if (!$upload_settings['status']) {
+  if (!$upload_settings['status'] || $format->editor != 'tinymce') {
     backdrop_add_http_header('Status', '403 Forbidden');
     return;
   }
@@ -22,9 +22,12 @@ function tinymce_image_upload($format) {
     }
   }
 
-  $destination = $upload_settings['scheme'] . '://' .  $upload_settings['directory'];
+  $profile_name = $format->editor_settings['tinymce_settings']['profile'];
+  $profile_options = config_get("tinymce.profiles.$profile_name", 'tiny_options');
+  $extensions = _tinymce_get_images_file_types($profile_options);
+  $extensions = str_replace(',', ' ', $extensions);
   $validators = array(
-    'file_validate_is_image' => array(),
+    'file_validate_extensions' => array($extensions),
   );
   if ($upload_settings['max_size']) {
     $validators['file_validate_size'] = array(parse_size($upload_settings['max_size']));
@@ -35,6 +38,7 @@ function tinymce_image_upload($format) {
     );
   }
 
+  $destination = $upload_settings['scheme'] . '://' .  $upload_settings['directory'];
   file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
   $file = file_save_upload('upload', $validators, $destination);
   if ($file) {
@@ -47,8 +51,9 @@ function tinymce_image_upload($format) {
       'uploaded' => 1,
       'location' => $url,
       'fileId' => $file->fid,
-      'width' => $image_info['width'],
-      'height' => $image_info['height'],
+      // Not for all image types dimensions may be available.
+      'width' => isset($image_info['width']) ? $image_info['width'] : '',
+      'height' => isset($image_info['height']) ? $image_info['height'] : '',
     );
   }
   else {

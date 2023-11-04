@@ -187,11 +187,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
         'token' => filter_editor_dialog_token($format, 'image'),
         'calling_path' => $_GET['q'],
       ));
-    if (!function_exists('image_gd_supported_extensions')) {
-      require BACKDROP_ROOT . '/' . backdrop_get_path('module', 'system') . '/image.gd.inc';
-    }
-    $extensions = image_gd_supported_extensions();
-    $options['tiny_options']['images_file_types'] = implode(',', $extensions);
+    $options['tiny_options']['images_file_types'] = _tinymce_get_images_file_types($options['tiny_options']);
     $options['tiny_options']['images_upload_url'] = url('tinymce/upload/image/' . $format->format, $upload_url_opts);
     $options['tiny_options']['automatic_uploads'] = TRUE;
     $options['tiny_options']['images_reuse_filename'] = TRUE;
@@ -224,6 +220,25 @@ function _tinymce_get_unregister_formats($taglist) {
     return array_values($diff);
   }
   return $all;
+}
+
+/**
+ * Helper function to provide image extensions for paste uploads.
+ *
+ * @param array $options
+ *   TinyMCE options from JSON profile.
+ *
+ * @return string
+ */
+function _tinymce_get_images_file_types($options) {
+  if (!empty($options['images_file_types'])) {
+    $extensions = $options['images_file_types'];
+  }
+  else {
+    $supported = image_get_supported_extensions();
+    $extensions = implode(',', $supported);
+  }
+  return $extensions;
 }
 
 /**
