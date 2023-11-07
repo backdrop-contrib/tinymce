@@ -120,7 +120,13 @@ function _tinymce_js_settings($format, array $existing_settings) {
   // styles on content display, so we prevent to use them in the editor.
   if ($format->filters['filter_html']->status) {
     // Note: this doesn't fully work.
-    $options['tiny_options']['valid_styles'] = array('*' => '');
+    $options['tiny_options']['valid_styles'] = array(
+      '*' => '',
+      // Inline styles get converted by the liststyle plugin, but internally
+      // TinyMCE still uses them and should be allowed to.
+      'ol' => 'list-style-type',
+      'ul' => 'list-style-type',
+    );
     // The table plugin uses lots of inline styles.
     $options['tiny_options']['table_cell_advtab'] = FALSE;
     $options['tiny_options']['table_row_advtab'] = FALSE;
@@ -174,6 +180,10 @@ function _tinymce_js_settings($format, array $existing_settings) {
           $icon_registry[$name] = $icon_data;
         }
       }
+    }
+    // This helper plugin deals with inline styles produced by advlist.
+    if (strpos($options['tiny_options']['plugins'], 'advlist') !== FALSE) {
+      $options['tiny_options']['external_plugins']['liststyle'] = $external_plugins['liststyle']['plugin_path'];
     }
   }
   if (!empty($icon_registry)) {
@@ -382,7 +392,18 @@ function tinymce_tinymce_external_plugins($format) {
         ),
       ),
     ),
+    'liststyle' => array(
+      'plugin_path' => $module_url . '/js/plugins/liststyle/plugin.js',
+    ),
   );
 
   return $plugins;
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function tinymce_preprocess_page(&$variables) {
+  $path = backdrop_get_path('module', 'tinymce');
+  backdrop_add_css($path . '/css/tinymce-frontend.css', array('every_page' => TRUE));
 }
