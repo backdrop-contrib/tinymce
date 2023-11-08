@@ -175,6 +175,16 @@ function _tinymce_js_settings($format, array $existing_settings) {
         }
       }
     }
+    // This helper plugin deals with inline styles produced by advlist.
+    if (strpos($options['tiny_options']['plugins'], 'advlist') !== FALSE) {
+      $options['tiny_options']['external_plugins']['liststyle'] = $external_plugins['liststyle']['plugin_path'];
+      if ($format->filters['filter_html']->status) {
+        // Extend restrictions for inline styles, if the filter's enabled.
+        // Otherwise not necessary, as there's no restriction then.
+        $options['tiny_options']['valid_styles']['ol'] = 'list-style-type';
+        $options['tiny_options']['valid_styles']['ol'] = 'list-style-type';
+      }
+    }
   }
   if (!empty($icon_registry)) {
     $options['iconRegistry'] = $icon_registry;
@@ -381,6 +391,9 @@ function tinymce_tinymce_external_plugins($format) {
           'required_tags' => array('img', 'figure', 'figcaption'),
         ),
       ),
+    ),
+    'liststyle' => array(
+      'plugin_path' => $module_url . '/js/plugins/liststyle/plugin.js',
     ),
   );
 

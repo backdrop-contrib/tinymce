@@ -1,0 +1,25 @@
+/**
+ * @file
+ * TinyMCE frontend styles to attach to content.
+ */
+ol[data-list-style="lower-alpha"] {
+  list-style-type: lower-alpha;
+}
+ol[data-list-style="lower-greek"] {
+  list-style-type: lower-greek;
+}
+ol[data-list-style="lower-roman"] {
+  list-style-type: lower-roman;
+}
+ol[data-list-style="upper-alpha"] {
+  list-style-type: upper-alpha;
+}
+ol[data-list-style="upper-roman"] {
+  list-style-type: upper-roman;
+}
+ul[data-list-style="circle"] {
+  list-style-type: circle;
+}
+ul[data-list-style="square"] {
+  list-style-type: square;
+}
