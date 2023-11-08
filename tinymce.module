@@ -399,11 +399,3 @@ function tinymce_tinymce_external_plugins($format) {
 
   return $plugins;
 }
-
-/**
- * Implements hook_preprocess_page().
- */
-function tinymce_preprocess_page(&$variables) {
-  $path = backdrop_get_path('module', 'tinymce');
-  backdrop_add_css($path . '/css/tinymce-frontend.css', array('every_page' => TRUE));
-}
