@@ -120,13 +120,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
   // styles on content display, so we prevent to use them in the editor.
   if ($format->filters['filter_html']->status) {
     // Note: this doesn't fully work.
-    $options['tiny_options']['valid_styles'] = array(
-      '*' => '',
-      // Inline styles get converted by the liststyle plugin, but internally
-      // TinyMCE still uses them and should be allowed to.
-      'ol' => 'list-style-type',
-      'ul' => 'list-style-type',
-    );
+    $options['tiny_options']['valid_styles'] = array('*' => '');
     // The table plugin uses lots of inline styles.
     $options['tiny_options']['table_cell_advtab'] = FALSE;
     $options['tiny_options']['table_row_advtab'] = FALSE;
@@ -184,6 +178,12 @@ function _tinymce_js_settings($format, array $existing_settings) {
     // This helper plugin deals with inline styles produced by advlist.
     if (strpos($options['tiny_options']['plugins'], 'advlist') !== FALSE) {
       $options['tiny_options']['external_plugins']['liststyle'] = $external_plugins['liststyle']['plugin_path'];
+      if ($format->filters['filter_html']->status) {
+        // Extend restrictions for inline styles, if the filter's enabled.
+        // Otherwise not necessary, as there's no restriction then.
+        $options['tiny_options']['valid_styles']['ol'] = 'list-style-type';
+        $options['tiny_options']['valid_styles']['ol'] = 'list-style-type';
+      }
     }
   }
   if (!empty($icon_registry)) {
