@@ -108,6 +108,7 @@
 
     detach: function (element, format, trigger) {
       if (trigger == 'serialize') {
+        tinymce.triggerSave();
         return;
       }
       let idSelector = '#' + element.id;
