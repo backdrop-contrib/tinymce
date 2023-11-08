@@ -108,10 +108,17 @@
 
     detach: function (element, format, trigger) {
       if (trigger == 'serialize') {
+        tinymce.triggerSave();
         return;
       }
       let idSelector = '#' + element.id;
       tinymce.remove(idSelector);
+      // On multifield reorder, reattach with small delay.
+      if (trigger == 'move') {
+        window.setTimeout(function () {
+          Backdrop.editors.tinymce.attach(element, format);
+        }, 100);
+      }
     }
   };
 
