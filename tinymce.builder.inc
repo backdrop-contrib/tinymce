@@ -159,6 +159,13 @@ function tinymce_builder_form(array $form, array &$form_state, $profile = NULL) 
     if (isset($buttons[$name])) {
       $default_button_list .= _tinymce_build_buttonlist_item($buttons[$name], $icons, $name);
     }
+    else {
+      $placeholder = array(
+        'icon' => 'temporary-placeholder',
+        'tooltip' => $name . ' (?)',
+      );
+      $default_button_list .= _tinymce_build_buttonlist_item($placeholder, $icons, $name);
+    }
   }
 
   $form['tb'] = array(
