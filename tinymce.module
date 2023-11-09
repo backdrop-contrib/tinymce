@@ -44,14 +44,42 @@ function tinymce_menu() {
     'file' => 'tinymce.pages.inc',
   );
   $items['admin/config/content/tinymce-builder'] = array(
+    'title' => 'TinyMCE profiles',
+    'page callback' => 'tinymce_profile_listing_page',
+    'access arguments' => array('administer filters'),
+    'description' => 'List TinyMCE editor profiles.',
+    'file' => 'tinymce.builder.inc',
+  );
+  $items['admin/config/content/tinymce-builder/add'] = array(
     'title' => 'TinyMCE profile builder',
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('tinymce_builder_form'),
     'access arguments' => array('administer filters'),
-    'description' => 'Create custom editor profiles.',
+    'file' => 'tinymce.builder.inc',
+  );
+  $items['admin/config/content/tinymce-builder/%tinymce_profile/edit'] = array(
+    'title' => 'Edit profile',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('tinymce_builder_form', 4),
+    'access arguments' => array('administer filters'),
+    'file' => 'tinymce.builder.inc',
+  );
+  $items['admin/config/content/tinymce-builder/%tinymce_profile/delete'] = array(
+    'title' => 'Delete profile',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('tinymce_builder_delete_confirm', 4),
+    'access arguments' => array('administer filters'),
     'file' => 'tinymce.builder.inc',
   );
   return $items;
+}
+
+/**
+ * Auto-loader for tinymce_profile item wildcard.
+ */
+function tinymce_profile_load($name) {
+  $profile = config("tinymce.profiles.$name");
+  return (!$profile->isNew()) ? $profile : FALSE;
 }
 
 /**
