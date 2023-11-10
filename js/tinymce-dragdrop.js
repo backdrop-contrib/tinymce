@@ -31,11 +31,13 @@
           if (ev.which == 39) {
             $(this).insertAfter($(this).next());
             $(this).focus();
+            updateFormItem();
           }
           // 37 = Arrow left.
           else if (ev.which == 37) {
             $(this).insertBefore($(this).prev());
             $(this).focus();
+            updateFormItem();
           }
           // 173 = "-" key.
           else if (ev.which == 173) {
