@@ -6,6 +6,9 @@
 
 /**
  * TinyMCE profile listing page.
+ *
+ * @return string
+ *   Rendered page content.
  */
 function tinymce_profile_listing_page() {
   $profiles = config_get_names_with_prefix('tinymce.profile');
@@ -69,7 +72,7 @@ function tinymce_profile_listing_page() {
  *   Basic form structure.
  * @param array $form_state
  *   Build structure.
- * @param null|object $profile
+ * @param null|Config $profile
  *   Config object or null when creating a new profile.
  *
  * @return array
