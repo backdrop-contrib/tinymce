@@ -13,6 +13,7 @@ function tinymce_profile_listing_page() {
   $items_default = array();
   $items_custom = array();
   $profiles_in_use = _tinymce_profiles_in_use();
+
   foreach ($profiles as $profile) {
     $config = config($profile);
     $name = $config->get('name');
@@ -21,6 +22,7 @@ function tinymce_profile_listing_page() {
       $items_default[] = array(
         'label' => $label,
         'name' => $name,
+        'in_use' => array_key_exists($name, $profiles_in_use) ? $profiles_in_use[$name] : '-',
         'actions' => t('Default (module-provided)'),
       );
     }
@@ -31,7 +33,7 @@ function tinymce_profile_listing_page() {
           'href' => "admin/config/content/tinymce-builder/$name/edit",
         ),
       );
-      if (!in_array($name, $profiles_in_use)) {
+      if (!array_key_exists($name, $profiles_in_use)) {
         $links['delete'] = array(
           'title' => t('Delete'),
           'href' => "admin/config/content/tinymce-builder/$name/delete",
@@ -40,6 +42,7 @@ function tinymce_profile_listing_page() {
       $items_custom[] = array(
         'label' => check_plain($label),
         'name' => $name,
+        'in_use' => array_key_exists($name, $profiles_in_use) ? $profiles_in_use[$name] : '-',
         'links' => array(
           'data' => array(
             '#type' => 'operations',
@@ -52,7 +55,7 @@ function tinymce_profile_listing_page() {
   $addlink = l(t('Add custom profile'), 'admin/config/content/tinymce-builder/add');
   $content = '<ul class="action-links"><li>' . $addlink . '</li></ul>';
   $content .= theme('table', array(
-    'header' => array(t('Label'), t('Machine name'), t('Action')),
+    'header' => array(t('Label'), t('Machine name'), t('In use'), t('Action')),
     'rows' => array_merge($items_default, $items_custom),
   ));
   $content .= '<p>' . t('Note that it is not recommended to edit profiles customized in code with the admin form. Settings might get lost.') . '</p>';
@@ -60,7 +63,7 @@ function tinymce_profile_listing_page() {
 }
 
 /**
- * Admin form to create custom TinyMCE profiles.
+ * Admin form to create or edit custom TinyMCE profiles.
  *
  * @param array $form
  *   Basic form structure.
@@ -220,7 +223,7 @@ function tinymce_builder_form(array $form, array &$form_state, $profile = NULL) 
   if ($profile) {
     $profiles_in_use = _tinymce_profiles_in_use();
     $name = $profile->get('name');
-    if (!in_array($name, $profiles_in_use)) {
+    if (!array_key_exists($name, $profiles_in_use)) {
       $form['actions']['delete'] = array(
         '#type' => 'link',
         '#title' => t('Delete'),
@@ -297,6 +300,7 @@ function _tinymce_build_active_list_wrapper($default_button_list) {
  * Helper function to find TinyMCE profiles in use in any format.
  *
  * @return array
+ *   Associative array keyed by profile name.
  */
 function _tinymce_profiles_in_use() {
   $all_formats = config_get_names_with_prefix('filter.format.');;
@@ -307,7 +311,16 @@ function _tinymce_profiles_in_use() {
       if ($editor != 'tinymce') {
         continue;
       }
-      $profiles_in_use[] = $config->get('editor_settings.tinymce_settings.profile');
+      $format_machinename = $config->get('format');
+      $format_humanname = $config->get('name');
+      $format_link = l(check_plain($format_humanname), "admin/config/content/formats/$format_machinename");
+      $profile_machinename = $config->get('editor_settings.tinymce_settings.profile');
+      if (array_key_exists($profile_machinename, $profiles_in_use)) {
+        $profiles_in_use[$profile_machinename] .= ', ' . $format_link;
+      }
+      else {
+        $profiles_in_use[$profile_machinename] = $format_link;
+      }
     }
   }
   return $profiles_in_use;
@@ -406,7 +419,7 @@ function tinymce_builder_delete_confirm(array $form, array &$form_state, $profil
     '#attributes' => array(
       'class' => array('button-danger'),
     ),
-    '#disabled' => in_array($name, $profiles_in_use),
+    '#disabled' => array_key_exists($name, $profiles_in_use),
   );
   $form['actions']['cancel'] = array(
     '#type' => 'link',
