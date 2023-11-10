@@ -252,6 +252,15 @@ function tinymce_builder_form(array $form, array &$form_state, $profile = NULL) 
 
 /**
  * Helper function to build a list item for draggable button lists.
+ *
+ * @param array $data
+ *   Button item, key-value pairs.
+ * @param array $icons
+ *   Icon list, key-value pair of name and SVG content.
+ * @param string $button_name
+ *   Button name.
+ *
+ * @return string
  */
 function _tinymce_build_buttonlist_item(array $data, array $icons, $button_name) {
   $label = $button_name;
@@ -278,6 +287,13 @@ function _tinymce_build_buttonlist_item(array $data, array $icons, $button_name)
 
 /**
  * Helper function to wrap button lists in markup.
+ *
+ * @param string $button_list
+ *   Markup of buttons list to wrap.
+ * @param string $separator_item
+ *   Markup of separator item to wrap.
+ *
+ * @return string
  */
 function _tinymce_build_available_list_wrapper($button_list, $separator_item) {
   $markup = '<div><strong>' . t('Available') . ':</strong></div>';
@@ -290,6 +306,11 @@ function _tinymce_build_available_list_wrapper($button_list, $separator_item) {
 
 /**
  * Helper function to wrap button list in markup.
+ *
+ * @param string $default_button_list
+ *   Markup of buttons list to wrap.
+ *
+ * @return string
  */
 function _tinymce_build_active_list_wrapper($default_button_list) {
   $markup = '<div><strong>' . t('Active') . ':</strong></div>';
@@ -332,7 +353,7 @@ function _tinymce_profiles_in_use() {
 /**
  * Submission handler for tinymce_builder_form().
  */
-function tinymce_builder_form_submit($form, &$form_state) {
+function tinymce_builder_form_submit(array $form, array &$form_state) {
   form_state_values_clean($form_state);
   $filter_allowlist = array();
   $plugins = array();
@@ -445,6 +466,11 @@ function tinymce_builder_delete_confirm_submit(array $form, array &$form_state) 
 
 /**
  * Helper function to check if a config name already exists.
+ *
+ * @param string $name
+ *   Profile name to check.
+ *
+ * @return bool
  */
 function tinymce_profile_name_exists($name) {
   $existing = array();
@@ -458,6 +484,8 @@ function tinymce_profile_name_exists($name) {
 
 /**
  * Helper function to return structured info about buttons.
+ *
+ * @return array
  */
 function _tinymce_get_button_defs() {
   $buttons = array(
@@ -710,6 +738,10 @@ function _tinymce_collect_icons() {
   // tinymce.activeEditor.ui.registry.getAll().icons
   $icon_file = $module_path . '/builder-data/icons.json';
   $icon_data = file_get_contents($icon_file);
+  if (!$icon_data) {
+    backdrop_set_message(t('Loading icon data failed.'), 'error');
+    return array();
+  }
   $icons = json_decode($icon_data, TRUE);
 
   // Also collect custom icons provided by plugins.

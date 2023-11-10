@@ -6,8 +6,11 @@
 
 /**
  * Custom callback for filter form.
+ *
+ * @param stdClass $format
+ *   Filter format.
  */
-function _tinymce_settings_form(&$form, $form_state, $format) {
+function _tinymce_settings_form(array &$form, array $form_state, $format) {
   $form['#validate'][] = '_tinymce_settings_form_validate';
   $elements = array();
   $settings = $format->editor_settings;
@@ -90,7 +93,7 @@ function _tinymce_settings_form(&$form, $form_state, $format) {
 /**
  * Validation callback for settings form.
  */
-function _tinymce_settings_form_validate($form, &$form_state) {
+function _tinymce_settings_form_validate(array $form, array &$form_state) {
   unset($form_state['values']['editor_settings']['tabs']);
 
   if (!empty($form_state['values']['editor_settings']['tinymce_settings']['content_css'])) {

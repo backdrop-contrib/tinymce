@@ -6,6 +6,11 @@
 
 /**
  * Menu callback; Saves images uploaded via copy/paste into the editor.
+ *
+ * @param stdClass $format
+ *   Filter format.
+ *
+ * @return array|void
  */
 function tinymce_image_upload($format) {
   $upload_settings = $format->editor_settings['image_upload'];
