@@ -1,14 +1,88 @@
 <?php
 /**
  * @file
- * TinyMCE profile builder form.
+ * TinyMCE profile builder page and forms.
  */
 
 /**
- * Admin form to create custom TinyMCE profiles.
+ * TinyMCE profile listing page.
+ *
+ * @return string
+ *   Rendered page content.
  */
-function tinymce_builder_form($form, &$form_state) {
-  $form = array();
+function tinymce_profile_listing_page() {
+  $profiles = config_get_names_with_prefix('tinymce.profile');
+  $default_profiles = array('default', 'full', 'small');
+  $items_default = array();
+  $items_custom = array();
+  $profiles_in_use = _tinymce_profiles_in_use();
+
+  foreach ($profiles as $profile) {
+    $config = config($profile);
+    $name = $config->get('name');
+    $label = $config->get('label');
+    if (in_array($name, $default_profiles)) {
+      $items_default[] = array(
+        'label' => $label,
+        'name' => $name,
+        'in_use' => array_key_exists($name, $profiles_in_use) ? $profiles_in_use[$name] : '-',
+        'actions' => t('Default (module-provided)'),
+      );
+    }
+    else {
+      $links = array(
+        'edit' => array(
+          'title' => t('Edit'),
+          'href' => "admin/config/content/tinymce-builder/$name/edit",
+        ),
+      );
+      if (!array_key_exists($name, $profiles_in_use)) {
+        $links['delete'] = array(
+          'title' => t('Delete'),
+          'href' => "admin/config/content/tinymce-builder/$name/delete",
+        );
+      }
+      $items_custom[] = array(
+        'label' => check_plain($label),
+        'name' => $name,
+        'in_use' => array_key_exists($name, $profiles_in_use) ? $profiles_in_use[$name] : '-',
+        'links' => array(
+          'data' => array(
+            '#type' => 'operations',
+            '#links' => $links,
+          ),
+        ),
+      );
+    }
+  }
+  $addlink = l(t('Add custom profile'), 'admin/config/content/tinymce-builder/add');
+  $content = '<ul class="action-links"><li>' . $addlink . '</li></ul>';
+  $content .= theme('table', array(
+    'header' => array(t('Label'), t('Machine name'), t('In use'), t('Action')),
+    'rows' => array_merge($items_default, $items_custom),
+  ));
+  $content .= '<p>' . t('Note that it is not recommended to edit profiles customized in code with the admin form. Settings might get lost.') . '</p>';
+  return $content;
+}
+
+/**
+ * Admin form to create or edit custom TinyMCE profiles.
+ *
+ * @param array $form
+ *   Basic form structure.
+ * @param array $form_state
+ *   Build structure.
+ * @param null|Config $profile
+ *   Config object or null when creating a new profile.
+ *
+ * @return array
+ */
+function tinymce_builder_form(array $form, array &$form_state, $profile = NULL) {
+  if ($profile) {
+    backdrop_set_title(t('Edit profile %label', array(
+      '%label' => $profile->get('label'),
+    )), PASS_THROUGH);
+  }
   $module_path = backdrop_get_path('module', 'tinymce');
   $form['#attached']['library'][] = array('system', 'ui.sortable');
   $form['#attached']['library'][] = array('system', 'ui.draggable');
@@ -18,37 +92,60 @@ function tinymce_builder_form($form, &$form_state) {
   $form['label'] = array(
     '#type' => 'textfield',
     '#title' => t('Profile name'),
-    '#default_value' => '',
+    '#default_value' => ($profile) ? $profile->get('label') : NULL,
     '#required' => TRUE,
   );
-  $form['name'] = array(
-    '#type' => 'machine_name',
-    '#default_value' => '',
-    '#machine_name' => array(
-      'exists' => 'tinymce_profile_name_exists',
-      'source' => array('label'),
-    ),
-  );
+  if ($profile) {
+    $form['name'] = array(
+      '#type' => 'value',
+      '#value' => $profile->get('name'),
+    );
+  }
+  else {
+    $form['name'] = array(
+      '#type' => 'machine_name',
+      '#default_value' => '',
+      '#machine_name' => array(
+        'exists' => 'tinymce_profile_name_exists',
+        'source' => array('label'),
+      ),
+    );
+  }
   $form['set'] = array(
     '#type' => 'fieldset',
     '#title' => t('Settings'),
   );
+  $menubar_value = 0;
+  if ($profile) {
+    $menubar_setting = $profile->get('tiny_options.menubar');
+    // Not set means it's enabled, as well as "true".
+    if ($menubar_setting === NULL || $menubar_setting === TRUE) {
+      $menubar_value = 1;
+    }
+  }
   $form['set']['use_menu'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use menubar'),
-    '#default_value' => 0,
-    '#description' => 'Provides a dropdown menu above the toolbar.',
+    '#default_value' => $menubar_value,
+    '#description' => t('Provides a dropdown menu above the toolbar.'),
   );
+  $autoresize_value = 1;
+  if ($profile) {
+    $plugin_setting_string = $profile->get('tiny_options.plugins');
+    if (strpos($plugin_setting_string, 'autoresize') === FALSE) {
+      $autoresize_value = 0;
+    }
+  }
   $form['set']['autoresize'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use autoresize'),
-    '#default_value' => 1,
-    '#description' => 'Lets the editor height automatically increase with its content.',
+    '#default_value' => $autoresize_value,
+    '#description' => t('Lets the editor height automatically increase with its content.'),
   );
 
   $icons = _tinymce_collect_icons();
   $buttons = _tinymce_get_button_defs();
-  $toolbar_default = config_get('tinymce.profiles.default', 'tiny_options.toolbar');
+  $toolbar_default = ($profile) ? $profile->get('tiny_options.toolbar') : config_get('tinymce.profiles.default', 'tiny_options.toolbar');
   $toolbar_default_buttons = explode(' ', $toolbar_default);
 
   $button_list = '';
@@ -74,6 +171,13 @@ function tinymce_builder_form($form, &$form_state) {
     }
     if (isset($buttons[$name])) {
       $default_button_list .= _tinymce_build_buttonlist_item($buttons[$name], $icons, $name);
+    }
+    else {
+      $placeholder = array(
+        'icon' => 'temporary-placeholder',
+        'tooltip' => $name . ' (?)',
+      );
+      $default_button_list .= _tinymce_build_buttonlist_item($placeholder, $icons, $name);
     }
   }
 
@@ -119,6 +223,30 @@ function tinymce_builder_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Save profile'),
   );
+  if ($profile) {
+    $profiles_in_use = _tinymce_profiles_in_use();
+    $name = $profile->get('name');
+    if (!array_key_exists($name, $profiles_in_use)) {
+      $form['actions']['delete'] = array(
+        '#type' => 'link',
+        '#title' => t('Delete'),
+        '#href' => "admin/config/content/tinymce-builder/$name/delete",
+        '#options' => array(
+          'attributes' => array(
+            'class' => array(
+              'button', 'button-secondary', 'form-delete',
+            ),
+          ),
+        ),
+      );
+    }
+  }
+  $form['actions']['cancel'] = array(
+    '#type' => 'link',
+    '#title' => t('Cancel'),
+    '#href' => 'admin/config/content/tinymce-builder',
+  );
+
   return $form;
 }
 
@@ -172,6 +300,36 @@ function _tinymce_build_active_list_wrapper($default_button_list) {
 }
 
 /**
+ * Helper function to find TinyMCE profiles in use in any format.
+ *
+ * @return array
+ *   Associative array keyed by profile name.
+ */
+function _tinymce_profiles_in_use() {
+  $all_formats = config_get_names_with_prefix('filter.format.');;
+  $profiles_in_use = array();
+  foreach ($all_formats as $name) {
+    $config = config($name);
+    if ($editor = $config->get('editor')) {
+      if ($editor != 'tinymce') {
+        continue;
+      }
+      $format_machinename = $config->get('format');
+      $format_humanname = $config->get('name');
+      $format_link = l(check_plain($format_humanname), "admin/config/content/formats/$format_machinename");
+      $profile_machinename = $config->get('editor_settings.tinymce_settings.profile');
+      if (array_key_exists($profile_machinename, $profiles_in_use)) {
+        $profiles_in_use[$profile_machinename] .= ', ' . $format_link;
+      }
+      else {
+        $profiles_in_use[$profile_machinename] = $format_link;
+      }
+    }
+  }
+  return $profiles_in_use;
+}
+
+/**
  * Submission handler for tinymce_builder_form().
  */
 function tinymce_builder_form_submit($form, &$form_state) {
@@ -185,12 +343,14 @@ function tinymce_builder_form_submit($form, &$form_state) {
     if ($button == '|') {
       continue;
     }
-    $info = $buttons[$button];
-    if (isset($info['required_tags'])) {
-      $filter_allowlist = array_merge($filter_allowlist, array_values($info['required_tags']));
-    }
-    if (isset($info['plugin'])) {
-      $plugins[] = $info['plugin'];
+    if (isset($buttons[$button])) {
+      $info = $buttons[$button];
+      if (isset($info['required_tags'])) {
+        $filter_allowlist = array_merge($filter_allowlist, array_values($info['required_tags']));
+      }
+      if (isset($info['plugin'])) {
+        $plugins[] = $info['plugin'];
+      }
     }
   }
   // We always need these, even if no button requires them:
@@ -199,13 +359,21 @@ function tinymce_builder_form_submit($form, &$form_state) {
   $allow_tags = implode(',', array_unique($filter_allowlist));
 
   $config = config('tinymce.profiles.' . $form_state['values']['name']);
-  $config->set('name', $form_state['values']['name']);
+  if ($config->isNew()) {
+    $config->set('name', $form_state['values']['name']);
+  }
   $config->set('label', $form_state['values']['label']);
   $config->set('filter_allowed_html', $allow_tags);
 
   $tiny_options = array();
+  if (!$config->isNew()) {
+    $tiny_options = $config->get('tiny_options');
+  }
   if (!$form_state['values']['use_menu']) {
     $tiny_options['menubar'] = FALSE;
+  }
+  else {
+    unset($tiny_options['menubar']);
   }
   if ($form_state['values']['autoresize']) {
     $plugins[] = 'autoresize';
@@ -225,10 +393,54 @@ function tinymce_builder_form_submit($form, &$form_state) {
   $config->set('tiny_options', $tiny_options);
   $config->save();
 
-  $form_state['redirect'] = 'admin/config/content/formats';
+  $form_state['redirect'] = 'admin/config/content/tinymce-builder';
   backdrop_set_message(t('The profile %profile has been saved.', array(
     '%profile' => $form_state['values']['label'],
   )));
+}
+
+/**
+ * Form callback to delete a TinyMCE profile.
+ */
+function tinymce_builder_delete_confirm(array $form, array &$form_state, $profile) {
+  backdrop_set_title(t('Delete profile %label', array(
+    '%label' => $profile->get('label'),
+  )), PASS_THROUGH);
+  $name = $profile->get('name');
+  $profiles_in_use = _tinymce_profiles_in_use();
+  $form['profile'] = array(
+    '#type' => 'value',
+    '#value' => $name,
+  );
+  $form['info'] = array(
+    '#type' => 'markup',
+    '#markup' => '<p>' . t('This action cannot be undone.') . '</p>',
+  );
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete'),
+    '#attributes' => array(
+      'class' => array('button-danger'),
+    ),
+    '#disabled' => array_key_exists($name, $profiles_in_use),
+  );
+  $form['actions']['cancel'] = array(
+    '#type' => 'link',
+    '#title' => t('Cancel'),
+    '#href' => 'admin/config/content/tinymce-builder',
+  );
+  return $form;
+}
+
+/**
+ * Submission callback to delete a TinyMCE profile.
+ */
+function tinymce_builder_delete_confirm_submit(array $form, array &$form_state) {
+  $name = $form_state['values']['profile'];
+  $config = config("tinymce.profiles.$name");
+  $config->delete();
+  $form_state['redirect'] = 'admin/config/content/tinymce-builder';
+  backdrop_set_message('The profile has been deleted.');
 }
 
 /**
