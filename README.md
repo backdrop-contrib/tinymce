@@ -29,7 +29,6 @@ Because CKEditor might eventually not be the ideal solution for your site,
 If none of the three default profiles meets your needs, you can create
  custom ones with the **builder tool**. Go to admin/config/content/tinymce-builder
  to create a custom profile via drag-and-drop with the buttons you need.
- This builder *will not edit* existing profiles, just create new ones.
 
 Find additional documentation in the [wiki](https://github.com/backdrop-contrib/tinymce/wiki).
 
