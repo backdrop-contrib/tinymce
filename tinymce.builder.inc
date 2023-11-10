@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * TinyMCE profile builder page forms.
+ * TinyMCE profile builder page and forms.
  */
 
 /**
@@ -51,11 +51,9 @@ function tinymce_profile_listing_page() {
   }
   $addlink = l(t('Add custom profile'), 'admin/config/content/tinymce-builder/add');
   $content = '<ul class="action-links"><li>' . $addlink . '</li></ul>';
-  $header = array(t('Label'), t('Machine name'), t('Action'));
-  $rows = array_merge($items_default, $items_custom);
   $content .= theme('table', array(
-    'header' => $header,
-    'rows' => $rows,
+    'header' => array(t('Label'), t('Machine name'), t('Action')),
+    'rows' => array_merge($items_default, $items_custom),
   ));
   $content .= '<p>' . t('Note that it is not recommended to edit profiles customized in code with the admin form. Settings might get lost.') . '</p>';
   return $content;
@@ -63,6 +61,15 @@ function tinymce_profile_listing_page() {
 
 /**
  * Admin form to create custom TinyMCE profiles.
+ *
+ * @param array $form
+ *   Basic form structure.
+ * @param array $form_state
+ *   Build structure.
+ * @param null|object $profile
+ *   Config object or null when creating a new profile.
+ *
+ * @return array
  */
 function tinymce_builder_form(array $form, array &$form_state, $profile = NULL) {
   if ($profile) {
@@ -228,6 +235,11 @@ function tinymce_builder_form(array $form, array &$form_state, $profile = NULL) 
       );
     }
   }
+  $form['actions']['cancel'] = array(
+    '#type' => 'link',
+    '#title' => t('Cancel'),
+    '#href' => 'admin/config/content/tinymce-builder',
+  );
 
   return $form;
 }
