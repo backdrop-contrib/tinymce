@@ -76,6 +76,12 @@ function tinymce_menu() {
 
 /**
  * Auto-loader for tinymce_profile item wildcard.
+ *
+ * @param string $name
+ *   Profile name from path.
+ *
+ * @return Config|false
+ *   Config object if this profile exists, FALSE otherwise.
  */
 function tinymce_profile_load($name) {
   $profile = config("tinymce.profiles.$name");
