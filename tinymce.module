@@ -57,14 +57,14 @@ function tinymce_menu() {
     'access arguments' => array('administer filters'),
     'file' => 'tinymce.builder.inc',
   );
-  $items['admin/config/content/tinymce-builder/%tinymce_profile/edit'] = array(
+  $items['admin/config/content/tinymce-builder/%tinymceprofile/edit'] = array(
     'title' => 'Edit profile',
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('tinymce_builder_form', 4),
     'access arguments' => array('administer filters'),
     'file' => 'tinymce.builder.inc',
   );
-  $items['admin/config/content/tinymce-builder/%tinymce_profile/delete'] = array(
+  $items['admin/config/content/tinymce-builder/%tinymceprofile/delete'] = array(
     'title' => 'Delete profile',
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('tinymce_builder_delete_confirm', 4),
@@ -75,7 +75,7 @@ function tinymce_menu() {
 }
 
 /**
- * Auto-loader for tinymce_profile item wildcard.
+ * Auto-loader for tinymceprofile item wildcard.
  *
  * @param string $name
  *   Profile name from path.
@@ -83,7 +83,7 @@ function tinymce_menu() {
  * @return Config|false
  *   Config object if this profile exists, FALSE otherwise.
  */
-function tinymce_profile_load($name) {
+function tinymceprofile_load($name) {
   $profile = config("tinymce.profiles.$name");
   return (!$profile->isNew()) ? $profile : FALSE;
 }
