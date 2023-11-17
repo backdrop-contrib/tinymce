@@ -260,7 +260,7 @@ function _tinymce_get_content_css(array $settings) {
  * Helper function to build the upload URL.
  *
  * @param stdClass $format
- *   Filter format
+ *   Filter format.
  *
  * @return string
  */
