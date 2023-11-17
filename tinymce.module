@@ -172,15 +172,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
 
   // Settings from admin UI.
   $options['tiny_options']['skin'] = $settings['tinymce_settings']['skin'];
-  $options['tiny_options']['content_css'] = array(
-    base_path() . backdrop_get_path('module', 'tinymce') . '/css/tinymce-content.css',
-  );
-  if (!empty($settings['tinymce_settings']['content_css'])) {
-    $css_files = explode("\n", trim($settings['tinymce_settings']['content_css']));
-    foreach ($css_files as $file) {
-      $options['tiny_options']['content_css'][] = trim($file);
-    }
-  }
+  $options['tiny_options']['content_css'] = _tinymce_get_content_css($settings['tinymce_settings']);
 
   // Collect additional TinyMCE plugins from hook.
   $external_plugins = module_invoke_all('tinymce_external_plugins', $format);
@@ -226,17 +218,9 @@ function _tinymce_js_settings($format, array $existing_settings) {
 
   // Drag-and-drop upload.
   if ($format->editor_settings['image_upload']['status']) {
-    $upload_url_opts = array(
-      'query' => array(
-        'token' => filter_editor_dialog_token($format, 'image'),
-        'calling_path' => $_GET['q'],
-      ));
-    if (!function_exists('image_gd_supported_extensions')) {
-      require BACKDROP_ROOT . '/' . backdrop_get_path('module', 'system') . '/image.gd.inc';
-    }
-    $extensions = image_gd_supported_extensions();
+    $extensions = image_get_supported_extensions();
     $options['tiny_options']['images_file_types'] = implode(',', $extensions);
-    $options['tiny_options']['images_upload_url'] = url('tinymce/upload/image/' . $format->format, $upload_url_opts);
+    $options['tiny_options']['images_upload_url'] = _tinymce_images_upload_url($format);
     $options['tiny_options']['automatic_uploads'] = TRUE;
     $options['tiny_options']['images_reuse_filename'] = TRUE;
     // The default image plugin doesn't reliably handle data-file-id. Prevent
@@ -249,6 +233,45 @@ function _tinymce_js_settings($format, array $existing_settings) {
   }
 
   return $options;
+}
+
+/**
+ * Helper function to collect content CSS files.
+ *
+ * @param array $settings
+ *   Settings from admin UI.
+ *
+ * @return array
+ */
+function _tinymce_get_content_css(array $settings) {
+  $content_css = array(
+    base_path() . backdrop_get_path('module', 'tinymce') . '/css/tinymce-content.css',
+  );
+  if (!empty($settings['content_css'])) {
+    $css_files = explode("\n", trim($settings['content_css']));
+    foreach ($css_files as $file) {
+      $content_css[] = trim($file);
+    }
+  }
+  return $content_css;
+}
+
+/**
+ * Helper function to build the upload URL.
+ *
+ * @param stdClass $format
+ *   Filter format
+ *
+ * @return string
+ */
+function _tinymce_images_upload_url($format) {
+  $upload_url_opts = array(
+    'query' => array(
+      'token' => filter_editor_dialog_token($format, 'image'),
+      'calling_path' => $_GET['q'],
+    ),
+  );
+  return url('tinymce/upload/image/' . $format->format, $upload_url_opts);
 }
 
 /**
