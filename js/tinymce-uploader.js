@@ -43,6 +43,14 @@ const tinymceImageUploadHandler = function (blobInfo, progress) {
 
       // Update other attributes, TinyMCE doesn't take care of.
       setTimeout(function () {
+        if (json.errors) {
+          // For example resized images.
+          tinymce.activeEditor.notificationManager.open({
+            text: json.errors,
+            type: 'warning',
+            icon: 'warn'
+          });
+        }
         let imgDomnode = tinymce.activeEditor.getBody().querySelector('[src^="' + json.location + '"]');
         if (imgDomnode) {
           imgDomnode.setAttribute('width', json.width);
