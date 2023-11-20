@@ -68,7 +68,7 @@ function tinymce_image_upload($format) {
     $message_string .= $type[0] . ' ';
   }
   if ($message_string) {
-    $response['errors'] = $message_string;
+    $response['errors'] = strip_tags($message_string);
   }
 
   return $response;
