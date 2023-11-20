@@ -66,7 +66,11 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
         for (let i = 0; i < nodes.length; i++) {
           let childImgs = nodes[i].getAll('img');
           if (!childImgs.length) {
-            nodes[i].remove();
+            // Remove empty figures, leave others untouched as figure can
+            // contain almost anything. Not just images.
+            if (!nodes[i].children().length) {
+              nodes[i].remove();
+            }
             continue;
           }
           let img = childImgs[0].clone();
