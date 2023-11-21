@@ -23,10 +23,17 @@ tinymce.PluginManager.add('backdropimage', function(editor, url) {
         }
       });
       editor.on('dblclick', function (ev) {
-        let node = editor.selection.getNode();
-        if (backdropimageTools.isRegularImg(node)) {
+        if (backdropimageTools.isRegularImg(ev.target)) {
           backdropimageTools.backdropDialog(editor);
+          ev.stopImmediatePropagation();
         }
+      });
+      // @see https://github.com/backdrop-contrib/tinymce/issues/56
+      editor.on('ObjectSelected', function (obj) {
+        if (obj.target.nodeName != 'IMG') {
+          return;
+        }
+        editor.selection.select(obj.target);
       });
       // Parser fires when the editor initializes, or the code plugin submits.
       editor.parser.addAttributeFilter('data-caption', function (nodes) {
