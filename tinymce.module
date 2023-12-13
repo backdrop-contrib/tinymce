@@ -208,7 +208,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
         // Extend restrictions for inline styles, if the filter's enabled.
         // Otherwise not necessary, as there's no restriction then.
         $options['tiny_options']['valid_styles']['ol'] = 'list-style-type';
-        $options['tiny_options']['valid_styles']['ol'] = 'list-style-type';
+        $options['tiny_options']['valid_styles']['ul'] = 'list-style-type';
       }
     }
   }
