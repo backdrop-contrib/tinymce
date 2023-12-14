@@ -275,8 +275,7 @@ function _tinymce_collect_theme_css($theme = NULL) {
     $theme_url = base_path() . $theme_path;
     $info = system_get_info('theme', $theme);
     if (isset($info['tinymce_content_css'])) {
-      $css_paths = $info['tinymce_content_css'];
-      foreach ($css_paths as $path) {
+      foreach ($info['tinymce_content_css'] as $path) {
         $css[] = $theme_url . '/' . $path;
       }
     }
