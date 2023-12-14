@@ -280,7 +280,7 @@ function _tinymce_collect_theme_css($theme = NULL) {
       }
     }
     if (isset($info['base theme'])) {
-      $css = array_merge($css, _tinymce_collect_theme_css($info['base theme']));
+      $css = array_merge(_tinymce_collect_theme_css($info['base theme']), $css);
     }
   }
   return $css;
