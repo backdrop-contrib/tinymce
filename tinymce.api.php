@@ -48,7 +48,7 @@ function hook_tinymce_external_plugins($format) {
 }
 
 /**
- * Themes can add CSS files for conent display via info file.
+ * Themes can add CSS files for content display via info file.
  *
  * In mytheme.info add something like:
  *
