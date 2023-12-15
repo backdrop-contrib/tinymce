@@ -250,7 +250,9 @@ function _tinymce_plugin_is_dependency($plugins, $name) {
   if ($name == 'liststyle' && strpos($plugins, 'advlist') !== FALSE) {
     return TRUE;
   }
-  if ($name == 'backdroplistprop' && strpos($plugins, 'lists') !== FALSE) {
+  // Not really a dependency, but start/reversed without list-style-type are
+  // odd.
+  if ($name == 'backdroplistprop' && strpos($plugins, 'advlist') !== FALSE) {
     return TRUE;
   }
   return FALSE;

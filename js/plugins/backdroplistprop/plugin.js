@@ -6,8 +6,8 @@
 
 tinymce.PluginManager.add('backdroplistprop', function(editor, url) {
   editor.ui.registry.addMenuItem('backdroplistorder', {
-    icon: 'sorting',
-    text: 'List order',
+    icon: 'ordered-list',
+    text: 'List properties...',
     onAction: function () {
       backdropListProp.openDialog(editor);
     }
@@ -18,7 +18,7 @@ tinymce.PluginManager.add('backdroplistprop', function(editor, url) {
   editor.ui.registry.addContextMenu('backdroplistprops', {
     update: function (element) {
       if (backdropListProp.getOlParent(element)) {
-        return 'backdroplistorder listprops';
+        return 'backdroplistorder';
       }
       return '';
     }
@@ -37,16 +37,25 @@ backdropListProp.openDialog = function (editor) {
     return;
   }
   editor.windowManager.open({
-    title: 'List ordering',
+    title: 'List properties...',
     body: {
       type: 'panel',
-      items: [{
+      items: [
+        {
+          type: 'input',
+          name: 'startnum',
+          label: 'Start list at number',
+          inputMode: 'numeric'
+        },
+        {
           type: 'checkbox',
           name: 'reverseorder',
           label: 'Reversed order'
-        }]
+        }
+      ]
     },
     initialData: {
+      startnum: editor.dom.getAttrib(parentOl, 'start', '1'),
       reverseorder: parentOl.hasAttribute('reversed')
     },
     buttons: [
@@ -69,6 +78,12 @@ backdropListProp.openDialog = function (editor) {
       }
       else {
         parentOl.removeAttribute('reversed');
+      }
+      if (data.startnum > 1) {
+        parentOl.setAttribute('start', data.startnum);
+      }
+      else {
+        parentOl.removeAttribute('start');
       }
       api.close();
     }
