@@ -48,6 +48,19 @@ function hook_tinymce_external_plugins($format) {
 }
 
 /**
+ * Themes can add CSS files for content display via info file.
+ *
+ * In mytheme.info add something like:
+ *
+ * @code
+ *   tinymce_content_css[] = css/mystyle.css
+ *   tinymce_content_css[] = css/morestyles.css
+ * @endcode
+ *
+ * TinyMCE will then apply these styles to editor content.
+ */
+
+/**
  * Not actually a hook.
  *
  * Editor profiles are config, so you can add your own by adding a JSON file to
