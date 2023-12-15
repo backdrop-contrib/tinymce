@@ -512,7 +512,6 @@ function tinymce_tinymce_external_plugins($format) {
     ),
     'backdroplistprop' => array(
       'plugin_path' => $module_url . '/js/plugins/backdroplistprop/plugin.js',
-      'icons' => array('sorting' => 'sorting.svg'),
     ),
   );
 

@@ -13,8 +13,6 @@ tinymce.PluginManager.add('backdroplistprop', function(editor, url) {
     }
   });
 
-  // Glue contextmenu that uses the listprops menu item from lists plugin and
-  // adds the sorting/ordering functionality not provided by TinyMCE.
   editor.ui.registry.addContextMenu('backdroplistprops', {
     update: function (element) {
       if (backdropListProp.getOlParent(element)) {
