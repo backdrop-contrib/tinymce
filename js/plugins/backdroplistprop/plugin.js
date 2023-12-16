@@ -6,7 +6,7 @@
   'use strict';
 
   /**
-   * Opens a TinyMCE dialog with form content.
+   * Opens a TinyMCE dialog with a form.
    *
    * @param object editor
    *   TinyMCE instance.
@@ -85,7 +85,7 @@
     return false;
   }
 
-  // Register plugin.
+  // Register plugin features.
   tinymce.PluginManager.add('backdroplistprop', function(editor, url) {
     editor.ui.registry.addMenuItem('backdroplistorder', {
       icon: 'ordered-list',
