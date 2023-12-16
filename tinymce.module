@@ -181,7 +181,9 @@ function _tinymce_js_settings($format, array $existing_settings) {
   foreach ($external_plugins as $name => $plugin) {
     if (strpos($options['tiny_options']['plugins'], $name) === FALSE) {
       // Do not load plugin if not needed.
-      continue;
+      if (!_tinymce_plugin_is_dependency($options['tiny_options']['plugins'], $name)) {
+        continue;
+      }
     }
     $options['tiny_options']['external_plugins'][$name] = $plugin['plugin_path'];
     if (!empty($plugin['variables'])) {
@@ -203,7 +205,6 @@ function _tinymce_js_settings($format, array $existing_settings) {
     }
     // This helper plugin deals with inline styles produced by advlist.
     if (strpos($options['tiny_options']['plugins'], 'advlist') !== FALSE) {
-      $options['tiny_options']['external_plugins']['liststyle'] = $external_plugins['liststyle']['plugin_path'];
       if ($format->filters['filter_html']->status) {
         // Extend restrictions for inline styles, if the filter's enabled.
         // Otherwise not necessary, as there's no restriction then.
@@ -233,6 +234,28 @@ function _tinymce_js_settings($format, array $existing_settings) {
   }
 
   return $options;
+}
+
+/**
+ * Helper for an improvised dependency check.
+ *
+ * @param string $plugins
+ *   Plugin list from profile.
+ * @param string $name
+ *   Plugin name from loop over registered plugins.
+ *
+ * @return bool
+ */
+function _tinymce_plugin_is_dependency($plugins, $name) {
+  if ($name == 'liststyle' && strpos($plugins, 'advlist') !== FALSE) {
+    return TRUE;
+  }
+  // Not really a dependency, but start/reversed without list-style-type are
+  // odd.
+  if ($name == 'backdroplistprop' && strpos($plugins, 'advlist') !== FALSE) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 /**
@@ -486,6 +509,9 @@ function tinymce_tinymce_external_plugins($format) {
     ),
     'liststyle' => array(
       'plugin_path' => $module_url . '/js/plugins/liststyle/plugin.js',
+    ),
+    'backdroplistprop' => array(
+      'plugin_path' => $module_url . '/js/plugins/backdroplistprop/plugin.js',
     ),
   );
 

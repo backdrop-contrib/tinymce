@@ -7,7 +7,7 @@
         "menubar": false,
         "toolbar": "bold italic blockquote | styles | bullist numlist | alignleft aligncenter alignright | backdroplink backdropunlink | backdropimage | code fullscreen",
         "plugins": "backdroplink lists advlist backdropimage fullscreen code autoresize",
-        "contextmenu": "backdropimage backdroplink",
+        "contextmenu": "backdropimage backdroplink backdroplistprops",
         "style_formats": [
             {
                 "title": "Headings",

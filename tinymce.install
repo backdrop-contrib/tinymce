@@ -66,3 +66,24 @@ function tinymce_update_1001() {
     }
   }
 }
+
+/**
+ * Add list properties context menu setting to default profiles.
+ */
+function tinymce_update_1002() {
+  $profiles = array(
+    'tinymce.profiles.default' => 'backdropimage backdroplink',
+    'tinymce.profiles.full' => 'backdroplink backdropimage',
+  );
+  foreach ($profiles as $profile => $orig_value) {
+    $config = config($profile);
+    if ($config->isNew()) {
+      continue;
+    }
+    $current_value = $config->get('tiny_options.contextmenu');
+    if ($current_value == $orig_value) {
+      $config->set('tiny_options.contextmenu', $orig_value . ' backdroplistprops');
+      $config->save();
+    }
+  }
+}
