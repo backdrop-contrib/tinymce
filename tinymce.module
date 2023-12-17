@@ -233,6 +233,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
     $options['tiny_options']['paste_data_images'] = FALSE;
   }
 
+  backdrop_alter('tinymce_options', $options, $format);
   return $options;
 }
 
