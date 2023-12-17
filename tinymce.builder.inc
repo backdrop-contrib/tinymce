@@ -208,12 +208,22 @@ function tinymce_builder_form(array $form, array &$form_state, $profile = NULL) 
     '#type' => 'markup',
     '#markup' => _tinymce_build_available_list_wrapper($button_list, $separator_item),
   );
-  $kbd_help = t('Use <em>tab</em> to navigate, left and right arrow keys to move buttons in active toolbar, the <em>-</em> key to remove, the <em>+</em> key in the avialable list to add to the active list.');
-  $markup = '<div class="element-invisible" id="builder-keyboard-help">' . $kbd_help . '</div>';
+
+  $keyboard_help = array(
+    t('Use <em>tab</em> and <em>shift + tab</em> to navigate'),
+    t('Left and right arrow keys to move focused buttons in active toolbar'),
+    t('The <em>-</em> key to remove from active toolbar'),
+    t('The, the <em>+</em> key in the avialable list to add to the active list'),
+  );
+  $markup = theme('item_list', array(
+    'items' => $keyboard_help,
+    'attributes' => array('id' => 'builder-keyboard-help'),
+  ));
   $markup .= '<div class="element-invisible" id="announce-addremove" aria-live="polite"></div>';
   $form['tb']['keyboard_help'] = array(
-    '#type' => 'markup',
-    '#markup' => $markup,
+    '#type' => 'details',
+    '#summary' => t('Keyboard navigation'),
+    '#details' => $markup,
   );
 
   $form['actions'] = array(
