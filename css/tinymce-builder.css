@@ -37,3 +37,11 @@
 #edit-tb .ui-sortable-helper {
   outline: 3px solid #0074bd;
 }
+#edit-keyboard-help {
+  border: none;
+  padding: 0;
+}
+#edit-keyboard-help summary span {
+  font-size: initial;
+  color: inherit;
+}
