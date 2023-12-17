@@ -61,6 +61,25 @@ function hook_tinymce_external_plugins($format) {
  */
 
 /**
+ * Modify the raw TinyMCE options before they're passed to the editor.
+ *
+ * @param array $options
+ *   Complete options.
+ * @param stdClass $format
+ *   Filter format.
+ */
+function hook_tinymce_options_alter(array &$options, $format) {
+  // Add CSS file based on special conditions.
+  if (_mymodule_special_check()) {
+    $options['tiny_options']['content_css'][] = '/path/to/dynamic/style.css';
+  }
+
+  // Switch toolbar language based on account preference setting.
+  global $user;
+  $options['tiny_options']['language'] = $user->language;
+}
+
+/**
  * Not actually a hook.
  *
  * Editor profiles are config, so you can add your own by adding a JSON file to
