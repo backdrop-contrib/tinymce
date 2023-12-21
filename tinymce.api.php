@@ -63,6 +63,9 @@ function hook_tinymce_external_plugins($format) {
 /**
  * Modify the raw TinyMCE options before they're passed to the editor.
  *
+ * This runs for both, modules and themes, but for themes only if they're the
+ * currently active one. Not if the admin theme is set when editing content.
+ *
  * @param array $options
  *   Complete options.
  * @param stdClass $format
