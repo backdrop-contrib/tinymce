@@ -13,7 +13,7 @@
       }
 
       // Prevent jquery.ui dialog focusin handling breaking tox form elements.
-      $(document).on('focusin', function(event) {
+      $(document).on('focusin', function (event) {
         // It's impossible to make this more specific because of split buttons.
         if (element.form && element.form.classList.contains('layout-block-configure-form')) {
           event.stopImmediatePropagation();
