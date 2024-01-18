@@ -6,7 +6,7 @@
 .wrapper ul {
   display: inline-block;
   margin: 0;
-  padding: .5rem;
+  padding: .3rem;
 }
 .wrapper li {
   cursor: move;
@@ -21,8 +21,8 @@
 .tinybutton {
   background-color: #fff;
   display: inline-block;
-  padding: 1px;
-  margin: 1px;
+  padding: 3px;
+  margin: 2px;
   line-height: 1rem;
   font-size: 1rem;
   vertical-align: middle;
@@ -31,8 +31,11 @@
   vertical-align: bottom;
 }
 .tinybutton.separator {
-  width: .8rem;
+  width: 8px;
   border: 1px dashed;
+}
+.tinybutton:not(:has(svg)) {
+  padding: 5px 8px;
 }
 #edit-tb .ui-sortable-helper {
   outline: 3px solid #0074bd;
