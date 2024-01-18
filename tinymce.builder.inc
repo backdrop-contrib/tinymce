@@ -213,7 +213,7 @@ function tinymce_builder_form(array $form, array &$form_state, $profile = NULL) 
     t('Use <em>tab</em> and <em>shift + tab</em> to navigate'),
     t('Left and right arrow keys to move focused buttons in active toolbar'),
     t('The <em>-</em> key to remove from active toolbar'),
-    t('The, the <em>+</em> key in the avialable list to add to the active list'),
+    t('The <em>+</em> key in the avialable list to add to the active list'),
   );
   $markup = theme('item_list', array(
     'items' => $keyboard_help,
