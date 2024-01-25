@@ -708,6 +708,11 @@ function _tinymce_get_button_defs() {
       'icon' => 'paste-text',
       'tooltip' => t('Paste as text'),
     ),
+    'anchor' => array(
+      'icon' => 'bookmark',
+      'tooltip' => t('Anchor'),
+      'plugin' => 'anchor',
+    ),
     // This is actually a nested menu item, not a button.
     'styles' => array(
       'text' => 'Styles&nbsp;▾',
