@@ -135,7 +135,8 @@
         api.setActive(false);
         editor.on('SelectionChange', function () {
           let node = editor.selection.getNode();
-          if (node.nodeName == 'A') {
+          // The anchor plugin marks its links as not editable.
+          if (node.nodeName == 'A' && node.isContentEditable) {
             api.setActive(true);
           }
           else {

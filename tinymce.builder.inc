@@ -518,6 +518,12 @@ function _tinymce_get_button_defs() {
       'plugin' => 'accordion',
       'required_tags' => array('details', 'summary'),
     ),
+    'anchor' => array(
+      'icon' => 'bookmark',
+      'tooltip' => t('Anchor'),
+      'plugin' => 'anchor',
+      'required_tags' => array('a'),
+    ),
     'numlist' => array(
       'icon' => 'ordered-list',
       'tooltip' => t('Numbered list'),
