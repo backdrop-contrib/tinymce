@@ -41,12 +41,12 @@ But there's more:
 
 - [TinyMCE snippets](https://backdropcms.org/project/tinymce_snippets)
   (Insert pre-defined HTML snippets into content, using a dialog)
-- [TinyMCE video filter](https://backdropcms.org/project/tinymce_video_filter)
-  (Integration with the Video Filter module)
 - [TinyMCE paragraph after](https://backdropcms.org/project/tinymce_paraafter)
   (Insert a new paragraph after block level elements)
 - [TinyMCE IMCE](https://backdropcms.org/project/tinymce_imce)
   (Integration with the IMCE uploader and browser)
+- [Video Filter](https://backdropcms.org/project/video_filter) since
+  version 1.x-3.5.0
 - [File Entity Embed Filter](https://backdropcms.org/project/feef)
   (Embed file entities in content using a token-like placeholder)
 
