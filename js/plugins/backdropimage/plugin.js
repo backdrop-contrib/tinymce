@@ -17,14 +17,14 @@
     let node = editor.selection.getNode();
     let existingValues = {};
 
-    if (node.nodeName == 'IMG') {
+    if (node.nodeName === 'IMG') {
       let attribs = node.getAttributeNames();
       for (let i = 0; i < attribs.length; i++) {
         let name = attribs[i];
         if (name.startsWith('data-mce')) {
           continue;
         }
-        existingValues[name] = node.attributes[name]['value'];
+        existingValues[name] = node.attributes[name].value;
       }
       let parentFigure = editor.dom.getParents(node, 'FIGURE');
       if (parentFigure.length) {
@@ -33,7 +33,7 @@
     }
 
     return existingValues;
-  }
+  };
 
   /**
    * Opens a Backdrop dialog.
@@ -46,7 +46,7 @@
     let saveCallback = function(returnValues) {
       let image = buildImage(editor, returnValues);
       let selected = editor.selection.getNode();
-      if (selected.nodeName == 'IMG') {
+      if (selected.nodeName === 'IMG') {
         let parentFigure = editor.dom.getParents(selected, 'FIGURE');
         let parentLink = editor.dom.getParents(selected, 'A');
         if (parentFigure.length) {
@@ -64,13 +64,13 @@
         imgToSize.onload = function() {
           imgDomnode.setAttribute('width', this.width);
           imgDomnode.setAttribute('height', this.height);
-        }
+        };
         imgToSize.src = src;
       }
     };
 
     Backdrop.tinymce.openDialog(editor, dialogUrl, existingValues, saveCallback, dialogSettings);
-  }
+  };
 
   /**
    * Builds the image markup.
@@ -101,10 +101,10 @@
       node = editor.dom.create('figure', figAttrib);
       let img = editor.dom.create('img');
       for (let key in values) {
-        if (key == 'data-has-caption') {
+        if (key === 'data-has-caption') {
           continue;
         }
-        if (key == 'data-file-id' && !values[key]) {
+        if (key === 'data-file-id' && !values[key]) {
           continue;
         }
         img.setAttribute(key, values[key]);
@@ -123,7 +123,7 @@
       if (parentFigure.length) {
         let parent = parentFigure[0];
         for (let i = 0; i < parent.childNodes.length; i++) {
-          if (parent.childNodes[i].nodeName == 'FIGCAPTION') {
+          if (parent.childNodes[i].nodeName === 'FIGCAPTION') {
             captiontext = parent.childNodes[i].innerHTML;
             break;
           }
@@ -135,10 +135,10 @@
     else {
       let img = editor.dom.create('img');
       for (let key in values) {
-        if (key == 'data-has-caption') {
+        if (key === 'data-has-caption') {
           continue;
         }
-        if (key == 'data-file-id' && !values[key]) {
+        if (key === 'data-file-id' && !values[key]) {
           continue;
         }
         img.setAttribute(key, values[key]);
@@ -152,7 +152,7 @@
       }
     }
     return node.outerHTML;
-  }
+  };
 
   /**
    * Parses an array of AstNodes into a string.
@@ -181,7 +181,7 @@
       }
     }
     return dummy.innerHTML;
-  }
+  };
 
   /**
    * Turns an attribute string into an AstNode instance.
@@ -198,7 +198,7 @@
 
     for (let i = 0; i < domNode.childNodes.length; i++) {
       let n = domNode.childNodes[i];
-      if (n.nodeName == '#text') {
+      if (n.nodeName === '#text') {
         let text = new tinymce.html.Node('#text', 3);
         text.value = n.textContent;
         caption.append(text);
@@ -213,7 +213,7 @@
       }
     }
     return caption;
-  }
+  };
 
   /**
    * Checks if a dom node is relevant for this plugin.
@@ -225,7 +225,7 @@
    *   True if this tag is something, this plugin handles.
    */
   const isRegularImg = function (node) {
-    if (node.nodeName != 'IMG') {
+    if (node.nodeName !== 'IMG') {
       return false;
     }
     if (node.hasAttribute('data-mce-object') || node.hasAttribute('data-mce-placeholder')) {
@@ -235,7 +235,7 @@
       return false;
     }
     return true;
-  }
+  };
 
   // Register plugin features.
   tinymce.PluginManager.add('backdropimage', function(editor, url) {
@@ -246,11 +246,11 @@
           // These "node" are AstNode, not dom node.
           // @see https://www.tiny.cloud/docs/tinymce/6/apis/tinymce.html.node/#Node
           let link;
-          if (nodes[i].parent.name == 'a') {
+          if (nodes[i].parent.name === 'a') {
             link = nodes[i].parent.clone();
             nodes[i].parent.unwrap();
           }
-          if (nodes[i].parent.name == 'p') {
+          if (nodes[i].parent.name === 'p') {
             nodes[i].parent.unwrap();
           }
           let img = nodes[i].clone();
@@ -343,7 +343,7 @@
         });
         // @see https://github.com/backdrop-contrib/tinymce/issues/56
         editor.on('ObjectSelected', function (obj) {
-          if (obj.target.nodeName != 'IMG') {
+          if (obj.target.nodeName !== 'IMG') {
             return;
           }
           editor.selection.select(obj.target);

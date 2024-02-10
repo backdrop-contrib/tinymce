@@ -26,21 +26,21 @@
 
       // Keyboard navigation.
       $('#edit-tb .tinybutton').on('keydown', function (ev) {
-        if ($(this).parent().attr('id') == 'buttons-active') {
+        if ($(this).parent().attr('id') === 'buttons-active') {
           // 39 = Arrow right.
-          if (ev.which == 39) {
+          if (ev.which === 39) {
             $(this).insertAfter($(this).next());
             $(this).focus();
             updateFormItem();
           }
           // 37 = Arrow left.
-          else if (ev.which == 37) {
+          else if (ev.which === 37) {
             $(this).insertBefore($(this).prev());
             $(this).focus();
             updateFormItem();
           }
           // 173 = "-" key.
-          else if (ev.which == 173) {
+          else if (ev.which === 173) {
             $(this).next().focus();
             $(this).appendTo('#buttons-available');
             let message = Backdrop.t('%button removed from active elements.', {
@@ -52,7 +52,7 @@
         }
         else {
           // 171 = "+" key.
-          if (ev.which == 171) {
+          if (ev.which === 171) {
             $(this).appendTo('#buttons-active');
             $(this).focus();
             let message = Backdrop.t('%button added to active elements.', {
@@ -80,7 +80,7 @@
           });
           $('#edit-toolbar').val(toolbarconf);
         }, 500);
-      }
+      };
     }
-  }
+  };
 })(jQuery, Backdrop);
