@@ -6,6 +6,21 @@
   'use strict';
 
   /**
+   * Get the Dom parent OL if exists.
+   *
+   * @param HTMLElement node
+   *
+   * @return HTMLElement|false
+   */
+  const getOlParent = function (node) {
+    const closestLi = node.closest('li');
+    if (closestLi && closestLi.parentNode.nodeName === 'OL') {
+      return closestLi.parentNode;
+    }
+    return false;
+  };
+
+  /**
    * Opens a TinyMCE dialog with a form.
    *
    * @param object editor
@@ -68,21 +83,6 @@
         api.close();
       }
     });
-  };
-
-  /**
-   * Get the Dom parent OL if exists.
-   *
-   * @param HTMLElement node
-   *
-   * @return HTMLElement|false
-   */
-  const getOlParent = function (node) {
-    const closestLi = node.closest('li');
-    if (closestLi && closestLi.parentNode.nodeName === 'OL') {
-      return closestLi.parentNode;
-    }
-    return false;
   };
 
   // Register plugin features.
