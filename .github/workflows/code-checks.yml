@@ -36,11 +36,8 @@ jobs:
           ls
           phpcs --standard=../phpcs/Backdrop --report=.github/misc/Github.php -n --basepath=. *
 
-      # Install and run jshint
-      - name: Run jshint
+      - name: Install and run jshint
         if: ${{ always() }}
         run: |
           sudo npm install -g jshint
-          jshint --reporter=checkstyle js
-          which jshint
-          pwd
+          jshint --reporter=.github/misc/reporter.js js
