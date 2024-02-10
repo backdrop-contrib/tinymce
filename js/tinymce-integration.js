@@ -36,8 +36,8 @@
         // Layouts block editing: image dialog opened from a block dialog,
         // results in upload (paste) handler to be undefined (nested iframes).
         // Only happens, if js aggregation is off.
-        if (typeof tinymceImageUploadHandler == 'function') {
-          options.images_upload_handler = tinymceImageUploadHandler;
+        if (typeof tinymceImageUploadHandler === 'function') {
+          options.images_upload_handler = tinymceImageUploadHandler;// jshint ignore:line
         }
         else {
           // We turn off pasting images in this case. Selecting via library, or
@@ -50,14 +50,14 @@
       let contentLang = options.language;
       // If this element's form has a language select list, toggle content lang
       // based on that value.
-      if (element.form.querySelector('#edit-langcode') != null) {
+      if (element.form.querySelector('#edit-langcode') !== null) {
         let languageToggle = element.form.querySelector('#edit-langcode');
-        if (languageToggle.value != 'und') {
+        if (languageToggle.value !== 'und') {
           contentLang = languageToggle.value;
         }
         languageToggle.addEventListener('change', function (ev) {
           let langcode = ev.target.value;
-          if (langcode == 'und') {
+          if (langcode === 'und') {
             langcode = options.language;
           }
           let event = new CustomEvent('contentLangSwitch', { detail: langcode });
@@ -78,7 +78,7 @@
           // @see https://github.com/tinymce/tinymce/issues/4830
           editor.contentDocument.documentElement.setAttribute('lang', contentLang);
           // Unregister formats, if any.
-          if (typeof format.editorSettings.unregisterFmts != 'undefined') {
+          if (typeof format.editorSettings.unregisterFmts !== 'undefined') {
             let fmts = format.editorSettings.unregisterFmts;
             for (let i = 0; i < fmts.length; i++) {
               editor.formatter.unregister(fmts[i]);
@@ -89,7 +89,7 @@
           editor.addCommand('indent', function () {});
           editor.addCommand('outdent', function () {});
           // Register custom icons provided by plugins.
-          if (typeof format.editorSettings.iconRegistry != 'undefined') {
+          if (typeof format.editorSettings.iconRegistry !== 'undefined') {
             let icons = format.editorSettings.iconRegistry;
             for (let name in icons) {
               editor.ui.registry.addIcon(name, icons[name]);
@@ -115,7 +115,7 @@
     },
 
     detach: function (element, format, trigger) {
-      if (trigger == 'serialize') {
+      if (trigger === 'serialize') {
         tinymce.triggerSave();
         return;
       }
@@ -142,7 +142,7 @@
         autoResize: true,
         modal: true,
         target: '#tinymce-modal'
-      }
+      };
       new Backdrop.ajax('tinymce-modal', $content.find('a').get(0), {
         accepts: 'application/vnd.backdrop-dialog',
         dialog: dialogSettings,
@@ -165,7 +165,7 @@
       }, 500);
       Backdrop.tinymce.saveCallback = saveCallback;
     }
-  }
+  };
   $(window).on('dialog:beforecreate', function (e, dialog, $element, settings) {
     $('.tinymce-dialog-loading').animate({top: '-40px'}, function () {
       $(this).remove();
@@ -181,7 +181,7 @@
 
   // Fires when hitting dialog Save or Close buttons.
   $(window).on('dialogclose', function(event, ui) {
-    if (event.target.id == 'tinymce-modal' && tinymce.activeEditor) {
+    if (event.target.id === 'tinymce-modal' && tinymce.activeEditor) {
       tinymce.activeEditor.iframeElement.focus();
     }
   });

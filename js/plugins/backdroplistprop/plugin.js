@@ -68,7 +68,7 @@
         api.close();
       }
     });
-  }
+  };
 
   /**
    * Get the Dom parent OL if exists.
@@ -79,11 +79,11 @@
    */
   const getOlParent = function (node) {
     const closestLi = node.closest('li');
-    if (closestLi && closestLi.parentNode.nodeName == 'OL') {
+    if (closestLi && closestLi.parentNode.nodeName === 'OL') {
       return closestLi.parentNode;
     }
     return false;
-  }
+  };
 
   // Register plugin features.
   tinymce.PluginManager.add('backdroplistprop', function(editor, url) {

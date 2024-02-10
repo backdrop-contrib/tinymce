@@ -13,7 +13,7 @@
           let attrValue = nodes[i].attr('data-list-style');
           let otherStyles = nodes[i].attr('style');
           let listStyle = 'list-style-type: ' + attrValue + ';';
-          if (typeof otherStyles == 'undefined') {
+          if (typeof otherStyles === 'undefined') {
             nodes[i].attr('style', listStyle);
           }
           else {
@@ -24,7 +24,7 @@
       });
       editor.serializer.addAttributeFilter('style', function (nodes) {
         for (let i = 0; i < nodes.length; i++) {
-          if (nodes[i].name != 'ul' && nodes[i].name != 'ol') {
+          if (nodes[i].name !== 'ul' && nodes[i].name !== 'ol') {
             continue;
           }
           let styles = nodes[i].attr('style');
@@ -35,7 +35,7 @@
               continue;
             }
             let keyVal = stylesArr[n].split(':');
-            if (keyVal[0].trim() == 'list-style-type') {
+            if (keyVal[0].trim() === 'list-style-type') {
               nodes[i].attr('data-list-style', keyVal[1].trim());
             }
             else {

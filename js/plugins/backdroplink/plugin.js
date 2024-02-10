@@ -19,7 +19,7 @@
 
     let saveCallback = function(returnValues) {
       let link = buildLink(editor, returnValues);
-      if (typeof existingValues.href == 'undefined') {
+      if (typeof existingValues.href === 'undefined') {
         editor.execCommand('mceInsertContent', false, link);
       }
       else {
@@ -28,7 +28,7 @@
     };
 
     Backdrop.tinymce.openDialog(editor, dialogUrl, existingValues, saveCallback, dialogSettings);
-  }
+  };
 
   /**
    * @param object editor
@@ -42,11 +42,11 @@
     let existingValues = {};
 
     // This image is already wrapped in a link.
-    if (node.nodeName == 'IMG' && node.parentNode.nodeName == 'A') {
+    if (node.nodeName === 'IMG' && node.parentNode.nodeName === 'A') {
       node = node.parentNode;
     }
 
-    if (node.nodeName == 'A') {
+    if (node.nodeName === 'A') {
       // Expand selection to whole anchor to prevent inserting a link into a link.
       editor.selection.select(node);
       if (node.textContent) {
@@ -59,10 +59,10 @@
         if (name.startsWith('data-mce')) {
           continue;
         }
-        existingValues[name] = node.attributes[name]['value'];
+        existingValues[name] = node.attributes[name].value;
       }
     }
-    else if (node.nodeName != 'IMG') {
+    else if (node.nodeName !== 'IMG') {
       let content = editor.selection.getContent({ format: 'text' });
       existingValues = {
         text: content
@@ -70,7 +70,7 @@
     }
 
     return existingValues;
-  }
+  };
 
   /**
    * Builds link markup.
@@ -88,23 +88,23 @@
 
     let a = editor.dom.create('a');
     for (let key in values) {
-      if (key == 'text') {
+      if (key === 'text') {
         textContent = values[key];
         continue;
       }
-      if (key == 'data-file-id' && !values[key]) {
+      if (key === 'data-file-id' && !values[key]) {
         continue;
       }
       a.setAttribute(key, values[key]);
     }
 
     let node = editor.selection.getNode();
-    if (node.nodeName == 'IMG') {
+    if (node.nodeName === 'IMG') {
       let clone = node.cloneNode(true);
       clone.removeAttribute('data-mce-src');
       a.appendChild(clone);
     }
-    else if (node.nodeName == 'A' && node.childNodes.length) {
+    else if (node.nodeName === 'A' && node.childNodes.length) {
       for (let i = 0; i < node.childNodes.length; i++) {
         let clone = node.childNodes[i].cloneNode(true);
         a.appendChild(clone);
@@ -121,7 +121,7 @@
       return a.innerHTML;
     }
     return a.outerHTML;
-  }
+  };
 
   // Register plugin features.
   tinymce.PluginManager.add('backdroplink', function(editor, url) {
@@ -136,7 +136,7 @@
         editor.on('SelectionChange', function () {
           let node = editor.selection.getNode();
           // The anchor plugin marks its links as not editable.
-          if (node.nodeName == 'A' && node.isContentEditable) {
+          if (node.nodeName === 'A' && node.isContentEditable) {
             api.setActive(true);
           }
           else {
@@ -155,7 +155,7 @@
         api.setEnabled(false);
         editor.on('SelectionChange', function () {
           let node = editor.selection.getNode();
-          if (node.nodeName == 'A' || node.parentNode.nodeName == 'A') {
+          if (node.nodeName === 'A' || node.parentNode.nodeName === 'A') {
             api.setEnabled(true);
           }
           else {

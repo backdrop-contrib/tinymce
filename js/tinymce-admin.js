@@ -9,7 +9,7 @@
 Backdrop.behaviors.tinymceAdmin = {
   attach: function (context, settings) {
     let selectedEditor = $('select[name="editor"]').val();
-    if (selectedEditor != 'tinymce') {
+    if (selectedEditor !== 'tinymce') {
       return;
     }
     let selectProfile = $('#edit-editor-settings-tinymce-settings-profile');
@@ -28,7 +28,7 @@ Backdrop.behaviors.tinymceAdmin = {
   },
   detach: function () {
     let selected = $('#edit-editor-settings-tinymce-settings-profile').val();
-    if (typeof selected == 'undefined') {
+    if (typeof selected === 'undefined') {
       return;
     }
     let featureList = Backdrop.behaviors.tinymceAdmin.buildFeatures();
