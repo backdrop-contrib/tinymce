@@ -2,13 +2,10 @@ name: Code Checks
 on: [pull_request]
 jobs:
   codechecks:
-    name: Code checks
+    name: PHP_CodeSniffer, JSHint
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
-      - name: Setup env
-        run: echo "REPO_NAME=${PWD##*/}" >> $GITHUB_ENV
-
       - name: Checkout module
         uses: actions/checkout@v4
 
@@ -17,7 +14,7 @@ jobs:
         with:
           php-version: 8.3
           # No composer, but we need our commandline tool.
-          tools: none, phpcs:3.7
+          tools: none, phpcs
 
       # The checkout action refuses to put it outside, so we have to do it in
       # two steps.
@@ -31,7 +28,9 @@ jobs:
         run: mv phpcs ..
 
       - name: Run CodeSniffer
-        run: phpcs --standard=../phpcs/Backdrop --report=.github/misc/Github.php -n --basepath=. *
+        run: |
+          phpcs --version
+          phpcs --standard=../phpcs/Backdrop --report=.github/misc/Github.php -n --basepath=. *
 
       - name: Install and run jshint
         if: ${{ always() }}
