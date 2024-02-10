@@ -2,7 +2,7 @@ name: Code Checks
 on: [pull_request]
 jobs:
   codechecks:
-    name: phpcs and jshint
+    name: Code checks
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:

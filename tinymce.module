@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * @file
  * TinyMCE module hook implementations and helper functions.
