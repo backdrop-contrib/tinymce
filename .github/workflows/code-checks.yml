@@ -1,0 +1,46 @@
+name: Code Checks
+on: [pull_request]
+jobs:
+  codechecks:
+    name: phpcs and jshint
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - name: Setup env
+        run: |
+          echo "REPO_NAME=${PWD##*/}" >> $GITHUB_ENV
+
+      - name: Checkout module
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          # No composer, but we need our commandline tool.
+          tools: none, phpcs:3.7
+
+      # The checkout action refuses to put it outside, so we have to do it in
+      # two steps.
+      - name: Checkout coding standard
+        uses: actions/checkout@v4
+        with:
+          repository: backdrop-ops/phpcs
+          ref: 1.0.0-beta2
+          path: phpcs
+      - name: Move standard outside current dir
+        run: mv phpcs ..
+
+      - name: Run CodeSniffer
+        run: |
+          ls
+          phpcs --standard=../phpcs/Backdrop --report=.github/misc/Github.php -n --basepath=. *
+
+      # Install and run jshint
+      - name: Run jshint
+        if: ${{ always() }}
+        run: |
+          sudo npm install -g jshint
+          jshint --reporter=checkstyle js
+          which jshint
+          pwd

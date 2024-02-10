@@ -1,0 +1,20 @@
+{
+  "browser"   : true,
+  "curly"     : true,
+  "devel"     : true,
+  "eqeqeq"    : true,
+  "esversion" : 6,
+  "expr"      : true,
+  "futurehostile" : true,
+  "latedef"   : true,
+  "newcap"    : true,
+  "noarg"     : true,
+  "strict"    : true,
+  "undef"     : true,
+  "unused"    : "vars",
+  "predef"    : [
+    "Backdrop",
+    "jQuery",
+    "tinymce"
+  ]
+}
