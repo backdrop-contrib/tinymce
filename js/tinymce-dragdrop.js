@@ -2,6 +2,25 @@
   "use strict";
   Backdrop.behaviors.tinymceAdminDragdrop = {
     attach: function (context, settings) {
+
+      let updateFormItem = function () {
+        setTimeout(function () {
+          let toolbarconf = '';
+          $('#buttons-active .tinybutton').each( function (i) {
+            if (i > 0) {
+              toolbarconf += ' ';
+            }
+            if (this.id) {
+              toolbarconf += this.id;
+            }
+            else if (this.classList.contains('separator')) {
+              toolbarconf += '|';
+            }
+          });
+          $('#edit-toolbar').val(toolbarconf);
+        }, 500);
+      };
+
       $('#buttons-active').sortable({
         connectWith: '#buttons-available',
         items: '.tinybutton',
@@ -63,24 +82,6 @@
           }
         }
       });
-
-      let updateFormItem = function () {
-        setTimeout(function () {
-          let toolbarconf = '';
-          $('#buttons-active .tinybutton').each( function (i) {
-            if (i > 0) {
-              toolbarconf += ' ';
-            }
-            if (this.id) {
-              toolbarconf += this.id;
-            }
-            else if (this.classList.contains('separator')) {
-              toolbarconf += '|';
-            }
-          });
-          $('#edit-toolbar').val(toolbarconf);
-        }, 500);
-      };
     }
   };
 })(jQuery, Backdrop);

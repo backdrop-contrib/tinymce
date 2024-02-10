@@ -3,32 +3,7 @@
  * Backdrop TinyMCE link plugin.
  */
 (function () {
-
   'use strict';
-
-  /**
-   * Opens a Backdrop dialog.
-   *
-   * @param object editor
-   *   TinyMCE editor instance.
-   */
-  const backdropDialog = function (editor) {
-    let dialogUrl = editor.options.get('backdroplinkDialogUrl');
-    let dialogSettings = {dialogClass: 'editor-link-dialog'};
-    let existingValues = getExistingValues(editor);
-
-    let saveCallback = function(returnValues) {
-      let link = buildLink(editor, returnValues);
-      if (typeof existingValues.href === 'undefined') {
-        editor.execCommand('mceInsertContent', false, link);
-      }
-      else {
-        editor.execCommand('mceReplaceContent', false, link);
-      }
-    };
-
-    Backdrop.tinymce.openDialog(editor, dialogUrl, existingValues, saveCallback, dialogSettings);
-  };
 
   /**
    * @param object editor
@@ -121,6 +96,30 @@
       return a.innerHTML;
     }
     return a.outerHTML;
+  };
+
+  /**
+   * Opens a Backdrop dialog.
+   *
+   * @param object editor
+   *   TinyMCE editor instance.
+   */
+  const backdropDialog = function (editor) {
+    let dialogUrl = editor.options.get('backdroplinkDialogUrl');
+    let dialogSettings = {dialogClass: 'editor-link-dialog'};
+    let existingValues = getExistingValues(editor);
+
+    let saveCallback = function(returnValues) {
+      let link = buildLink(editor, returnValues);
+      if (typeof existingValues.href === 'undefined') {
+        editor.execCommand('mceInsertContent', false, link);
+      }
+      else {
+        editor.execCommand('mceReplaceContent', false, link);
+      }
+    };
+
+    Backdrop.tinymce.openDialog(editor, dialogUrl, existingValues, saveCallback, dialogSettings);
   };
 
   // Register plugin features.

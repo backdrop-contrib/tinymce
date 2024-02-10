@@ -3,7 +3,6 @@
  * Backdrop TinyMCE image plugin.
  */
 (function () {
-
   'use strict';
 
   /**
@@ -33,43 +32,6 @@
     }
 
     return existingValues;
-  };
-
-  /**
-   * Opens a Backdrop dialog.
-   */
-  const backdropDialog = function (editor) {
-    let dialogUrl = editor.options.get('backdropimageDialogUrl');
-    let dialogSettings = {dialogClass: 'editor-image-dialog'};
-    let existingValues = getExistingValues(editor);
-
-    let saveCallback = function(returnValues) {
-      let image = buildImage(editor, returnValues);
-      let selected = editor.selection.getNode();
-      if (selected.nodeName === 'IMG') {
-        let parentFigure = editor.dom.getParents(selected, 'FIGURE');
-        let parentLink = editor.dom.getParents(selected, 'A');
-        if (parentFigure.length) {
-          parentFigure[0].remove();
-        }
-        else if (parentLink.length) {
-          parentLink[0].remove();
-        }
-      }
-      editor.execCommand('mceInsertContent', false, image);
-      if (!returnValues.attributes.width && !returnValues.attributes.height) {
-        let src = returnValues.attributes.src;
-        let imgDomnode = editor.getBody().querySelector('[src="' + src + '"]');
-        let imgToSize = new Image();
-        imgToSize.onload = function() {
-          imgDomnode.setAttribute('width', this.width);
-          imgDomnode.setAttribute('height', this.height);
-        };
-        imgToSize.src = src;
-      }
-    };
-
-    Backdrop.tinymce.openDialog(editor, dialogUrl, existingValues, saveCallback, dialogSettings);
   };
 
   /**
@@ -155,6 +117,43 @@
   };
 
   /**
+   * Opens a Backdrop dialog.
+   */
+  const backdropDialog = function (editor) {
+    let dialogUrl = editor.options.get('backdropimageDialogUrl');
+    let dialogSettings = {dialogClass: 'editor-image-dialog'};
+    let existingValues = getExistingValues(editor);
+
+    let saveCallback = function(returnValues) {
+      let image = buildImage(editor, returnValues);
+      let selected = editor.selection.getNode();
+      if (selected.nodeName === 'IMG') {
+        let parentFigure = editor.dom.getParents(selected, 'FIGURE');
+        let parentLink = editor.dom.getParents(selected, 'A');
+        if (parentFigure.length) {
+          parentFigure[0].remove();
+        }
+        else if (parentLink.length) {
+          parentLink[0].remove();
+        }
+      }
+      editor.execCommand('mceInsertContent', false, image);
+      if (!returnValues.attributes.width && !returnValues.attributes.height) {
+        let src = returnValues.attributes.src;
+        let imgDomnode = editor.getBody().querySelector('[src="' + src + '"]');
+        let imgToSize = new Image();
+        imgToSize.onload = function() {
+          imgDomnode.setAttribute('width', this.width);
+          imgDomnode.setAttribute('height', this.height);
+        };
+        imgToSize.src = src;
+      }
+    };
+
+    Backdrop.tinymce.openDialog(editor, dialogUrl, existingValues, saveCallback, dialogSettings);
+  };
+
+  /**
    * Parses an array of AstNodes into a string.
    *
    * @param object editor
@@ -171,10 +170,10 @@
     let dummy = editor.dom.create('figcaption');
 
     for (let i = 0; i < captionContent.length; i++) {
-      if (captionContent[i].type == 3) {
+      if (captionContent[i].type === 3) {
         dummy.append(document.createTextNode(captionContent[i].value));
       }
-      else if (captionContent[i].type == 1) {
+      else if (captionContent[i].type === 1) {
         if (allowedTags.includes(captionContent[i].name)) {
           dummy.append(editor.dom.create(captionContent[i].name, {}, captionContent[i].firstChild.value));
         }
