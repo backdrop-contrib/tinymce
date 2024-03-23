@@ -363,6 +363,7 @@ function _tinymce_merge_default_settings(array $settings) {
     'language' => $language->langcode,
     'browser_spellcheck' => TRUE,
     'entity_encoding' => 'raw',
+    'license_key' => 'gpl',
   );
   $settings += $tiny_defaults;
 
@@ -414,7 +415,7 @@ function tinymce_library_info() {
   $libraries['tinymce'] = array(
     'title' => 'TinyMCE',
     'website' => 'https://www.tiny.cloud/',
-    'version' => '6.8.3',
+    'version' => '7.0.0',
     'js' => array(
       $path . '/libraries/tinymce/js/tinymce/tinymce.min.js' => array(
         'preprocess' => FALSE,
