@@ -64,10 +64,14 @@ Bugs and feature requests should be reported in the [Issue Queue](https://github
 
 ## Credits
 
-Bundles the versatile [TinyMCE](https://www.tiny.cloud/) JavaScript library
-(MIT licensed), maintained with <3 by Tiny Technologies Inc. The editor has
-been around for almost two decades and is one of the most used Open Source
-JavaScript based WYSIWYG editors, integrated in many projects.
+Bundles the versatile [TinyMCE](https://www.tiny.cloud/) JavaScript library,
+maintained with <3 by Ephox Corporation DBA Tiny Technologies, Inc.
+Licensed under the terms of GNU General Public License Version 2 or later
+beginning with its version 7.0 (used to be MIT with version 6).
+
+The editor has been around for almost two decades and is one of the most used
+Open Source JavaScript based WYSIWYG editors, integrated in many projects.
+
 
 ## License
 
