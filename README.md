@@ -34,7 +34,7 @@ Find additional documentation in the [wiki](https://github.com/backdrop-contrib/
 
 ## Extending with plugins
 
-By default TinyMCE already ships with [lots of plugins](https://www.tiny.cloud/docs/tinymce/6/plugins/).
+By default TinyMCE already ships with [lots of plugins](https://www.tiny.cloud/docs/tinymce/latest/plugins/#open-source-plugins).
 And it's integrated well in Backdrop CMS with its media handling.
 
 But there's more:
