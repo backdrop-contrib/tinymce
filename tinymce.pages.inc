@@ -28,8 +28,9 @@ function tinymce_image_upload($format) {
   }
 
   $destination = $upload_settings['scheme'] . '://' .  $upload_settings['directory'];
+  $extensions = _tinymce_supported_image_extensions();
   $validators = array(
-    'file_validate_is_image' => array(),
+    'file_validate_extensions' => array(implode(' ', $extensions)),
   );
   if ($upload_settings['max_size']) {
     $validators['file_validate_size'] = array(parse_size($upload_settings['max_size']));

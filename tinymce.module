@@ -219,7 +219,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
 
   // Drag-and-drop upload.
   if ($format->editor_settings['image_upload']['status']) {
-    $extensions = image_get_supported_extensions();
+    $extensions = _tinymce_supported_image_extensions();
     $options['tiny_options']['images_file_types'] = implode(',', $extensions);
     $options['tiny_options']['images_upload_url'] = _tinymce_images_upload_url($format);
     $options['tiny_options']['automatic_uploads'] = TRUE;
@@ -235,6 +235,20 @@ function _tinymce_js_settings($format, array $existing_settings) {
 
   backdrop_alter('tinymce_options', $options, $format);
   return $options;
+}
+
+/**
+ * Custom callback to file extensions to consider as image.
+ *
+ * @return array
+ */
+function _tinymce_supported_image_extensions() {
+  $extensions = image_get_supported_extensions();
+  // Available since Backdrop 1.28 ... @todo maybe.
+  if (function_exists('file_get_svg_support') && file_get_svg_support()) {
+    $extensions[] = 'svg';
+  }
+  return $extensions;
 }
 
 /**
