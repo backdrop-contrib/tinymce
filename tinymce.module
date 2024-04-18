@@ -238,7 +238,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
 }
 
 /**
- * Custom callback to file extensions to consider as image.
+ * Custom callback to get file extensions to consider as image.
  *
  * @return array
  */
