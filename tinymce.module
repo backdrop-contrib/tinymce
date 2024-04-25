@@ -244,9 +244,16 @@ function _tinymce_js_settings($format, array $existing_settings) {
  */
 function _tinymce_supported_image_extensions() {
   $extensions = image_get_supported_extensions();
-  // Available since Backdrop 1.28 ... @todo maybe.
-  if (function_exists('file_get_svg_support') && file_get_svg_support()) {
-    $extensions[] = 'svg';
+  // Core version 1.28 provides support for proper SVG display in the image
+  // library. Before that their display was broken.
+  // @todo we'll see...
+  if (version_compare(BACKDROP_VERSION, '1.28.0', '>=')) {
+    // Only if svg upload's allowed by default.
+    $default_allowed = config_get('file.settings', 'default_allowed_extensions');
+    $ext_array = explode(' ', $default_allowed);
+    if (in_array('svg', $ext_array)) {
+      $extensions[] = 'svg';
+    }
   }
   return $extensions;
 }

@@ -53,8 +53,8 @@ function tinymce_image_upload($format) {
       'uploaded' => 1,
       'location' => $url,
       'fileId' => $file->fid,
-      'width' => $image_info['width'],
-      'height' => $image_info['height'],
+      'width' => !empty($image_info['width']) ? $image_info['width'] : '',
+      'height' => !empty($image_info['height']) ? $image_info['height'] : '',
     );
   }
   else {
