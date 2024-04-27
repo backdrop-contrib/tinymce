@@ -28,7 +28,7 @@ function tinymce_image_upload($format) {
   }
 
   $destination = $upload_settings['scheme'] . '://' .  $upload_settings['directory'];
-  $extensions = _tinymce_supported_image_extensions();
+  $extensions = image_get_supported_extensions();
   $validators = array(
     'file_validate_extensions' => array(implode(' ', $extensions)),
   );

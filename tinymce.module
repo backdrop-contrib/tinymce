@@ -219,7 +219,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
 
   // Drag-and-drop upload.
   if ($format->editor_settings['image_upload']['status']) {
-    $extensions = _tinymce_supported_image_extensions();
+    $extensions = image_get_supported_extensions();
     $options['tiny_options']['images_file_types'] = implode(',', $extensions);
     $options['tiny_options']['images_upload_url'] = _tinymce_images_upload_url($format);
     $options['tiny_options']['automatic_uploads'] = TRUE;
@@ -235,27 +235,6 @@ function _tinymce_js_settings($format, array $existing_settings) {
 
   backdrop_alter('tinymce_options', $options, $format);
   return $options;
-}
-
-/**
- * Custom callback to get file extensions to consider as image.
- *
- * @return array
- */
-function _tinymce_supported_image_extensions() {
-  $extensions = image_get_supported_extensions();
-  // Core version 1.28 provides support for proper SVG display in the image
-  // library. Before that their display was broken.
-  // @todo we'll see...
-  if (version_compare(BACKDROP_VERSION, '1.28.0', '>=')) {
-    // Only if svg upload's allowed by default.
-    $default_allowed = config_get('file.settings', 'default_allowed_extensions');
-    $ext_array = explode(' ', $default_allowed);
-    if (in_array('svg', $ext_array)) {
-      $extensions[] = 'svg';
-    }
-  }
-  return $extensions;
 }
 
 /**
