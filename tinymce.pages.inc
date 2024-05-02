@@ -31,6 +31,7 @@ function tinymce_image_upload($format) {
   $extensions = image_get_supported_extensions();
   $validators = array(
     'file_validate_extensions' => array(implode(' ', $extensions)),
+    'tinymce_validate_is_image' => array(),
   );
   if ($upload_settings['max_size']) {
     $validators['file_validate_size'] = array(parse_size($upload_settings['max_size']));
@@ -73,4 +74,29 @@ function tinymce_image_upload($format) {
   }
 
   return $response;
+}
+
+/**
+ * Custom validation callback for image upload.
+ *
+ * Currently file_validate_is_image() fails for newly uploaded files, as the uri
+ * is something like "/tmp/phpAbCde" - without file extension.
+ * @see https://github.com/backdrop/backdrop-issues/issues/6497
+ */
+function tinymce_validate_is_image(File $file) {
+  $errors = array();
+
+  // SVG have their own validator on upload (file_validate_svg).
+  // If SVG aren't supported, yet, TinyMCE would refuse to upload in the first
+  // place and even if upload was attempted, the server-side extension based
+  // validation would fail.
+  if ($file->filemime == 'image/svg+xml') {
+    return $errors;
+  }
+  // Validate that the image toolkit can handle this raster image.
+  if (!$info = image_get_info($file->uri)) {
+    $errors[] = t('The image appears to be broken.');
+  }
+
+  return $errors;
 }
