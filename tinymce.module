@@ -218,7 +218,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
   }
 
   // Drag-and-drop upload.
-  if ($format->editor_settings['image_upload']['status']) {
+  if ($format->editor_settings['image_upload']['status'] && user_access('upload editor images')) {
     $extensions = image_get_supported_extensions();
     $options['tiny_options']['images_file_types'] = implode(',', $extensions);
     $options['tiny_options']['images_upload_url'] = _tinymce_images_upload_url($format);
