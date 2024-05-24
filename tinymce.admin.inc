@@ -77,6 +77,7 @@ function _tinymce_settings_form(array &$form, array $form_state, $format) {
     'editor_settings',
     'image_upload',
   );
+  $elements['tabs']['image_settings']['image']['status']['#description'] = _tinymce_settings_status_description('image');
   $elements['tabs']['file_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('File upload'),
@@ -86,6 +87,7 @@ function _tinymce_settings_form(array &$form, array $form_state, $format) {
     'editor_settings',
     'file_upload',
   );
+  $elements['tabs']['file_settings']['file']['status']['#description'] = _tinymce_settings_status_description('file');
 
   return $elements;
 }
@@ -128,4 +130,40 @@ function _tinymce_get_profile_options() {
     $options[$profile_name] = check_plain($config->get('label'));
   }
   return $options;
+}
+
+/**
+ * Helper callback to provide a form description for upload setting.
+ *
+ * @param string $type
+ * @return string
+ */
+function _tinymce_settings_status_description($type) {
+  // This link hint might get obsolete, if core Filter module provides the
+  // permission matrix directly in this form.
+  if (user_access('administer permissions')) {
+    if ($type == 'image') {
+      $help = t('Allow roles with <a href="!url">sufficient permissions</a> to upload via editor image dialog and drag and drop.', array(
+        '!url' => url('admin/config/people/permissions', array(
+          'query' => array('search' => 'filter'),
+        )),
+      ));
+    }
+    else {
+      $help = t('Allow roles with <a href="!url">sufficient permissions</a> to upload files via editor link dialog.', array(
+        '!url' => url('admin/config/people/permissions', array(
+          'query' => array('search' => 'filter'),
+        )),
+      ));
+    }
+  }
+  else {
+    if ($type == 'image') {
+      $help = t('Allow roles with sufficient permissions to upload via editor image dialog and drag and drop.');
+    }
+    else {
+      $help = t('Allow roles with sufficient permissions to upload files via editor link dialog.');
+    }
+  }
+  return $help;
 }

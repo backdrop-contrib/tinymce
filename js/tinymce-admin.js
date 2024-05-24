@@ -53,4 +53,44 @@ Backdrop.behaviors.tinymceAdmin = {
   }
 };
 
+Backdrop.behaviors.tinymceAdminSummaries = {
+  attach: function () {
+    let $form = $('#filter-admin-format-form');
+    $form.find('#edit-editor-settings-image-browser').backdropSetSummary( function() {
+      if ($form.find('input[name="editor_settings[image_browser][enable]"]:checked').length) {
+        return Backdrop.t('Enabled');
+      }
+      else {
+        return Backdrop.t('Not enabled');
+      }
+    });
+    $form.find('#edit-editor-settings-tabs-image-settings').backdropSetSummary( function() {
+      if ($form.find('input[name="editor_settings[image_upload][status]"]:checked').length) {
+        let message = Backdrop.t('Enabled');
+        let directory = $form.find('input[name="editor_settings[image_upload][directory]"]').val();
+        if (directory) {
+          message += ', ' + Backdrop.t('upload to %dir', {'%dir': directory});
+        }
+        return message;
+      }
+      else {
+        return Backdrop.t('Not enabled');
+      }
+    });
+    $form.find('#edit-editor-settings-tabs-file-settings').backdropSetSummary( function() {
+      if ($form.find('input[name="editor_settings[file_upload][status]"]:checked').length) {
+        let message =  Backdrop.t('Enabled');
+        let directory = $form.find('input[name="editor_settings[file_upload][directory]"]').val();
+        if (directory) {
+          message += ', ' + Backdrop.t('upload to %dir', {'%dir': directory});
+        }
+        return message;
+      }
+      else {
+        return Backdrop.t('Not enabled');
+      }
+    });
+  }
+};
+
 })(jQuery, Backdrop);
