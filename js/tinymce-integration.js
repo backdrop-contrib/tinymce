@@ -46,6 +46,23 @@
         }
       }
 
+      // Add icon API vars to editor content styles. They might be in use in
+      // CSS files attached via content_css option.
+      if (typeof Backdrop.settings.icons === 'object') {
+        let contentStyle = ':root{';
+        for (const [key, value] of Object.entries(Backdrop.settings.icons)) {
+          contentStyle += '--icon-' + key + ':url(' + value + ');';
+        }
+        contentStyle += '}';
+        // Consider custom profiles already using this option.
+        if (typeof options.content_style === 'string') {
+          options.content_style += contentStyle;
+        }
+        else {
+          options.content_style = contentStyle;
+        }
+      }
+
       // Content language defaults to interface language.
       let contentLang = options.language;
       // If this element's form has a language select list, toggle content lang
