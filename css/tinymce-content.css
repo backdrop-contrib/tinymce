@@ -21,6 +21,7 @@ img[data-align="center"] {
 figure img[data-align="left"],
 figure img[data-align="right"] {
   float: none;
+  margin: 0;
 }
 figure img[data-align="center"] {
   display: inline;
