@@ -45,6 +45,8 @@ But there's more:
   (Insert a new paragraph after block level elements)
 - [TinyMCE IMCE](https://backdropcms.org/project/tinymce_imce)
   (Integration with the IMCE uploader and browser)
+- [TinyMCE File Link](https://backdropcms.org/project/tinymce_filelink)
+  (File browser to search and insert links to files in content)
 - [Video Filter](https://backdropcms.org/project/video_filter) since
   version 1.x-3.5.0
 - [File Entity Embed Filter](https://backdropcms.org/project/feef)
