@@ -79,7 +79,8 @@
       clone.removeAttribute('data-mce-src');
       a.appendChild(clone);
     }
-    else if (node.nodeName === 'A' && node.childNodes.length) {
+    else if (node.nodeName === 'A' && node.children.length) {
+      // The link contains Dom elements, not only text - add back.
       for (let i = 0; i < node.childNodes.length; i++) {
         let clone = node.childNodes[i].cloneNode(true);
         a.appendChild(clone);
