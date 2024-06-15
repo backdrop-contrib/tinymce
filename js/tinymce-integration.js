@@ -125,17 +125,22 @@
   };
 
   /**
-   * Mostly copy-paste from ckeditor module.
+   * Provides Backdrop dialog handling for TinyMCE plugins.
    */
   Backdrop.tinymce = {
     saveCallback: null,
+    dialogTriggerClass: 'tinymce-dialog-open-trigger',
     openDialog: function (editor, url, existingValues, saveCallback, dialogSettings) {
-      var classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
+      let classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
       classes.push('editor-dialog');
-      var $content = $('<div class="tinymce-dialog-loading"><span class="tinymce-dialog-loading-link"><a>' + Backdrop.t('Loading...') + '</a></span></div>');
-      var $target = $('.tox-edit-area');
-      $target.css('position', 'relative');
-      $content.appendTo($target);
+      // Trigger element gets removed as soon as the dialog opens.
+      let trigger = document.createElement('div');
+      trigger.style.display = 'none';
+      trigger.classList.add(this.dialogTriggerClass);
+      trigger.addEventListener('click', function () {
+        editor.setProgressState(true);
+      });
+      document.body.append(trigger);
 
       dialogSettings = {
         dialogClass: classes.join(' '),
@@ -143,36 +148,34 @@
         modal: true,
         target: '#tinymce-modal'
       };
-      new Backdrop.ajax('tinymce-modal', $content.find('a').get(0), {
+      new Backdrop.ajax('tinymce-modal', trigger, {
         accepts: 'application/vnd.backdrop-dialog',
         dialog: dialogSettings,
-        selector: '.tinymce-dialog-loading-link',
+        selector: '#tinymce-modal',
         url: url,
-        event: 'tinymce-internal.tinymce',
-        progress: {'type': 'throbber'},
+        event: 'click',
+        progress: {'type': 'none'},
         submit: {
           editor_object: existingValues
         }
       });
-      // Trigger AJAX event to open modal.
-      $content.find('a')
-          .on('click', function () { return false; })
-          .trigger('tinymce-internal.tinymce');
-
-      // After a short delay, show "Loading…" message.
-      window.setTimeout(function () {
-        $content.find('span').animate({top: '0px'});
-      }, 500);
+      // Store the save callback to be executed when this dialog is closed.
       Backdrop.tinymce.saveCallback = saveCallback;
+      // Trigger opening this modal.
+      trigger.click();
     }
   };
-  $(window).on('dialog:beforecreate', function (e, dialog, $element, settings) {
-    $('.tinymce-dialog-loading').animate({top: '-40px'}, function () {
-      $(this).remove();
-    });
+
+  // Content for dialog is loaded. Remove the obsolete trigger and stop
+  // TinyMCE's loading animation.
+  $(window).on('dialog:beforecreate', function () {
+    $('.' + Backdrop.tinymce.dialogTriggerClass).remove();
+    if (tinymce.activeEditor) {
+      tinymce.activeEditor.setProgressState(false);
+    }
   });
 
-  // The filter module triggers this?
+  // The filter module triggers this.
   $(window).on('editor:dialogsave', function (e, values) {
     if (Backdrop.tinymce.saveCallback) {
       Backdrop.tinymce.saveCallback(values);
