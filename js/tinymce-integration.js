@@ -133,18 +133,18 @@
     openDialog: function (editor, url, existingValues, saveCallback, dialogSettings) {
       let classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
       classes.push('editor-dialog');
-      // Trigger element gets removed as soon as the dialog opens.
-      let trigger = document.createElement('div');
-      trigger.style.display = 'none';
-      trigger.classList.add(this.dialogTriggerClass);
-      document.body.append(trigger);
-
       dialogSettings = {
         dialogClass: classes.join(' '),
         autoResize: true,
         modal: true,
         target: '#tinymce-modal'
       };
+      // Trigger element gets removed again as soon as the dialog opens.
+      let trigger = document.createElement('div');
+      trigger.style.display = 'none';
+      trigger.classList.add(this.dialogTriggerClass);
+      document.body.append(trigger);
+
       new Backdrop.ajax('tinymce-modal', trigger, {
         accepts: 'application/vnd.backdrop-dialog',
         dialog: dialogSettings,
