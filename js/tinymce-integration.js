@@ -137,9 +137,6 @@
       let trigger = document.createElement('div');
       trigger.style.display = 'none';
       trigger.classList.add(this.dialogTriggerClass);
-      trigger.addEventListener('click', function () {
-        editor.setProgressState(true);
-      });
       document.body.append(trigger);
 
       dialogSettings = {
@@ -161,8 +158,9 @@
       });
       // Store the save callback to be executed when this dialog is closed.
       Backdrop.tinymce.saveCallback = saveCallback;
-      // Trigger opening this modal.
+      // Trigger opening this modal and start loading animation.
       trigger.click();
+      editor.setProgressState(true);
     }
   };
 
