@@ -158,6 +158,8 @@
       });
       // Store the save callback to be executed when this dialog is closed.
       Backdrop.tinymce.saveCallback = saveCallback;
+      // Make sure, the editor owning the dialog button is the active one.
+      editor.focus();
       // Trigger opening this modal and start loading animation.
       trigger.click();
       editor.setProgressState(true);
