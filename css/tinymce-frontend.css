@@ -23,3 +23,10 @@ ul[data-list-style="circle"] {
 ul[data-list-style="square"] {
   list-style-type: square;
 }
+/* Get Tiny dialog display slightly closer to Backdrop dialog styles. */
+.tox.tox-silver-sink .tox-dialog {
+  border-radius: 0;
+}
+.tox.tox-silver-sink .tox-dialog-wrap__backdrop {
+  background-color: #0002;
+}
