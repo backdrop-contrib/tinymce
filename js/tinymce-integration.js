@@ -26,6 +26,9 @@
       // Backdrop link dialog.
       options.convert_urls = false;
 
+      // Add tiny's skin name to body classes for easier styling.
+      $('body').addClass('tinymce-skin-' + options.skin);
+
       // Additional variables from hook.
       for (let item in format.editorSettings.backdrop) {
         options[item] = format.editorSettings.backdrop[item];
