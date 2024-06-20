@@ -10,7 +10,7 @@
       const buttonLabels = {
         visible: Backdrop.t('Hide button text'),
         invisible: Backdrop.t('Show button text')
-      }
+      };
       const textToggle = '<a href="" class="tinymce-toggle-text" aria-hidden="true">' + buttonLabels.invisible + '<a>';
       $('#edit-tb .fieldset-description').after(textToggle);
       $('.tinymce-toggle-text').on('click', function (event) {
