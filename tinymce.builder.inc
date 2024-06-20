@@ -161,9 +161,8 @@ function tinymce_builder_form(array $form, array &$form_state, $profile = NULL) 
     'class' => 'tinybutton separator',
     'tabindex' => '0',
     'title' => t('Separator'),
-    'aria-label' => t('Separator'),
   );
-  $separator_item = '<li' . backdrop_attributes($attributes) . '>&nbsp;</li>';
+  $separator_item = '<li' . backdrop_attributes($attributes) . '><span class="element-invisible">' . t('Separator') . '</span></li>';
   foreach ($toolbar_default_buttons as $name) {
     if ($name == '|') {
       $default_button_list .= $separator_item;
@@ -188,7 +187,7 @@ function tinymce_builder_form(array $form, array &$form_state, $profile = NULL) 
       'role' => 'application',
       'aria-describedby' => 'builder-keyboard-help',
     ),
-    '#description' => t('Drag desired buttons to the "Active" list, drag unwanted ones to the "Available" list below.'),
+    '#description' => t('Drag desired buttons to the "Active" list, drag unwanted ones to the "Available" list below. To easier identify the buttons, toggle their text display (takes more space, has no influence on the resulting editor toolbar).'),
   );
   $form['tb']['toolbar'] = array(
     '#type' => 'textarea',
@@ -274,11 +273,14 @@ function tinymce_builder_form(array $form, array &$form_state, $profile = NULL) 
  */
 function _tinymce_build_buttonlist_item(array $data, array $icons, $button_name) {
   $label = $button_name;
-  $tooltip = '';
+  $text = isset($data['tooltip']) ? $data['tooltip'] : $button_name;
   if (isset($data['icon'])) {
     $icon_name = $data['icon'];
     if (isset($icons[$icon_name])) {
       $label = $icons[$icon_name];
+      if (function_exists('image_add_svg_attributes')) {
+        $label = image_add_svg_attributes($label, array('aria-hidden' => 'true'));
+      }
     }
   }
   elseif (isset($data['text'])) {
@@ -288,11 +290,10 @@ function _tinymce_build_buttonlist_item(array $data, array $icons, $button_name)
     'draggable' => 'true',
     'class' => 'tinybutton',
     'id' => $button_name,
-    'title' => isset($data['tooltip']) ? $data['tooltip'] : '',
+    'title' => $text,
     'tabindex' => '0',
-    'aria-label' => isset($data['tooltip']) ? $data['tooltip'] : $button_name,
   );
-  return '<li' . backdrop_attributes($attributes) . '>' . $label . '</li>';
+  return '<li' . backdrop_attributes($attributes) . '>' . $label . '<span class="element-invisible"> ' . $text . '</span></li>';
 }
 
 /**
