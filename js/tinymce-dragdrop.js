@@ -1,5 +1,36 @@
+/**
+ * @file
+ * Backdrop behaviors for the builder tool.
+ */
 (function ($, Backdrop) {
   "use strict";
+
+  Backdrop.behaviors.tinymceAdminToggleButtonText = {
+    attach: function () {
+      const buttonLabels = {
+        visible: Backdrop.t('Hide button text'),
+        invisible: Backdrop.t('Show button text')
+      }
+      const textToggle = '<a href="" class="tinymce-toggle-text" aria-hidden="true">' + buttonLabels.invisible + '<a>';
+      $('#edit-tb .fieldset-description').after(textToggle);
+      $('.tinymce-toggle-text').on('click', function (event) {
+        event.preventDefault();
+        let $toggle = $(event.target);
+
+        if (!$toggle.hasClass('text-visible')) {
+          $toggle.addClass('text-visible');
+          $toggle.text(buttonLabels.visible);
+          $('#edit-tb .wrapper li span').removeClass('element-invisible');
+        }
+        else {
+          $toggle.removeClass('text-visible');
+          $toggle.text(buttonLabels.invisible);
+          $('#edit-tb .wrapper li span').addClass('element-invisible');
+        }
+      });
+    }
+  };
+
   Backdrop.behaviors.tinymceAdminDragdrop = {
     attach: function (context, settings) {
 

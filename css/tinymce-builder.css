@@ -31,11 +31,18 @@
   vertical-align: bottom;
 }
 .tinybutton.separator {
-  width: 8px;
+  padding: 5px .8em;
+  height: 1em;
+  width: auto !important;
   border: 1px dashed;
 }
 .tinybutton:not(:has(svg)) {
   padding: 5px 8px;
+}
+.tinybutton span {
+  font-size: smaller;
+  vertical-align: text-top;
+  opacity: 0.8;
 }
 #edit-tb .ui-sortable-helper {
   outline: 3px solid #0074bd;
