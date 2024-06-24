@@ -8,8 +8,8 @@
   Backdrop.behaviors.tinymceAdminToggleButtonText = {
     attach: function () {
       const buttonLabels = {
-        visible: Backdrop.t('Hide button text'),
-        invisible: Backdrop.t('Show button text')
+        visible: Backdrop.t('Hide button info'),
+        invisible: Backdrop.t('Show button info')
       };
       const textToggle = '<a href="" class="tinymce-toggle-text" aria-hidden="true">' + buttonLabels.invisible + '<a>';
       $('#edit-tb .fieldset-description').after(textToggle);
