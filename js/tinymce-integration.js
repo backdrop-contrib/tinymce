@@ -27,7 +27,10 @@
       options.convert_urls = false;
 
       // Add tiny's skin name to body classes for easier styling.
-      $('body').addClass('tinymce-skin-' + options.skin);
+      let skinClass = 'tinymce-skin-' + options.skin;
+      if (!$('body').hasClass(skinClass)) {
+        $('body').addClass(skinClass);
+      }
 
       // Additional variables from hook.
       for (let item in format.editorSettings.backdrop) {
