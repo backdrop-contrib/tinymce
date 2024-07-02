@@ -46,6 +46,10 @@
    */
   const buildImage = function (editor, returnValues) {
     let values = returnValues.attributes;
+    // Do not insert an empty img tag.
+    if (!values.src) {
+      return '';
+    }
     let node, link;
     let selected = editor.selection.getNode();
     let parentLink = editor.dom.getParents(selected, 'A');
@@ -138,7 +142,7 @@
         }
       }
       editor.execCommand('mceInsertContent', false, image);
-      if (!returnValues.attributes.width && !returnValues.attributes.height) {
+      if (returnValues.attributes.src && !returnValues.attributes.width && !returnValues.attributes.height) {
         let src = returnValues.attributes.src;
         let imgDomnode = editor.getBody().querySelector('[src="' + src + '"]');
         let imgToSize = new Image();
