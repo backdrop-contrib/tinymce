@@ -158,28 +158,44 @@
   };
 
   /**
+   * Limit allowed tags in figcaption to the same ones CKE4 allowed.
+   */
+  const tagsAllowedInFigcaption = ['a', 'em', 'strong', 'cite', 'code', 'br'];
+
+  /**
    * Parses an array of AstNodes into a string.
    *
-   * @param object editor
    * @param array captionContent
    *
    * @return string
    */
-  const captionAstNodeToString = function (editor, captionContent) {
+  const captionAstNodeToString = function (captionContent) {
     let content = '';
     if (!captionContent.length) {
       return content;
     }
-    let allowedTags = ['a', 'em', 'strong'];
-    let dummy = editor.dom.create('figcaption');
+    let dummy = document.createElement('figcaption');
 
     for (let i = 0; i < captionContent.length; i++) {
       if (captionContent[i].type === 3) {
         dummy.append(document.createTextNode(captionContent[i].value));
       }
       else if (captionContent[i].type === 1) {
-        if (allowedTags.includes(captionContent[i].name)) {
-          dummy.append(editor.dom.create(captionContent[i].name, {}, captionContent[i].firstChild.value));
+        if (tagsAllowedInFigcaption.includes(captionContent[i].name)) {
+          let item = captionContent[i];
+          // @todo nested children still don't work.
+          let element = document.createElement(item.name);
+          if (item.firstChild && item.firstChild.value) {
+            element.append(document.createTextNode(item.firstChild.value));
+          }
+          if (item.attributes) {
+            for (const attr of item.attributes) {
+              if (!attr.name.startsWith('data-mce')) {
+                element.setAttribute(attr.name, attr.value);
+              }
+            }
+          }
+          dummy.append(element);
         }
       }
     }
@@ -194,7 +210,6 @@
    * @return object
    */
   const attributeToCaption = function (attrContent) {
-    let allowedTags = ['A', 'EM', 'STRONG'];
     let caption = new tinymce.html.Node('figcaption', 1);
     let domNode = document.createElement('figcaption');
     domNode.innerHTML = attrContent;
@@ -206,9 +221,14 @@
         text.value = n.textContent;
         caption.append(text);
       }
-      else if (allowedTags.includes(n.nodeName)) {
+      else if (tagsAllowedInFigcaption.includes(n.nodeName.toLowerCase())) {
         let tag = n.nodeName.toLowerCase();
         let node = new tinymce.html.Node(tag, 1);
+        if (n.hasAttributes()) {
+          for (const attr of n.attributes) {
+            node.attr(attr.name, attr.value);
+          }
+        }
         let text = new tinymce.html.Node('#text', 3);
         text.value = n.innerText;
         node.append(text);
@@ -243,6 +263,10 @@
   // Register plugin features.
   tinymce.PluginManager.add('backdropimage', function(editor, url) {
     editor.on('PreInit', function () {
+      // Override allowed tags schema for figcaption tags, to comply with
+      // CKEditor implementation in core. For better interchangeability.
+      editor.schema.addValidChildren('figcaption[' + tagsAllowedInFigcaption.join('|') + '|#text]');
+
       // Parser fires when the editor initializes, or the code plugin submits.
       editor.parser.addAttributeFilter('data-caption', function (nodes) {
         for (let i = 0; i < nodes.length; i++) {
@@ -292,7 +316,7 @@
           let captions = nodes[i].getAll('figcaption');
           if (captions.length) {
             let captionContent = captions[0].children();
-            let content = captionAstNodeToString(editor, captionContent);
+            let content = captionAstNodeToString(captionContent);
             img.attr('data-caption', content);
           }
           // Also cleanup internal attributes.
@@ -307,7 +331,8 @@
 
           let link;
           let childLinks = nodes[i].getAll('a');
-          if (childLinks.length) {
+          // Get all links, but ignore links in figcaptions.
+          if (childLinks.length && childLinks[0].parent.name !== 'figcaption') {
             link = childLinks[0].clone();
             link.attr('data-mce-href', null);
             link.attr('data-mce-selected', null);
