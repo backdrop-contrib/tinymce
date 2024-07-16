@@ -177,26 +177,56 @@
     let dummy = document.createElement('figcaption');
 
     for (let i = 0; i < captionContent.length; i++) {
-      if (captionContent[i].type === 3) {
-        dummy.append(document.createTextNode(captionContent[i].value));
+      let node = captionContent[i];
+      let children = node.children();
+      if (!children.length) {
+        if (node.name === '#text') {
+          dummy.append(document.createTextNode(node.value));
+        }
+        else if (node.parent) {
+          // <br> elements without parent are stray.
+          // @todo figure out where they come from.
+          dummy.append(document.createElement(node.name));
+        }
       }
-      else if (captionContent[i].type === 1) {
-        if (tagsAllowedInFigcaption.includes(captionContent[i].name)) {
-          let item = captionContent[i];
-          // @todo nested children still don't work.
-          let element = document.createElement(item.name);
-          if (item.firstChild && item.firstChild.value) {
-            element.append(document.createTextNode(item.firstChild.value));
-          }
-          if (item.attributes) {
-            for (const attr of item.attributes) {
-              if (!attr.name.startsWith('data-mce')) {
-                element.setAttribute(attr.name, attr.value);
-              }
+      else if (children.length === 1) {
+        let element = document.createElement(node.name);
+        if (node.firstChild.value) {
+          element.append(document.createTextNode(node.firstChild.value));
+        }
+        if (node.attributes.length) {
+          for (const attr of node.attributes) {
+            if (!attr.name.startsWith('data-mce')) {
+              element.setAttribute(attr.name, attr.value);
             }
           }
-          dummy.append(element);
         }
+        dummy.append(element);
+      }
+      else {
+        let parent = document.createElement(node.name);
+        while (node = node.walk()) {
+          if (node.name === '#text') {
+            if (node.parent.name === parent.nodeName.toLowerCase()) {
+              parent.append(document.createTextNode(node.value));
+            }
+          }
+          else {
+            let nestedElm = document.createElement(node.name);
+            if (node.firstChild && node.firstChild.value) {
+              nestedElm.append(document.createTextNode(node.firstChild.value));
+            }
+            if (node.attributes.length) {
+              for (const attr of node.attributes) {
+                if (!attr.name.startsWith('data-mce')) {
+                  nestedElm.setAttribute(attr.name, attr.value);
+                }
+              }
+            }
+            parent.append(nestedElm);
+          }
+        }
+        dummy.append(parent);
       }
     }
     return dummy.innerHTML;
@@ -211,29 +241,10 @@
    */
   const attributeToCaption = function (attrContent) {
     let caption = new tinymce.html.Node('figcaption', 1);
-    let domNode = document.createElement('figcaption');
-    domNode.innerHTML = attrContent;
-
-    for (let i = 0; i < domNode.childNodes.length; i++) {
-      let n = domNode.childNodes[i];
-      if (n.nodeName === '#text') {
-        let text = new tinymce.html.Node('#text', 3);
-        text.value = n.textContent;
-        caption.append(text);
-      }
-      else if (tagsAllowedInFigcaption.includes(n.nodeName.toLowerCase())) {
-        let tag = n.nodeName.toLowerCase();
-        let node = new tinymce.html.Node(tag, 1);
-        if (n.hasAttributes()) {
-          for (const attr of n.attributes) {
-            node.attr(attr.name, attr.value);
-          }
-        }
-        let text = new tinymce.html.Node('#text', 3);
-        text.value = n.innerText;
-        node.append(text);
-        caption.append(node);
-      }
+    let parsed = tinymce.html.DomParser({validate: false, forced_root_block: false}).parse(attrContent);
+    let children = parsed.children();
+    for (let i = 0; i < children.length; i++) {
+      caption.append(children[i]);
     }
     return caption;
   };
@@ -330,9 +341,20 @@
           nodes[i].wrap(p);
 
           let link;
+          // Get all links, but filter out links in figcaptions.
           let childLinks = nodes[i].getAll('a');
-          // Get all links, but ignore links in figcaptions.
-          if (childLinks.length && childLinks[0].parent.name !== 'figcaption') {
+          if (childLinks.length) {
+            childLinks = childLinks.filter(function (item) {
+              if (item.parent.name == 'figcaption') {
+                return false;
+              }
+              if (item.parent.parent && item.parent.parent.name == 'figcaption') {
+                return false;
+              }
+              return true;
+            });
+          }
+          if (childLinks.length) {
             link = childLinks[0].clone();
             link.attr('data-mce-href', null);
             link.attr('data-mce-selected', null);
