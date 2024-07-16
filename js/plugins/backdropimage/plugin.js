@@ -205,17 +205,10 @@
       }
       else {
         let parent = document.createElement(node.name);
+        let lastChild = node.lastChild;
         while (node = node.walk()) {
-          if (node.name === 'p') {
-            // Unclear where these "p" come from.
-            continue;
-          }
-          if (node.name === 'br' && !node.parent) {
-            // Another riddle - only if there's more than one "br" in a
-            // figcaption, odd things happen.
-            // @todo
-            continue;
-          }
+          // Caution, walk() does not only walk over this node, so we have to
+          // stop ourselves.
           if (node.name === '#text') {
             if (node.parent.name === parent.nodeName.toLowerCase()) {
               parent.append(document.createTextNode(node.value));
@@ -234,6 +227,10 @@
               }
             }
             parent.append(nestedElm);
+          }
+          if (node === lastChild) {
+            // Stop before leaving figcaption.
+            break;
           }
         }
         dummy.append(parent);
