@@ -206,6 +206,16 @@
       else {
         let parent = document.createElement(node.name);
         while (node = node.walk()) {
+          if (node.name === 'p') {
+            // Unclear where these "p" come from.
+            continue;
+          }
+          if (node.name === 'br' && !node.parent) {
+            // Another riddle - only if there's more than one "br" in a
+            // figcaption, odd things happen.
+            // @todo
+            continue;
+          }
           if (node.name === '#text') {
             if (node.parent.name === parent.nodeName.toLowerCase()) {
               parent.append(document.createTextNode(node.value));
