@@ -188,24 +188,17 @@
           dummy.append(document.createElement(node.name));
         }
       }
-      else if (children.length === 1) {
-        let element = document.createElement(node.name);
-        if (node.firstChild.value) {
-          element.append(document.createTextNode(node.firstChild.value));
-        }
+      else {
+        let parent = document.createElement(node.name);
         if (node.attributes.length) {
           for (const attr of node.attributes) {
             if (!attr.name.startsWith('data-mce')) {
-              element.setAttribute(attr.name, attr.value);
+              parent.setAttribute(attr.name, attr.value);
             }
           }
         }
-        dummy.append(element);
-      }
-      else {
-        let parent = document.createElement(node.name);
         let lastChild = node.lastChild;
-        while (node = node.walk()) {// jshint ignore:line
+        while ((node = node.walk())) {
           // Caution, walk() does not only walk over this node, so we have to
           // stop ourselves.
           if (node.name === '#text') {
