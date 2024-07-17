@@ -221,7 +221,7 @@
             parent.append(nestedElm);
           }
           if (node === lastChild) {
-            // Stop before leaving figcaption.
+            // Stop before leaving this node.
             break;
           }
         }
