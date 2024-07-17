@@ -158,29 +158,74 @@
   };
 
   /**
+   * Limit allowed tags in figcaption to the same ones CKE4 allowed.
+   * Plus "span", because otherwise inserting links in figcaptions breaks.
+   */
+  const tagsAllowedInFigcaption = ['a', 'em', 'strong', 'cite', 'code', 'br', 'span'];
+
+  /**
    * Parses an array of AstNodes into a string.
    *
-   * @param object editor
    * @param array captionContent
    *
    * @return string
    */
-  const captionAstNodeToString = function (editor, captionContent) {
+  const captionAstNodeToString = function (captionContent) {
     let content = '';
     if (!captionContent.length) {
       return content;
     }
-    let allowedTags = ['a', 'em', 'strong'];
-    let dummy = editor.dom.create('figcaption');
+    let dummy = document.createElement('figcaption');
 
     for (let i = 0; i < captionContent.length; i++) {
-      if (captionContent[i].type === 3) {
-        dummy.append(document.createTextNode(captionContent[i].value));
-      }
-      else if (captionContent[i].type === 1) {
-        if (allowedTags.includes(captionContent[i].name)) {
-          dummy.append(editor.dom.create(captionContent[i].name, {}, captionContent[i].firstChild.value));
+      let node = captionContent[i];
+      let children = node.children();
+      if (!children.length) {
+        if (node.name === '#text') {
+          dummy.append(document.createTextNode(node.value));
         }
+        else {
+          dummy.append(document.createElement(node.name));
+        }
+      }
+      else {
+        let parent = document.createElement(node.name);
+        if (node.attributes.length) {
+          for (const attr of node.attributes) {
+            if (!attr.name.startsWith('data-mce')) {
+              parent.setAttribute(attr.name, attr.value);
+            }
+          }
+        }
+        let lastChild = node.lastChild;
+        while ((node = node.walk())) {
+          // Caution, walk() does not only walk over this node, so we have to
+          // stop ourselves.
+          if (node.name === '#text') {
+            if (node.parent.name === parent.nodeName.toLowerCase()) {
+              parent.append(document.createTextNode(node.value));
+            }
+          }
+          else {
+            let nestedElm = document.createElement(node.name);
+            if (node.firstChild && node.firstChild.value) {
+              nestedElm.append(document.createTextNode(node.firstChild.value));
+            }
+            if (node.attributes.length) {
+              for (const attr of node.attributes) {
+                if (!attr.name.startsWith('data-mce')) {
+                  nestedElm.setAttribute(attr.name, attr.value);
+                }
+              }
+            }
+            parent.append(nestedElm);
+          }
+          if (node === lastChild) {
+            // Stop before leaving this node.
+            break;
+          }
+        }
+        dummy.append(parent);
       }
     }
     return dummy.innerHTML;
@@ -194,26 +239,11 @@
    * @return object
    */
   const attributeToCaption = function (attrContent) {
-    let allowedTags = ['A', 'EM', 'STRONG'];
     let caption = new tinymce.html.Node('figcaption', 1);
-    let domNode = document.createElement('figcaption');
-    domNode.innerHTML = attrContent;
-
-    for (let i = 0; i < domNode.childNodes.length; i++) {
-      let n = domNode.childNodes[i];
-      if (n.nodeName === '#text') {
-        let text = new tinymce.html.Node('#text', 3);
-        text.value = n.textContent;
-        caption.append(text);
-      }
-      else if (allowedTags.includes(n.nodeName)) {
-        let tag = n.nodeName.toLowerCase();
-        let node = new tinymce.html.Node(tag, 1);
-        let text = new tinymce.html.Node('#text', 3);
-        text.value = n.innerText;
-        node.append(text);
-        caption.append(node);
-      }
+    let parsed = tinymce.html.DomParser({validate: false, forced_root_block: false}).parse(attrContent);
+    let children = parsed.children();
+    for (let i = 0; i < children.length; i++) {
+      caption.append(children[i]);
     }
     return caption;
   };
@@ -243,6 +273,10 @@
   // Register plugin features.
   tinymce.PluginManager.add('backdropimage', function(editor, url) {
     editor.on('PreInit', function () {
+      // Override allowed tags schema for figcaption tags, to comply with
+      // CKEditor implementation in core. For better interchangeability.
+      editor.schema.addValidChildren('figcaption[' + tagsAllowedInFigcaption.join('|') + '|#text]');
+
       // Parser fires when the editor initializes, or the code plugin submits.
       editor.parser.addAttributeFilter('data-caption', function (nodes) {
         for (let i = 0; i < nodes.length; i++) {
@@ -292,7 +326,7 @@
           let captions = nodes[i].getAll('figcaption');
           if (captions.length) {
             let captionContent = captions[0].children();
-            let content = captionAstNodeToString(editor, captionContent);
+            let content = captionAstNodeToString(captionContent);
             img.attr('data-caption', content);
           }
           // Also cleanup internal attributes.
@@ -306,7 +340,19 @@
           nodes[i].wrap(p);
 
           let link;
+          // Get all links, but filter out links in figcaptions.
           let childLinks = nodes[i].getAll('a');
+          if (childLinks.length) {
+            childLinks = childLinks.filter(function (item) {
+              if (item.parent.name === 'figcaption') {
+                return false;
+              }
+              if (item.parent.parent && item.parent.parent.name === 'figcaption') {
+                return false;
+              }
+              return true;
+            });
+          }
           if (childLinks.length) {
             link = childLinks[0].clone();
             link.attr('data-mce-href', null);
