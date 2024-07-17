@@ -159,8 +159,9 @@
 
   /**
    * Limit allowed tags in figcaption to the same ones CKE4 allowed.
+   * Plus "span", because otherwise inserting links in figcaptions breaks.
    */
-  const tagsAllowedInFigcaption = ['a', 'em', 'strong', 'cite', 'code', 'br'];
+  const tagsAllowedInFigcaption = ['a', 'em', 'strong', 'cite', 'code', 'br', 'span'];
 
   /**
    * Parses an array of AstNodes into a string.
@@ -183,9 +184,7 @@
         if (node.name === '#text') {
           dummy.append(document.createTextNode(node.value));
         }
-        else if (node.parent) {
-          // <br> elements without parent are stray.
-          // @todo figure out where they come from.
+        else {
           dummy.append(document.createElement(node.name));
         }
       }
@@ -206,7 +205,7 @@
       else {
         let parent = document.createElement(node.name);
         let lastChild = node.lastChild;
-        while (node = node.walk()) {
+        while (node = node.walk()) {// jshint ignore:line
           // Caution, walk() does not only walk over this node, so we have to
           // stop ourselves.
           if (node.name === '#text') {
@@ -352,10 +351,10 @@
           let childLinks = nodes[i].getAll('a');
           if (childLinks.length) {
             childLinks = childLinks.filter(function (item) {
-              if (item.parent.name == 'figcaption') {
+              if (item.parent.name === 'figcaption') {
                 return false;
               }
-              if (item.parent.parent && item.parent.parent.name == 'figcaption') {
+              if (item.parent.parent && item.parent.parent.name === 'figcaption') {
                 return false;
               }
               return true;
