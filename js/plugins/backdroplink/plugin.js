@@ -136,7 +136,7 @@
         editor.on('SelectionChange', function () {
           let node = editor.selection.getNode();
           // The anchor plugin marks its links as not editable.
-          if (node.nodeName === 'A' && node.isContentEditable) {
+          if (node.isContentEditable && (node.nodeName === 'A' || node.parentNode.nodeName === 'A')) {
             api.setActive(true);
           }
           else {
@@ -150,18 +150,6 @@
       tooltip: 'Remove link',
       onAction: function () {
         editor.execCommand('unlink');
-      },
-      onSetup: function (api) {
-        api.setEnabled(false);
-        editor.on('SelectionChange', function () {
-          let node = editor.selection.getNode();
-          if (node.nodeName === 'A' || node.parentNode.nodeName === 'A') {
-            api.setEnabled(true);
-          }
-          else {
-            api.setEnabled(false);
-          }
-        });
       }
     });
 
