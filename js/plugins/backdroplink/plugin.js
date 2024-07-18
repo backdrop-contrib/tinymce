@@ -150,7 +150,7 @@
       tooltip: 'Remove link',
       onAction: function () {
         editor.execCommand('unlink');
-      },
+      }
     });
 
     editor.ui.registry.addMenuItem('backdroplink', {
