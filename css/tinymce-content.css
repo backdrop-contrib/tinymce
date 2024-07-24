@@ -8,11 +8,27 @@ img {
 }
 img[data-align="left"] {
   float: left;
-  margin: .5rem 1rem .5rem 0;
+  margin: .3rem 1rem .5rem 0;
+}
+a:has(img[data-align="left"]) {
+  float: left;
+  margin: .3rem 1rem .5rem 0;
+}
+a:has(img[data-align="left"]) img {
+  float: none;
+  margin: 0;
 }
 img[data-align="right"] {
   float: right;
-  margin: .5rem 0 .5rem 1rem;
+  margin: .3rem 0 .5rem 1rem;
+}
+a:has(img[data-align="right"]) {
+  float: right;
+  margin: .3rem 0 .5rem 1rem;
+}
+a:has(img[data-align="right"]) img {
+  float: none;
+  margin: 0;
 }
 img[data-align="center"] {
   display: block;
