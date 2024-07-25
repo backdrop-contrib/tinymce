@@ -9,9 +9,6 @@ This module can co-exist with CKEditor, you can also toggle on-the-fly
  in node forms, although having both editors turned on might have side effects
  on page performance.
 
-Compatible with the [Editor Image Dimension Sync](https://backdropcms.org/project/editorimgdimensionsync)
- module.
-
 ### Why another WYSIWYG editor?
 
 Because CKEditor might eventually not be the ideal solution for your site,
@@ -48,9 +45,11 @@ But there's more:
 - [TinyMCE File Link](https://backdropcms.org/project/tinymce_filelink)
   (File browser to search and insert links to files in content)
 - [Video Filter](https://backdropcms.org/project/video_filter) since
-  version 1.x-3.5.0
+  version 1.x-3.5.0 (embed any type of video in your site using a simple tag)
 - [File Entity Embed Filter](https://backdropcms.org/project/feef)
   (Embed file entities in content using a token-like placeholder)
+- Compatible with the [Editor Image Dimension Sync](https://backdropcms.org/project/editorimgdimensionsync)
+  module. (Enhances the editor image selection dialog.)
 
 And if that's not enough, it's not hard to add custom ones by leveraging
  hook_tinymce_external_plugins(). See the
