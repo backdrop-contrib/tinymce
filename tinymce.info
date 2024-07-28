@@ -4,6 +4,7 @@ description = Integrates TinyMCE as WYSIWYG editor for content.
 tags[] = Text Editors
 tags[] = Formats
 package = User Interface
+maintainers[indigoxela] = indigoxela
 
 dependencies[] = filter
 
