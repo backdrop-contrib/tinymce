@@ -44,6 +44,8 @@ But there's more:
   (Integration with the IMCE uploader and browser)
 - [TinyMCE File Link](https://backdropcms.org/project/tinymce_filelink)
   (File browser to search and insert links to files in content)
+- [TinyMCE JavaScript Accordions](https://backdropcms.org/project/tinymce_js_accordion)
+  (Extends TinyMCE integration with an animated accordion based on description lists)
 - [Video Filter](https://backdropcms.org/project/video_filter) since
   version 1.x-3.5.0 (embed any type of video in your site using a simple tag)
 - [File Entity Embed Filter](https://backdropcms.org/project/feef)
