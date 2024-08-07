@@ -140,7 +140,9 @@
       let classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
       classes.push('editor-dialog');
       dialogSettings = {
-        dialogClass: classes.join(' '),
+        classes: {
+          'ui-dialog': classes.join(' ')
+        },
         autoResize: true,
         modal: true,
         target: '#tinymce-modal'
