@@ -94,7 +94,7 @@
             $(this).next().focus();
             $(this).appendTo('#buttons-available');
             let message = Backdrop.t('%button removed from active elements.', {
-              '%button': $(this).attr('aria-label')
+              '%button': $(this).text()
             });
             $('#announce-addremove').html(message);
             updateFormItem();
@@ -106,7 +106,7 @@
             $(this).appendTo('#buttons-active');
             $(this).focus();
             let message = Backdrop.t('%button added to active elements.', {
-              '%button': $(this).attr('aria-label')
+              '%button': $(this).text()
             });
             $('#announce-addremove').html(message);
             updateFormItem();
