@@ -54,7 +54,7 @@ function _tinymce_settings_form(array &$form, array $form_state, $format) {
     '#attributes' => array(
       'placeholder' => '/core/themes/basis/css/skin.css',
     ),
-    '#description' => t('Add URLs to CSS files, the editor should use to display its content, one file per line.'),
+    '#description' => t('Add URLs to CSS files, the editor should use to display its content, one file per line.<br>If a file is named <code>tinymce-styles-dropdown.css</code>, this file additionally gets parsed for items to append to the toolbar styles dropdown.'),
   );
 
   $elements['tabs']['image_browser'] = array(

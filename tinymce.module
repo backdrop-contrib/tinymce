@@ -174,6 +174,16 @@ function _tinymce_js_settings($format, array $existing_settings) {
   $options['tiny_options']['skin'] = $settings['tinymce_settings']['skin'];
   $options['tiny_options']['content_css'] = _tinymce_get_content_css($settings['tinymce_settings']);
 
+  // If that specific file is also part of content CSS, let Tiny parse it.
+  if (count($options['tiny_options']['content_css']) > 1) {
+    $parse_file_found = preg_grep('#tinymce-styles-dropdown\.css$#', $options['tiny_options']['content_css']);
+    if (!empty($parse_file_found)) {
+      $options['tiny_options']['plugins'] .= ' importcss';
+      $options['tiny_options']['importcss_file_filter'] = 'tinymce-styles-dropdown.css';
+      $options['tiny_options']['importcss_append'] = TRUE;
+    }
+  }
+
   // Collect additional TinyMCE plugins from hook.
   $external_plugins = module_invoke_all('tinymce_external_plugins', $format);
   $icon_registry = array();
