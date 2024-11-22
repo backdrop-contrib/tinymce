@@ -169,6 +169,9 @@ function _tinymce_js_settings($format, array $existing_settings) {
       $options['unregisterFmts'] = $unregister;
     }
   }
+  else {
+    $options['backdrop']['allowInlineStyle'] = TRUE;
+  }
 
   // Settings from admin UI.
   $options['tiny_options']['skin'] = $settings['tinymce_settings']['skin'];

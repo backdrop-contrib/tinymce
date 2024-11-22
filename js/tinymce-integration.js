@@ -92,8 +92,10 @@
           }
           // Override as noop-commands to prevent inline styles clutter on block
           // elements. That way indent/outdent are limited to list items.
-          editor.addCommand('indent', function () {});
-          editor.addCommand('outdent', function () {});
+          if (!format.editorSettings.backdrop.allowInlineStyle) {
+            editor.addCommand('indent', function () {});
+            editor.addCommand('outdent', function () {});
+          }
           // Register custom icons provided by plugins.
           if (typeof format.editorSettings.iconRegistry !== 'undefined') {
             let icons = format.editorSettings.iconRegistry;
