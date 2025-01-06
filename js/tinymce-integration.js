@@ -92,7 +92,7 @@
           }
           // Override as noop-commands to prevent inline styles clutter on block
           // elements. That way indent/outdent are limited to list items.
-          if (!format.editorSettings.backdrop.allowInlineStyle) {
+          if (format.editorSettings.backdrop && !format.editorSettings.backdrop.allowInlineStyle) {
             editor.addCommand('indent', function () {});
             editor.addCommand('outdent', function () {});
           }
