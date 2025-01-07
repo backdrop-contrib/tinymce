@@ -168,6 +168,7 @@ function _tinymce_js_settings($format, array $existing_settings) {
     if ($unregister) {
       $options['unregisterFmts'] = $unregister;
     }
+    $options['backdrop']['allowInlineStyle'] = FALSE;
   }
   else {
     $options['backdrop']['allowInlineStyle'] = TRUE;
