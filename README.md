@@ -61,6 +61,13 @@ And if that's not enough, it's not hard to add custom ones by leveraging
 
 Bugs and feature requests should be reported in the [Issue Queue](https://github.com/backdrop-contrib/tinymce/issues)
 
+## Release frequency
+
+As the library ships with the module, there are regular updates to keep up with their releases.
+Currently roughly once a month.
+
+This frequency may eventually change in the future, but the plan is to not fall behind too far.
+
 ## Current Maintainers
 
 - [Indigoxela](https://github.com/indigoxela)
