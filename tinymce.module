@@ -168,10 +168,10 @@ function _tinymce_js_settings($format, array $existing_settings) {
     if ($unregister) {
       $options['unregisterFmts'] = $unregister;
     }
-    $options['backdrop']['allowInlineStyle'] = FALSE;
+    $options['allowInlineStyle'] = FALSE;
   }
   else {
-    $options['backdrop']['allowInlineStyle'] = TRUE;
+    $options['allowInlineStyle'] = TRUE;
   }
 
   // Settings from admin UI.
