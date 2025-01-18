@@ -31,6 +31,8 @@
       if (!$('body').hasClass(skinClass)) {
         $('body').addClass(skinClass);
       }
+      // Add a class to the editing area body to allow styling per form.
+      options.body_class = 'form-' + element.form.id;
 
       // Additional variables from hook.
       for (let item in format.editorSettings.backdrop) {
