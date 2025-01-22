@@ -12,7 +12,10 @@
         invisible: Backdrop.t('Show button info')
       };
       const textToggle = '<a href="" class="tinymce-toggle-text" aria-hidden="true">' + buttonLabels.invisible + '<a>';
+      // Selector before core 1.30.0.
       $('#edit-tb .fieldset-description').after(textToggle);
+      // Changed CSS class as of core 1.30.0.
+      $('#edit-tb .fieldset-wrapper .description').after(textToggle);
       $('.tinymce-toggle-text').on('click', function (event) {
         event.preventDefault();
         let $toggle = $(event.target);
