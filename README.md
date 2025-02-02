@@ -46,6 +46,10 @@ But there's more:
   (File browser to search and insert links to files in content)
 - [TinyMCE JavaScript Accordions](https://backdropcms.org/project/tinymce_js_accordion)
   (Animated accordions based on description lists)
+- [TinyMCE Emojis](https://backdropcms.org/project/tinymce_emojis)
+  (Provides a button to insert emojis)
+- [TinyMCE Paging](https://backdropcms.org/project/tinymce_paging)
+  (Provides an button to insert page breaks used by the Paging module)
 - [Video Filter](https://backdropcms.org/project/video_filter) since
   version 1.x-3.5.0 (embed any type of video in your site using a simple tag)
 - [File Entity Embed Filter](https://backdropcms.org/project/feef)
