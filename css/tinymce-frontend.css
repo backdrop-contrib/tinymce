@@ -30,3 +30,7 @@ ul[data-list-style="square"] {
 .tox.tox-silver-sink .tox-dialog-wrap__backdrop {
   background-color: #0002;
 }
+/* Prevent large previews in styles dropdown from overlapping each other. */
+body .tox :not(svg):not(rect) .tox-collection__item-label {
+  line-height: 1.15;
+}
