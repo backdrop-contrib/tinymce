@@ -378,6 +378,7 @@ function _tinymce_merge_default_settings(array $settings) {
     'browser_spellcheck' => TRUE,
     'entity_encoding' => 'raw',
     'license_key' => 'gpl',
+    'toolbar_mode' => 'wrap',
   );
   $settings += $tiny_defaults;
 
