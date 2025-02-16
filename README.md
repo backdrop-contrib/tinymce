@@ -50,6 +50,8 @@ But there's more:
   (Provides a button to insert emojis)
 - [TinyMCE Paging](https://backdropcms.org/project/tinymce_paging)
   (Provides an button to insert page breaks used by the Paging module)
+- [TinyMCE Code Highlight](https://backdropcms.org/project/tinymce_codehighlight)
+  (Adds tweaks for the codesample plugin, adds syntax highlighting on content display)
 - [Video Filter](https://backdropcms.org/project/video_filter) since
   version 1.x-3.5.0 (embed any type of video in your site using a simple tag)
 - [File Entity Embed Filter](https://backdropcms.org/project/feef)
