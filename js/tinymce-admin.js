@@ -64,6 +64,14 @@ Backdrop.behaviors.tinymceAdminSummaries = {
         return Backdrop.t('Not enabled');
       }
     });
+    $form.find('#edit-editor-settings-tabs-image-styles').backdropSetSummary( function() {
+      if ($form.find('input[name="editor_settings[image_styles][status]"]:checked').length) {
+        return Backdrop.t('Enabled');
+      }
+      else {
+        return Backdrop.t('Not enabled');
+      }
+    });
     $form.find('#edit-editor-settings-tabs-image-settings').backdropSetSummary( function() {
       if ($form.find('input[name="editor_settings[image_upload][status]"]:checked').length) {
         let message = Backdrop.t('Enabled');
