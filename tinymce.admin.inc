@@ -68,6 +68,18 @@ function _tinymce_settings_form(array &$form, array $form_state, $format) {
     '#default_value' => $settings['image_browser']['enable'],
   );
 
+  // New feature as of Backdrop v1.31.0: image styles for inline images.
+  if (function_exists('filter_editor_image_styles_settings_form')) {
+    $elements['tabs']['image_styles'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Inline image styles'),
+    );
+    $elements['tabs']['image_styles']['settings'] = filter_editor_image_styles_settings_form($format);
+    $elements['tabs']['image_styles']['settings']['#parents'] = array(
+      'editor_settings',
+      'image_styles',
+    );
+  }
   $elements['tabs']['image_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Image upload'),
