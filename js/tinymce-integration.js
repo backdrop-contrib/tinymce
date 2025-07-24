@@ -92,12 +92,27 @@
               editor.formatter.unregister(fmts[i]);
             }
           }
-          // Override as noop-commands to prevent inline styles clutter on block
-          // elements. That way indent/outdent are limited to list items.
+
+          // Override with custom function to prevent inline styles, as
+          // "Limit allowed HTML tags" filter setting prevents their display.
+          // That way indent/outdent is limited to list items.
           if (!format.editorSettings.allowInlineStyle) {
-            editor.addCommand('indent', function () {});
-            editor.addCommand('outdent', function () {});
+            const indentOrig = editor.editorCommands.commands.exec.indent;
+            editor.addCommand('indent', function () {
+              const blocks = editor.selection.getSelectedBlocks();
+              if (blocks.length && blocks[0].closest('li')) {
+                indentOrig();
+              }
+            });
+            const outdentOrig = editor.editorCommands.commands.exec.outdent;
+            editor.addCommand('outdent', function () {
+              const blocks = editor.selection.getSelectedBlocks();
+              if (blocks.length && blocks[0].closest('li')) {
+                outdentOrig();
+              }
+            });
           }
+
           // Register custom icons provided by plugins.
           if (typeof format.editorSettings.iconRegistry !== 'undefined') {
             let icons = format.editorSettings.iconRegistry;
