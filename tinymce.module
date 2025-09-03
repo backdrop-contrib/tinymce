@@ -430,7 +430,7 @@ function tinymce_library_info() {
   $libraries['tinymce'] = array(
     'title' => 'TinyMCE',
     'website' => 'https://www.tiny.cloud/',
-    'version' => '8.0.0',
+    'version' => '8.0.2',
     'js' => array(
       $path . '/libraries/tinymce/js/tinymce/tinymce.min.js' => array(
         'preprocess' => FALSE,
