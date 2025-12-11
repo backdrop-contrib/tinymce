@@ -540,7 +540,10 @@ function tinymce_tinymce_external_plugins($format) {
 }
 
 /**
+ * Helper function to determine the editor's UI language.
  *
+ * @return string
+ *   Language code to use for editor option.
  */
 function _tinymce_interface_language_option() {
   $langcode = &backdrop_static(__FUNCTION__);
