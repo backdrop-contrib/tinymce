@@ -247,6 +247,11 @@ function _tinymce_js_settings($format, array $existing_settings) {
     $options['tiny_options']['paste_data_images'] = FALSE;
   }
 
+  // Set content language independently from editor UI language, as the editor
+  // has only a limited number of translations.
+  global $language;
+  $options['contentLanguageDefault'] = $language->langcode;
+
   backdrop_alter('tinymce_options', $options, $format);
   return $options;
 }
@@ -370,11 +375,10 @@ function _tinymce_get_unregister_formats($taglist) {
  * @return array
  */
 function _tinymce_merge_default_settings(array $settings) {
-  global $language;
   $tiny_defaults = array(
     'branding' => FALSE,
     'promotion' => FALSE,
-    'language' => $language->langcode,
+    'language' => _tinymce_interface_language_option(),
     'browser_spellcheck' => TRUE,
     'entity_encoding' => 'raw',
     'license_key' => 'gpl',
@@ -533,4 +537,61 @@ function tinymce_tinymce_external_plugins($format) {
   );
 
   return $plugins;
+}
+
+/**
+ * Helper function to determine the editor's UI language.
+ *
+ * @return string
+ *   Language code to use for editor option.
+ */
+function _tinymce_interface_language_option() {
+  $langcode = &backdrop_static(__FUNCTION__);
+
+  if (!isset($langcode)) {
+    global $language;
+    $langcode = $language->langcode;
+
+    if ($langcode == 'en') {
+      // Return early, as "en" is the default editor UI language.
+      return $langcode;
+    }
+
+    // Note: this mapping needs to get checked with every language pack update.
+    // @see standard_language_list()
+    $mapping = array(
+      'bg' => 'bg_BG',
+      'bn' => 'bn_BD',
+      'en-gb' => 'en',
+      'fr' => 'fr_FR',
+      'he' => 'he_IL',
+      'hu' => 'hu_HU',
+      'is' => 'is_IS',
+      'ka' => 'ka_GE',
+      'ko' => 'ko_KR',
+      'nb' => 'nb_NO',
+      'pt' => 'pt_PT',
+      'pt-br' => 'pt_BR',
+      'pt-pt' => 'pt_PT',
+      'sl' => 'sl_SI',
+      'sv' => 'sv_SE',
+      'ta-lk' => 'ta',
+      'th' => 'th_TH',
+      'zh-hans' => 'zh_CN',
+      'zh-hant' => 'zh_TW',
+    );
+    if (array_key_exists($langcode, $mapping)) {
+      $langcode = $mapping[$langcode];
+    }
+    else {
+      // Otherwise check if such a file exists, fall back to English if not.
+      $path = backdrop_get_path('module', 'tinymce');
+      $file_exists = file_exists("$path/libraries/tinymce/js/tinymce/langs/$langcode.js");
+      if (!$file_exists) {
+        $langcode = 'en';
+      }
+    }
+  }
+
+  return $langcode;
 }

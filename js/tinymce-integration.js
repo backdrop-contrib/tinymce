@@ -54,8 +54,8 @@
         }
       }
 
-      // Content language defaults to interface language.
-      let contentLang = options.language;
+      // Content language defaults to current page language.
+      let contentLang = format.editorSettings.contentLanguageDefault;
       // If this element's form has a language select list, toggle content lang
       // based on that value.
       if (element.form.querySelector('#edit-langcode') !== null) {
@@ -66,7 +66,7 @@
         languageToggle.addEventListener('change', function (ev) {
           let langcode = ev.target.value;
           if (langcode === 'und') {
-            langcode = options.language;
+            langcode = format.editorSettings.contentLanguageDefault;
           }
           let event = new CustomEvent('contentLangSwitch', { detail: langcode });
           window.dispatchEvent(event);
