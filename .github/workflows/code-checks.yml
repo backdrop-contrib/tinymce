@@ -3,11 +3,11 @@ on: [pull_request]
 jobs:
   codechecks:
     name: PHP_CodeSniffer, JSHint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout module
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -20,7 +20,7 @@ jobs:
       # The checkout action refuses to put it outside, so we have to do it in
       # two steps.
       - name: Checkout coding standard
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: backdrop-ops/phpcs
           ref: 1.2.0
