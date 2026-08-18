@@ -141,7 +141,7 @@
 
     detach: function (element, format, trigger) {
       if (trigger === 'submit') {
-        // New trigger type as of core 1.43.3.
+        // New trigger type as of core 1.34.3.
         return;
       }
       if (trigger === 'serialize') {
