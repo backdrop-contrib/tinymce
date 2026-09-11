@@ -466,7 +466,7 @@ function tinymce_config_info() {
   $prefixes['tinymce.profiles'] = array(
     'name_key' => 'name',
     'label_key' => 'label',
-    'group' => t('Editor profiles'),
+    'group' => t('TinyMCE editor profiles'),
   );
   return $prefixes;
 }
