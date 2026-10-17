@@ -415,12 +415,23 @@ function _tinymce_merge_default_settings(array $settings) {
       'classes' => 'text-align-justify',
     ),
   );
-  // Set tag as default for underline (instead of style).
+  // Override defaults, set tags only to prevent inline styles.
   $formats['underline'] = array(
     array(
       'inline' => 'u',
     ),
   );
+  $formats['bold'] = array(
+    array(
+      'inline' => 'strong',
+    ),
+  );
+  $formats['italic'] = array(
+    array(
+      'inline' => 'em',
+    ),
+  );
+
   $settings['formats'] = $formats;
 
   return $settings;
