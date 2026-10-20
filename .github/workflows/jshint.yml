@@ -6,6 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run JSHint
-        uses: indigoxela/gha_composite/actions/jshint@v1
+        uses: indigoxela/gha_composite/actions/jshint@main
         with:
           paths_to_check: 'js'
