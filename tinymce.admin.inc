@@ -148,6 +148,7 @@ function _tinymce_get_profile_options() {
  * Helper callback to provide a form description for upload setting.
  *
  * @param string $type
+ *   Type name like "image".
  * @return string
  */
 function _tinymce_settings_status_description($type) {
