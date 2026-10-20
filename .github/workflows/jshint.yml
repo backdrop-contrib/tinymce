@@ -1,0 +1,11 @@
+name: JSHint
+on: [pull_request]
+jobs:
+  js_linter:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run JSHint
+        uses: indigoxela/gha_composite/actions/jshint@v1
+        with:
+          paths_to_check: 'js'
