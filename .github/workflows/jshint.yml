@@ -7,3 +7,5 @@ jobs:
     steps:
       - name: Run JSHint
         uses: indigoxela/gha_composite/actions/jshint@v1
+        with:
+          paths_to_check: 'js'
